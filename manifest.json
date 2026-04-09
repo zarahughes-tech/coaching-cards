@@ -1,0 +1,18 @@
+{
+  "name": "Coaching Cards Library",
+  "short_name": "Coaching Cards",
+  "description": "7 interactive coaching card decks for teams, reflection, and conversation.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f7f1e8",
+  "theme_color": "#b54b5d",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "coaching-cards-icon.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

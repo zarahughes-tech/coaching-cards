@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coaching Cards for Every Day</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal:        #5bbfbf;
+      --teal-dark:   #4aadad;
+      --teal-light:  #a8dede;
+      --teal-bg:     #e6f5f5;
+      --white:       #ffffff;
+      --text:        #2a2a2a;
+      --text-mid:    #555;
+      --comfortable: #4caf85;
+      --uncomfortable: #e07b5a;
+      --shadow:      rgba(0,0,0,0.12);
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--teal-bg);
+      font-family: 'Segoe UI', Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px 48px;
+      color: var(--text);
+    }
+
+    /* ── SHARED HEADER ───────────────────────────────────────────── */
+    .site-title {
+      font-family: 'Brush Script MT', 'Segoe Script', 'Bradley Hand ITC', cursive;
+      font-size: clamp(1.7rem, 5vw, 2.4rem);
+      color: var(--teal-dark);
+      text-align: center;
+      line-height: 1.25;
+      margin-bottom: 6px;
+    }
+    .site-sub {
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--teal-dark);
+      opacity: 0.75;
+      letter-spacing: 0.04em;
+      margin-bottom: 28px;
+    }
+
+    /* ── SCREENS ─────────────────────────────────────────────────── */
+    .screen { display: none; width: 100%; max-width: 400px; }
+    .screen.active { display: flex; flex-direction: column; align-items: center; }
+
+    /* ── MENU SCREEN ─────────────────────────────────────────────── */
+    .menu-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      width: 100%;
+    }
+
+    .menu-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 20px 22px;
+      cursor: pointer;
+      box-shadow: 0 3px 12px var(--shadow);
+      border: 2px solid transparent;
+      transition: border-color 0.18s, transform 0.14s, box-shadow 0.18s;
+      text-align: left;
+    }
+    .menu-card:hover {
+      border-color: var(--teal-light);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--shadow);
+    }
+    .menu-card .mc-icon { font-size: 1.6rem; margin-bottom: 6px; }
+    .menu-card .mc-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--teal-dark);
+      margin-bottom: 4px;
+    }
+    .menu-card .mc-desc {
+      font-size: 0.82rem;
+      color: var(--text-mid);
+      line-height: 1.5;
+    }
+
+    /* ── CARD COMPONENT ──────────────────────────────────────────── */
+    .card-wrap {
+      width: 100%;
+      perspective: 1200px;
+    }
+    .card {
+      width: 100%;
+      aspect-ratio: 2 / 3;
+      border-radius: 18px;
+      box-shadow: 0 8px 32px var(--shadow);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--white);
+      transition: transform 0.3s cubic-bezier(.4,0,.2,1), opacity 0.22s;
+    }
+    .card.flip { transform: rotateY(90deg); opacity: 0.15; }
+
+    .card-top {
+      background: var(--teal);
+      padding: 20px 18px 16px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .card-top h2 {
+      font-family: 'Brush Script MT', 'Segoe Script', 'Bradley Hand ITC', cursive;
+      font-size: clamp(1.2rem, 3.8vw, 1.55rem);
+      color: var(--white);
+      line-height: 1.3;
+    }
+    .card-body {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 26px 22px;
+    }
+    .card-body p {
+      font-size: clamp(1rem, 3vw, 1.18rem);
+      color: var(--text);
+      text-align: center;
+      line-height: 1.7;
+    }
+    .card-bottom {
+      background: var(--teal);
+      height: 66px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 10px;
+      flex-shrink: 0;
+    }
+    .sunrise {
+      width: 48px; height: 33px; opacity: 0.85;
+    }
+
+    /* ── PROGRESS BAR ────────────────────────────────────────────── */
+    .progress-row {
+      width: 100%;
+      margin-bottom: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .progress-label {
+      font-size: 0.8rem;
+      color: var(--teal-dark);
+      display: flex;
+      justify-content: space-between;
+    }
+    .progress-bar-bg {
+      width: 100%;
+      height: 6px;
+      background: var(--teal-light);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--teal-dark);
+      border-radius: 3px;
+      transition: width 0.3s;
+    }
+
+    /* ── BUTTONS ─────────────────────────────────────────────────── */
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      flex: 1;
+      min-width: 80px;
+      padding: 13px 14px;
+      border: none;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+      transition: background 0.15s, transform 0.1s;
+      box-shadow: 0 2px 8px var(--shadow);
+    }
+    .btn:active { transform: scale(0.96); }
+    .btn:disabled { opacity: 0.4; cursor: default; }
+
+    .btn-teal  { background: var(--teal); color: var(--white); }
+    .btn-teal:hover:not(:disabled)  { background: var(--teal-dark); }
+
+    .btn-ghost { background: var(--white); color: var(--teal-dark); border: 2px solid var(--teal-light); }
+    .btn-ghost:hover { background: #d4f0f0; }
+
+    .btn-comfortable   { background: var(--comfortable); color: var(--white); }
+    .btn-uncomfortable { background: var(--uncomfortable); color: var(--white); }
+    .btn-comfortable:hover   { background: #3d9e72; }
+    .btn-uncomfortable:hover { background: #c96a49; }
+
+    .btn-sm {
+      padding: 9px 14px;
+      font-size: 0.8rem;
+      flex: none;
+    }
+
+    /* ── PILL COUNTERS (split-draw) ──────────────────────────────── */
+    .pool-row {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      margin-top: 16px;
+    }
+    .pool-pill {
+      flex: 1;
+      padding: 10px 12px;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: opacity 0.15s, transform 0.1s;
+      box-shadow: 0 2px 8px var(--shadow);
+    }
+    .pool-pill:active { transform: scale(0.96); }
+    .pool-pill:disabled { opacity: 0.35; cursor: default; }
+    .pool-pill.c { background: var(--comfortable); color: var(--white); }
+    .pool-pill.u { background: var(--uncomfortable); color: var(--white); }
+    .pool-pill span { display: block; font-size: 1.1rem; font-weight: 900; }
+
+    /* ── RESULT BANNER ───────────────────────────────────────────── */
+    .sort-result {
+      width: 100%;
+      background: var(--white);
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 3px 12px var(--shadow);
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .sort-result h3 { font-size: 1.05rem; color: var(--teal-dark); margin-bottom: 14px; }
+    .result-pills { display: flex; gap: 12px; justify-content: center; margin-bottom: 16px; }
+    .result-pill {
+      padding: 10px 20px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--white);
+    }
+    .result-pill.c { background: var(--comfortable); }
+    .result-pill.u { background: var(--uncomfortable); }
+
+    /* ── DAILY COUNTER ───────────────────────────────────────────── */
+    .daily-counter {
+      font-size: 0.82rem;
+      color: var(--teal-dark);
+      text-align: center;
+      margin-top: 6px;
+      margin-bottom: 14px;
+      opacity: 0.8;
+    }
+
+    /* ── BACK LINK ───────────────────────────────────────────────── */
+    .back-link {
+      align-self: flex-start;
+      background: none;
+      border: none;
+      color: var(--teal-dark);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      opacity: 0.8;
+    }
+    .back-link:hover { opacity: 1; }
+
+    /* ── EMPTY STATE ─────────────────────────────────────────────── */
+    .empty-msg {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 28px 22px;
+      text-align: center;
+      box-shadow: 0 3px 12px var(--shadow);
+      width: 100%;
+    }
+    .empty-msg .e-icon { font-size: 2.5rem; margin-bottom: 10px; }
+    .empty-msg p { font-size: 0.9rem; color: var(--text-mid); line-height: 1.6; }
+
+    /* ── FOOTER ──────────────────────────────────────────────────── */
+    footer {
+      margin-top: 32px;
+      text-align: center;
+      font-size: 0.73rem;
+      color: #7aadad;
+      line-height: 1.7;
+    }
+    footer a { color: var(--teal-dark); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .top-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 900;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      background: rgba(230, 245, 245, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(91, 191, 191, 0.18);
+    }
+    .nav-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--teal-dark);
+      text-decoration: none;
+      opacity: 0.6;
+      transition: opacity 0.15s;
+    }
+    .nav-back:hover { opacity: 1; }
+  </style>
+  <link rel="manifest" href="manifest.json">
+  <script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');</script>
+</head>
+<body>
+  <nav class="top-nav" aria-label="Site navigation">
+    <a href="index.html" class="nav-back">← All card sets</a>
+  </nav>
+
+  <h1 class="site-title" style="margin-top: 16px;">Coaching Cards<br>for Every Day</h1>
+  <p class="site-sub">by Kim Morgan · Barefoot Coaching</p>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       SCREEN 1 — MENU
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="screen active" id="screen-menu">
+    <div class="menu-grid">
+
+      <div class="menu-card" onclick="startSplit()">
+        <div class="mc-icon">🃏</div>
+        <div class="mc-title">Split the deck</div>
+        <div class="mc-desc">Go through each card and mark it comfortable or uncomfortable. Then draw one from each pile — the way the cards are designed to be used.</div>
+      </div>
+
+      <div class="menu-card" onclick="startShuffle()">
+        <div class="mc-icon">🔀</div>
+        <div class="mc-title">Shuffle the deck</div>
+        <div class="mc-desc">Pick a card at random. Good for starting a coaching conversation or solo reflection when you want something unexpected.</div>
+      </div>
+
+      <div class="menu-card" onclick="startDaily()">
+        <div class="mc-icon">☀️</div>
+        <div class="mc-title">Once a day</div>
+        <div class="mc-desc">Work through the cards in order — one a day, 5 minutes. Keep your place and come back tomorrow.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       SCREEN 2 — SORT (phase 1 of Split the deck)
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="screen" id="screen-sort">
+    <button class="back-link" onclick="goMenu()">← Back to menu</button>
+
+    <div class="progress-row">
+      <div class="progress-label">
+        <span>Sorting cards</span>
+        <span id="sort-label">1 of 50</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="sort-bar" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div class="card-wrap">
+      <div class="card" id="card-sort">
+        <div class="card-top"><h2>Coaching Cards<br>for Every Day</h2></div>
+        <div class="card-body"><p id="sort-text"></p></div>
+        <div class="card-bottom"><svg class="sunrise" viewBox="0 0 52 36" fill="none"><line x1="26" y1="13" x2="26" y2="4" stroke="white" stroke-width="2.2" stroke-linecap="round"/><line x1="26" y1="13" x2="34" y2="6" stroke="white" stroke-width="2.2" stroke-linecap="round"/><line x1="26" y1="13" x2="37" y2="13" stroke="white" stroke-width="2.2" stroke-linecap="round"/><line x1="26" y1="13" x2="16" y2="6" stroke="white" stroke-width="2.2" stroke-linecap="round"/><line x1="26" y1="13" x2="15" y2="13" stroke="white" stroke-width="2.2" stroke-linecap="round"/><line x1="26" y1="13" x2="19" y2="20" stroke="white" stroke-width="2.2" stroke-linecap="round"/><line x1="26" y1="13" x2="33" y2="20" stroke="white" stroke-width="2.2" stroke-linecap="round"/><path d="M 9 28 A 17 17 0 0 1 43 28" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"/><line x1="4" y1="28" x2="48" y2="28" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.6"/></svg></div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-comfortable" onclick="sortCard('comfortable')">✓ Comfortable</button>
+      <button class="btn btn-uncomfortable" onclick="sortCard('uncomfortable')">✗ Uncomfortable</button>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost btn-sm" onclick="undoSort()" id="sort-undo" disabled>↩ Undo</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       SCREEN 3 — SORT RESULT (bridge between sort and draw)
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="screen" id="screen-sort-result">
+    <button class="back-link" onclick="goMenu()">← Back to menu</button>
+    <div class="sort-result">
+      <h3>Your deck is sorted</h3>
+      <div class="result-pills">
+        <div class="result-pill c" id="r-comfortable">– comfortable</div>
+        <div class="result-pill u" id="r-uncomfortable">– uncomfortable</div>
+      </div>
+      <p style="font-size:0.85rem;color:var(--text-mid);line-height:1.6">
+        Now draw one card from each pile. Start with whichever feels right — the comfortable card to ground you, or the uncomfortable card to stretch you.
+      </p>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-teal" onclick="startSplitDraw()">Start drawing →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       SCREEN 4 — SPLIT DRAW (phase 2 of Split the deck)
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="screen" id="screen-split-draw">
+    <button class="back-link" onclick="goMenu()">← Back to menu</button>
+
+    <div class="card-wrap">
+      <div class="card" id="card-draw">
+        <div class="card-top"><h2>Coaching Cards<br>for Every Day</h2></div>
+        <div class="card-body"><p id="draw-text">Tap a pile below to draw a card.</p></div>
+        <div class="card-bottom"><svg class="sunrise" viewBox="0 0 52 36" fill="none"><line x1="26" y1="13" x2="26" y2="4" stroke="white" stroke-width="2.2" stroke-linecap="round"/><line x1="26" y1="13" x2="34" y2="6" stroke="white" stroke-width="2.2" stroke-linecap="round"/><line x1="26" y1="13" x2="37" y2="13" stroke="white" stroke-width="2.2" stroke-linecap="round"/><line x1="26" y1="13" x2="16" y2="6" stroke="white" stroke-width="2.2" stroke-linecap="round"/><line x1="26" y1="13" x2="15" y2="13" stroke="white" stroke-width="2.2" stroke-linecap="round"/><line x1="26" y1="13" x2="19" y2="20" stroke="white" stroke-width="2.2" stroke-linecap="round"/><line x1="26" y1="13" x2="33" y2="20" stroke="white" stroke-width="2.2" stroke-linecap="round"/><path d="M 9 28 A 17 17 0 0 1 43 28" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"/><line x1="4" y1="28" x2="48" y2="28" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.6"/></svg></div>
+      </div>
+    </div>
+
+    <!-- Pool draw buttons -->
+    <div class="pool-row">
+      <button class="pool-pill c" id="pill-c" onclick="drawFromPool('comfortable')">
+        <span id="pill-c-count">–</span>
+        ✓ Comfortable
+      </button>
+      <button class="pool-pill u" id="pill-u" onclick="drawFromPool('uncomfortable')">
+        <span id="pill-u-count">–</span>
+        ✗ Uncomfortable
+      </button>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost btn-sm" onclick="goSortResult()">← Piles</button>
+      <button class="btn btn-ghost btn-sm" onclick="startSplit()">Sort again</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       SCREEN 5 — SHUFFLE
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="screen" id="screen-shuffle">
+    <button class="back-link" onclick="goMenu()">← Back to menu</button>
+
+    <div class="card-wrap">
+      <div class="card" id="card-shuffle">
+        <div class="card-top"><h2>Coaching Cards<br>for Every Day</h2></div>
+        <div class="card-body"><p id="shuffle-text"></p></div>
+        <div class="card-bottom"><svg class="sunrise" viewBox="0 0 52 36" fill="none"><line x1="26" y1="13" x2="26" y2="4" stroke="white" stroke-width="2.2" stroke-linecap="round"/><line x1="26" y1="13" x2="34" y2="6" stroke="white" stroke-width="2.2" stroke-linecap="round"/><line x1="26" y1="13" x2="37" y2="13" stroke="white" stroke-width="2.2" stroke-linecap="round"/><line x1="26" y1="13" x2="16" y2="6" stroke="white" stroke-width="2.2" stroke-linecap="round"/><line x1="26" y1="13" x2="15" y2="13" stroke="white" stroke-width="2.2" stroke-linecap="round"/><line x1="26" y1="13" x2="19" y2="20" stroke="white" stroke-width="2.2" stroke-linecap="round"/><line x1="26" y1="13" x2="33" y2="20" stroke="white" stroke-width="2.2" stroke-linecap="round"/><path d="M 9 28 A 17 17 0 0 1 43 28" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"/><line x1="4" y1="28" x2="48" y2="28" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.6"/></svg></div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-teal" onclick="drawRandom()">🔀 Draw another</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       SCREEN 6 — DAILY
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="screen" id="screen-daily">
+    <button class="back-link" onclick="goMenu()">← Back to menu</button>
+
+    <p class="daily-counter" id="daily-counter">Card 1 of 50</p>
+
+    <div class="card-wrap">
+      <div class="card" id="card-daily">
+        <div class="card-top"><h2>Coaching Cards<br>for Every Day</h2></div>
+        <div class="card-body"><p id="daily-text"></p></div>
+        <div class="card-bottom"><svg class="sunrise" viewBox="0 0 52 36" fill="none"><line x1="26" y1="13" x2="26" y2="4" stroke="white" stroke-width="2.2" stroke-linecap="round"/><line x1="26" y1="13" x2="34" y2="6" stroke="white" stroke-width="2.2" stroke-linecap="round"/><line x1="26" y1="13" x2="37" y2="13" stroke="white" stroke-width="2.2" stroke-linecap="round"/><line x1="26" y1="13" x2="16" y2="6" stroke="white" stroke-width="2.2" stroke-linecap="round"/><line x1="26" y1="13" x2="15" y2="13" stroke="white" stroke-width="2.2" stroke-linecap="round"/><line x1="26" y1="13" x2="19" y2="20" stroke="white" stroke-width="2.2" stroke-linecap="round"/><line x1="26" y1="13" x2="33" y2="20" stroke="white" stroke-width="2.2" stroke-linecap="round"/><path d="M 9 28 A 17 17 0 0 1 43 28" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"/><line x1="4" y1="28" x2="48" y2="28" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.6"/></svg></div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost" id="daily-prev" onclick="dailyNav(-1)">← Prev</button>
+      <button class="btn btn-teal"  id="daily-next" onclick="dailyNav(1)">Next →</button>
+    </div>
+  </div>
+
+  <footer>
+    Cards by <a href="https://barefootcoaching.co.uk" target="_blank" rel="noopener">Barefoot Coaching</a> · Kim Morgan<br>
+    Recreated digitally for personal use
+  </footer>
+
+  <script>
+    // ══════════════════════════════════════════════════════════════
+    // CARD DATA — edit prompts here
+    // ══════════════════════════════════════════════════════════════
+    const CARDS = [
+      "Describe where you are now in your life. Where do you want to be? How will you get there?",
+      "What is working well for you in your life?",
+      "What is your earliest memory? How has this influenced your life?",
+      "What obstacles are you facing? How could you overcome them?",
+      "Who are the most important people in your life and how do they support you?",
+      "Who or what drains your energy? What can you do about this?",
+      "Imagine you wake up tomorrow and a miracle has occurred\u2026 describe your day from the moment you open your eyes.",
+      "Where, when and with whom do you feel most comfortable?",
+      "In the unlikely event that you had to leave your house suddenly and could only save 3 things, what would you take with you?",
+      "If you are confused about a decision, ask yourself:\n\u201cIf I say yes to this, what am I saying no to?\u201d\n\u201cIf I say no to this, what am I saying yes to?\u201d",
+      "Think of something you are having difficulty moving forward. Imagine what you would tell someone else to do in the same circumstances.",
+      "If you could create a mission statement for your life, what would it be?",
+      "If your life were a book or a film, which one would it be?",
+      "Think about a difficulty you are facing now. Imagine looking back on it in a year\u2019s time and ask yourself how important it was.",
+      "What does \u201chappy\u201d mean to you?",
+      "Make a list of all the things you are grateful for in your life.",
+      "Think about something you want and ask yourself:\n\u201cWhat will having this give me that I don\u2019t already have?\u201d",
+      "Imagine a time in the future when you have succeeded in achieving one of your goals. Looking backwards, describe the steps you took which got you there.",
+      "What must you have in your life to make you feel complete, fulfilled and happy?",
+      "What 6 things do you still want to achieve in your life?",
+      "What things do you want to stop doing? What is getting in the way of you stopping?",
+      "What gives you the greatest sense of satisfaction in your life?",
+      "Write a letter to a good friend as if you were writing at a future point in your life. Write as if your life has turned out exactly how you wanted it and describe the things you are doing and how you got to be doing them.",
+      "If you won \u00a31 million and had to spend half on yourself and give half to a good cause, what would you choose to do in each case?",
+      "If you could choose anyone to mentor you, who would you choose? Fictional, historical, famous people or people in your life are all allowed.",
+      "What is important to you in your work?",
+      "What is important to you in your life?",
+      "Write a list of all the things you love doing. How often do you do them? How can you do them more often?",
+      "What are your top 5 experiences in life so far?",
+      "What qualities do you have which you value?",
+      "If you could give yourself a gift, what would it be?",
+      "If no-one was looking, who would you really be?",
+      "When you have faced challenges in the past how have you overcome them?",
+      "Write a letter to yourself listing all your dreams and goals. Ask a friend to post it to you in 3 months\u2019 time.",
+      "What 5 things are you most proud of?",
+      "What would you like people to say about you at the end of your life? How would you like to be remembered?",
+      "When did you last do something which scared you a bit?",
+      "Write down all the \u2018labels\u2019 which you have worn in your life. Celebrate the ones you want to keep. Cross out the ones which are not true or useful to you. Write some new, useful and positive labels about who you are today.",
+      "What are you assuming about yourself that is holding you back?",
+      "What are you like when you are at your best?",
+      "What 5 words would your best friend use to describe you?",
+      "What gives your life meaning? What gives you pleasure?",
+      "What \u2018failures\u2019 have you experienced in your life and what have you learned from them?",
+      "If you do not make any changes to your behaviours in the next 3 years, how do you feel about who you will be then?",
+      "How can you be as kind and forgiving to yourself as you are to others? What do you need to do differently?",
+      "What could you change to make your situation more positive?",
+      "If you were to go back in time, what advice would you give to your younger self?",
+      "What one thing can you say no to, which will improve your life?",
+      "What is the best thing that could happen to you in the next year?",
+      "Consider what inspires you \u2013 what has inspired you today, this week, this month or this year? What or who assists this inspiration? What or who does not assist this inspiration?"
+    ];
+
+    // ══════════════════════════════════════════════════════════════
+    // STATE
+    // ══════════════════════════════════════════════════════════════
+    let sortIndex     = 0;
+    let comfortable   = [];   // card indices
+    let uncomfortable = [];   // card indices
+    let sortHistory   = [];   // for undo: array of 'comfortable'|'uncomfortable'
+
+    let drawPool = { comfortable: [], uncomfortable: [] };
+
+    let dailyIndex    = 0;
+
+    let animating     = false;
+
+    // ══════════════════════════════════════════════════════════════
+    // SCREEN ROUTING
+    // ══════════════════════════════════════════════════════════════
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function goMenu() { showScreen('screen-menu'); }
+
+    // ══════════════════════════════════════════════════════════════
+    // ANIMATION HELPER
+    // ══════════════════════════════════════════════════════════════
+    function flipCard(cardEl, newText, cb) {
+      if (animating) return;
+      animating = true;
+      cardEl.classList.add('flip');
+      setTimeout(() => {
+        cardEl.querySelector('p').innerHTML = newText.replace(/\n/g, '<br>');
+        if (cb) cb();
+        cardEl.classList.remove('flip');
+        animating = false;
+      }, 220);
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // MODE 1 — SPLIT THE DECK: SORT PHASE
+    // ══════════════════════════════════════════════════════════════
+    function startSplit() {
+      sortIndex     = 0;
+      comfortable   = [];
+      uncomfortable = [];
+      sortHistory   = [];
+      showScreen('screen-sort');
+      renderSort();
+    }
+
+    function renderSort() {
+      const total = CARDS.length;
+      const pct   = (sortIndex / total) * 100;
+      document.getElementById('sort-label').textContent = `${sortIndex + 1} of ${total}`;
+      document.getElementById('sort-bar').style.width   = pct + '%';
+      document.getElementById('sort-text').innerHTML    = CARDS[sortIndex].replace(/\n/g, '<br>');
+      document.getElementById('sort-undo').disabled     = sortHistory.length === 0;
+    }
+
+    function sortCard(pile) {
+      if (animating) return;
+      if (pile === 'comfortable')   comfortable.push(sortIndex);
+      else                          uncomfortable.push(sortIndex);
+      sortHistory.push(pile);
+      sortIndex++;
+
+      if (sortIndex >= CARDS.length) {
+        // Done sorting
+        showSortResult();
+        return;
+      }
+
+      const cardEl = document.getElementById('card-sort');
+      flipCard(cardEl, CARDS[sortIndex], renderSort);
+      // renderSort called inside flipCard callback — but we need immediate label update
+      document.getElementById('sort-label').textContent = `${sortIndex + 1} of ${CARDS.length}`;
+      document.getElementById('sort-bar').style.width   = ((sortIndex / CARDS.length) * 100) + '%';
+      document.getElementById('sort-undo').disabled     = false;
+    }
+
+    function undoSort() {
+      if (sortHistory.length === 0 || animating) return;
+      const lastPile = sortHistory.pop();
+      sortIndex--;
+      if (lastPile === 'comfortable') comfortable.pop();
+      else                            uncomfortable.pop();
+
+      const cardEl = document.getElementById('card-sort');
+      flipCard(cardEl, CARDS[sortIndex], renderSort);
+      document.getElementById('sort-label').textContent = `${sortIndex + 1} of ${CARDS.length}`;
+      document.getElementById('sort-bar').style.width   = ((sortIndex / CARDS.length) * 100) + '%';
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // MODE 1 — SPLIT RESULT
+    // ══════════════════════════════════════════════════════════════
+    function showSortResult() {
+      document.getElementById('r-comfortable').textContent   = `${comfortable.length} comfortable`;
+      document.getElementById('r-uncomfortable').textContent = `${uncomfortable.length} uncomfortable`;
+      showScreen('screen-sort-result');
+    }
+
+    function goSortResult() { showScreen('screen-sort-result'); }
+
+    // ══════════════════════════════════════════════════════════════
+    // MODE 1 — SPLIT DRAW PHASE
+    // ══════════════════════════════════════════════════════════════
+    function startSplitDraw() {
+      // Shuffle both pools
+      drawPool.comfortable   = shuffle([...comfortable]);
+      drawPool.uncomfortable = shuffle([...uncomfortable]);
+      showScreen('screen-split-draw');
+      updatePillCounts();
+      document.getElementById('draw-text').innerHTML = 'Tap a pile below to draw a card.';
+    }
+
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function drawFromPool(pile) {
+      if (animating) return;
+      const pool = drawPool[pile];
+      if (pool.length === 0) return;
+      const idx  = pool.pop();
+      const cardEl = document.getElementById('card-draw');
+      flipCard(cardEl, CARDS[idx], () => { updatePillCounts(); });
+    }
+
+    function updatePillCounts() {
+      const cCount = drawPool.comfortable.length;
+      const uCount = drawPool.uncomfortable.length;
+      document.getElementById('pill-c-count').textContent = cCount;
+      document.getElementById('pill-u-count').textContent = uCount;
+      document.getElementById('pill-c').disabled = cCount === 0;
+      document.getElementById('pill-u').disabled = uCount === 0;
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // MODE 2 — SHUFFLE
+    // ══════════════════════════════════════════════════════════════
+    function startShuffle() {
+      showScreen('screen-shuffle');
+      drawRandom();
+    }
+
+    function drawRandom() {
+      const idx    = Math.floor(Math.random() * CARDS.length);
+      const cardEl = document.getElementById('card-shuffle');
+      flipCard(cardEl, CARDS[idx]);
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // MODE 3 — DAILY
+    // ══════════════════════════════════════════════════════════════
+    function startDaily() {
+      showScreen('screen-daily');
+      renderDaily();
+    }
+
+    function renderDaily() {
+      document.getElementById('daily-text').innerHTML     = CARDS[dailyIndex].replace(/\n/g, '<br>');
+      document.getElementById('daily-counter').textContent = `Card ${dailyIndex + 1} of ${CARDS.length}`;
+      document.getElementById('daily-prev').disabled      = dailyIndex === 0;
+      document.getElementById('daily-next').disabled      = dailyIndex === CARDS.length - 1;
+    }
+
+    function dailyNav(dir) {
+      if (animating) return;
+      const next = dailyIndex + dir;
+      if (next < 0 || next >= CARDS.length) return;
+      const cardEl = document.getElementById('card-daily');
+      cardEl.classList.add('flip');
+      setTimeout(() => {
+        dailyIndex = next;
+        renderDaily();
+        cardEl.classList.remove('flip');
+      }, 220);
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // KEYBOARD SHORTCUTS
+    // ══════════════════════════════════════════════════════════════
+    document.addEventListener('keydown', e => {
+      const active = document.querySelector('.screen.active')?.id;
+      if (active === 'screen-sort') {
+        if (e.key === 'ArrowRight' || e.key === 'c') sortCard('comfortable');
+        if (e.key === 'ArrowLeft'  || e.key === 'u') sortCard('uncomfortable');
+        if (e.key === 'z') undoSort();
+      }
+      if (active === 'screen-split-draw') {
+        if (e.key === 'c') drawFromPool('comfortable');
+        if (e.key === 'u') drawFromPool('uncomfortable');
+      }
+      if (active === 'screen-shuffle') {
+        if (e.key === ' ' || e.key === 'Enter') drawRandom();
+      }
+      if (active === 'screen-daily') {
+        if (e.key === 'ArrowRight') dailyNav(1);
+        if (e.key === 'ArrowLeft')  dailyNav(-1);
+      }
+    });
+  </script>
+</body>
+</html>

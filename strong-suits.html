@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strong Suits</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    :root {
+      --diamond: #d97c85;
+      --spade: #62656d;
+      --heart: #db7b93;
+      --club: #6ca38e;
+      --ink: #2b2730;
+      --muted: #716a75;
+      --paper: #f7f1ea;
+      --panel: rgba(255,255,255,0.86);
+      --border: rgba(52, 44, 54, 0.12);
+      --shadow: rgba(31, 21, 34, 0.14);
+      --white: #fff;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top, rgba(255,255,255,0.94), rgba(255,255,255,0) 30%),
+        linear-gradient(180deg, #eff6f5 0%, #f7f2eb 44%, #efe5dc 100%);
+      padding: 66px 16px 40px;
+    }
+    /* ── top nav ── */
+    .top-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 900;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      background: rgba(255, 252, 248, 0.82);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(0,0,0,0.07);
+    }
+    .nav-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: inherit;
+      text-decoration: none;
+      opacity: 0.5;
+      transition: opacity 0.15s;
+    }
+    .nav-back:hover { opacity: 1; }
+
+    .app { max-width: 1180px; margin: 0 auto; }
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      box-shadow: 0 14px 34px var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.78);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.76rem;
+      font-weight: 800;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 5vw, 3.8rem);
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .sub {
+      max-width: 760px;
+      margin: 10px auto 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 1rem;
+    }
+
+    h2 { margin: 0 0 10px; font-size: 1.15rem; }
+    p { margin: 0; color: var(--muted); line-height: 1.6; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 18px;
+    }
+
+    .hero, .rules, .main, .aside, .browse-panel { padding: 22px; }
+
+    .actions, .filter-row, .card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .actions { margin-top: 16px; }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.1s ease, opacity 0.14s ease, box-shadow 0.14s ease;
+      box-shadow: 0 8px 20px rgba(33, 23, 40, 0.12);
+    }
+
+    .btn:active { transform: scale(0.98); }
+    .btn-secondary { background: rgba(255,255,255,0.92); color: var(--ink); border: 1px solid var(--border); }
+    .btn-primary { background: linear-gradient(135deg, #63aa95, #d97c85); color: var(--white); }
+    .btn-diamond { background: var(--diamond); color: var(--white); }
+    .btn-spade { background: var(--spade); color: var(--white); }
+    .btn-heart { background: var(--heart); color: var(--white); }
+    .btn-club { background: var(--club); color: var(--white); }
+
+    .back-link {
+      border: none;
+      background: none;
+      padding: 0;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .suit-grid, .menu-grid, .hand-grid, .browse-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .menu-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-top: 14px; }
+    .suit-grid { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); margin-top: 14px; }
+    .hand-grid { grid-template-columns: repeat(auto-fit, minmax(185px, 1fr)); }
+    .browse-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+    .hand-grid .playing-card {
+      min-height: 200px;
+      padding: 22px 16px 16px;
+      cursor: pointer;
+      font-size: 0.76em;
+    }
+    .hand-grid .playing-card:hover { transform: translateY(-2px); }
+    .hand-grid .corner-top { top: 12px; left: 12px; }
+    .hand-grid .corner-bottom { right: 12px; bottom: 12px; }
+    .playing-card.selected {
+      box-shadow: 0 0 0 3px rgba(108,163,142,0.45), 0 14px 28px rgba(33,23,40,0.14);
+      border-color: rgba(108,163,142,0.45);
+    }
+
+    .menu-card, .suit-card, .mini-card {
+      border-radius: 22px;
+      background: rgba(255,255,255,0.86);
+      border: 1px solid var(--border);
+      padding: 18px;
+      box-shadow: 0 10px 24px rgba(33, 23, 40, 0.08);
+    }
+
+    .menu-card h3, .suit-card h3 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+    }
+
+    .menu-card p, .suit-card p { font-size: 0.94rem; }
+
+    .playing-card {
+      position: relative;
+      min-height: 420px;
+      border-radius: 28px;
+      background: var(--white);
+      border: 2px solid rgba(0,0,0,0.05);
+      box-shadow: 0 14px 28px rgba(33, 23, 40, 0.12);
+      padding: 32px 30px 26px;
+      overflow: hidden;
+    }
+    .suit-diamonds {
+      background:
+        radial-gradient(circle at 16% 14%, rgba(217,124,133,0.42) 0 26px, transparent 27px),
+        radial-gradient(circle at 81% 21%, rgba(247,175,165,0.3) 0 20px, transparent 21px),
+        radial-gradient(circle at 21% 82%, rgba(251,195,180,0.46) 0 28px, transparent 29px),
+        radial-gradient(circle at 81% 80%, rgba(220,145,135,0.32) 0 24px, transparent 25px),
+        var(--white);
+    }
+    .suit-spades {
+      background:
+        radial-gradient(circle at 16% 14%, rgba(98,101,130,0.24) 0 26px, transparent 27px),
+        radial-gradient(circle at 81% 21%, rgba(140,155,190,0.22) 0 20px, transparent 21px),
+        radial-gradient(circle at 21% 82%, rgba(120,135,172,0.28) 0 28px, transparent 29px),
+        radial-gradient(circle at 81% 80%, rgba(90,100,132,0.22) 0 24px, transparent 25px),
+        var(--white);
+    }
+    .suit-hearts {
+      background:
+        radial-gradient(circle at 16% 14%, rgba(219,123,147,0.4) 0 26px, transparent 27px),
+        radial-gradient(circle at 81% 21%, rgba(247,185,200,0.32) 0 20px, transparent 21px),
+        radial-gradient(circle at 21% 82%, rgba(255,198,212,0.44) 0 28px, transparent 29px),
+        radial-gradient(circle at 81% 80%, rgba(232,150,170,0.3) 0 24px, transparent 25px),
+        var(--white);
+    }
+    .suit-clubs {
+      background:
+        radial-gradient(circle at 16% 14%, rgba(108,163,142,0.38) 0 26px, transparent 27px),
+        radial-gradient(circle at 81% 21%, rgba(158,208,183,0.28) 0 20px, transparent 21px),
+        radial-gradient(circle at 21% 82%, rgba(188,224,203,0.42) 0 28px, transparent 29px),
+        radial-gradient(circle at 81% 80%, rgba(128,178,158,0.3) 0 24px, transparent 25px),
+        var(--white);
+    }
+    .card-accent {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 5px;
+      background: currentColor;
+      border-radius: 28px 28px 0 0;
+      opacity: 0.6;
+    }
+    .card-suit-name {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-weight: 700;
+      opacity: 0.65;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    .card-lead-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .shadow-section {
+      border-top: 1px solid rgba(35,31,39,0.08);
+      padding-top: 12px;
+      margin-top: 8px;
+    }
+    .shadow-eyebrow {
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      font-weight: 700;
+      margin-bottom: 4px;
+      opacity: 0.65;
+    }
+
+    .playing-card::before {
+      content: "";
+      position: absolute;
+      inset: 14px;
+      border-radius: 22px;
+      border: 1px solid rgba(35, 31, 39, 0.12);
+      pointer-events: none;
+    }
+
+    .corner {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      font-weight: 800;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+
+    .corner small { font-size: 1.05rem; }
+    .corner-top { top: 24px; left: 24px; }
+    .corner-bottom {
+      right: 24px;
+      bottom: 24px;
+      transform: rotate(180deg);
+    }
+
+    .card-body {
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: center;
+      gap: 18px;
+    }
+
+    .trait {
+      margin-top: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      font-weight: 800;
+      font-size: 1.28rem;
+    }
+
+    .lead, .shadow {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.2rem, 3.2vw, 1.7rem);
+      line-height: 1.35;
+      text-wrap: balance;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    .shadow {
+      font-size: clamp(1.08rem, 2.8vw, 1.42rem);
+      color: var(--muted);
+    }
+
+    .divider {
+      width: 100%;
+      max-width: 180px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      opacity: 0.8;
+    }
+
+    .divider::before, .divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: currentColor;
+    }
+
+    .mini-card {
+      cursor: pointer;
+      transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+    }
+
+    .mini-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(35,31,39,0.2);
+      box-shadow: 0 16px 26px rgba(33, 23, 40, 0.12);
+    }
+
+    .mini-card.selected {
+      border-color: rgba(35,31,39,0.26);
+      box-shadow: 0 0 0 3px rgba(108,163,142,0.25), 0 16px 26px rgba(33, 23, 40, 0.12);
+    }
+
+    .mini-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    .mini-trait {
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.84rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+      font-weight: 800;
+    }
+
+    .mini-card p {
+      color: var(--ink);
+      font-size: 0.95rem;
+    }
+
+    .note-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .note {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.74);
+      border: 1px solid var(--border);
+    }
+
+    .counter {
+      font-size: 0.86rem;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .status {
+      margin-top: 10px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.76);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.74);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 26px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.7;
+    }
+
+    a { color: inherit; }
+
+    .hand-display {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+      margin-top: 16px;
+    }
+    .hand-display .playing-card {
+      flex: 0 0 190px;
+      min-height: 300px;
+      font-size: 0.85em;
+    }
+    .review-analysis { margin-top: 22px; }
+    .review-panel { padding: 22px; }
+
+    @media (max-width: 940px) {
+      .grid { grid-template-columns: 1fr; }
+      .playing-card { min-height: 360px; padding: 22px 24px; }
+      .hand-display .playing-card { flex: 0 0 160px; min-height: 260px; }
+    }
+  </style>
+  <link rel="manifest" href="manifest.json">
+  <script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');</script>
+</head>
+<body>
+  <nav class="top-nav" aria-label="Site navigation">
+    <a href="index.html" class="nav-back">← All card sets</a>
+  </nav>
+  <div class="app">
+    <header>
+      <div class="eyebrow">StrongSuits · Team Insights Pack</div>
+      <h1>Strong Suits</h1>
+      <p class="sub">A simple reflection version of Strong Suits for self-coaching, 1:1 coaching, or team discussion. Pick a mode below, read each card’s strength statement first, then use the lower statement as the possible overuse or shadow side.</p>
+    </header>
+
+    <section class="screen active" id="screen-menu">
+      <div class="grid">
+        <div class="panel hero">
+          <h2>Start here</h2>
+          <p>This version is not a multiplayer game. It works best as a solo reflection tool or as something a coach, facilitator, or team lead can use to prompt conversation. Choose one of the three ways in below.</p>
+          <div class="menu-grid">
+            <button class="menu-card btn-secondary" data-open="hand" type="button">
+              <h3>Start with 5 cards</h3>
+              <p>Choose five cards that feel most like you at your best, then review which suits dominate your hand.</p>
+            </button>
+            <button class="menu-card btn-secondary" data-open="draw" type="button">
+              <h3>Use one random card</h3>
+              <p>Draw one card for a quick check-in and reflect on the strength it shows and the stretch point underneath it.</p>
+            </button>
+            <button class="menu-card btn-secondary" data-open="browse" type="button">
+              <h3>Browse the visible deck</h3>
+              <p>Look through the cards by suit if you want to talk through options before choosing one or building a hand.</p>
+            </button>
+          </div>
+          <div class="status">Best starting point: choose <strong>Start with 5 cards</strong> if you want the closest thing to a full reflection exercise.</div>
+        </div>
+        <div class="panel rules">
+          <h2>What the suits mean</h2>
+          <div class="suit-grid">
+            <div class="suit-card">
+              <h3 style="color: var(--diamond);">♦ Standards</h3>
+              <p>Reliable, objective, thorough.</p>
+            </div>
+            <div class="suit-card">
+              <h3 style="color: var(--spade);">♠ Drive</h3>
+              <p>Determined, driven, assertive.</p>
+            </div>
+            <div class="suit-card">
+              <h3 style="color: var(--heart);">♥ Passion</h3>
+              <p>Energetic, enthusiastic, persuasive.</p>
+            </div>
+            <div class="suit-card">
+              <h3 style="color: var(--club);">♣ Relationships</h3>
+              <p>Patient, agreeable, diplomatic.</p>
+            </div>
+          </div>
+          <div class="note-list">
+            <div class="note">
+              <strong>How to read a card</strong>
+              <p>Read the top statement as the strength you bring when you are using it well. Then read the lower statement as the possible overuse, blind spot, or shadow side of that same strength.</p>
+            </div>
+            <div class="note">
+              <strong>What is in this version</strong>
+              <p>This build includes the Strong Suits cards that were readable in the supplied photographs, so you can use the visible sample deck now while the rest waits to be transcribed.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-hand">
+      <div class="panel main">
+        <button class="back-link" data-back type="button">← Back to menu</button>
+        <h2>Your Winning Hand</h2>
+        <p>Choose five cards that feel most like your strengths at their best. Once your hand is complete, review which suit shows up most strongly and which suit is missing.</p>
+        <div class="chip-row">
+          <span class="chip" id="hand-count">0 / 5 selected</span>
+          <span class="chip" id="hand-summary">No suit pattern yet</span>
+        </div>
+        <div class="hand-grid" id="hand-grid"></div>
+        <div class="card-actions" style="margin-top: 18px;">
+          <button class="btn btn-primary" id="review-hand-btn" type="button" disabled>Review my hand</button>
+          <button class="btn btn-secondary" id="clear-hand-btn" type="button">Clear hand</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-review">
+      <div class="panel review-panel">
+        <button class="back-link" data-open="hand" type="button">← Back to hand</button>
+        <h2>Your hand</h2>
+        <div class="hand-display" id="review-cards"></div>
+        <div class="review-analysis">
+          <h2>What your hand suggests</h2>
+          <div class="note-list" id="review-notes"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-draw">
+      <div class="grid">
+        <div class="panel main">
+          <button class="back-link" data-back type="button">← Back to menu</button>
+          <h2>Draw a card</h2>
+          <p>Use this for a quick reflection. Ask yourself: When is this strength helping me most? When does its shadow begin to show up?</p>
+          <div id="draw-card"></div>
+          <div class="card-actions" style="margin-top: 18px;">
+            <button class="btn btn-primary" id="draw-next-btn" type="button">Draw another card</button>
+          </div>
+        </div>
+        <div class="panel aside">
+          <h2>Prompts</h2>
+          <div class="note-list">
+            <div class="note">Where does this strength show up naturally for me?</div>
+            <div class="note">What do other people probably appreciate when I use it well?</div>
+            <div class="note">What would the overdone version of this strength look like this week?</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-browse">
+      <div class="grid">
+        <div class="panel browse-panel">
+          <button class="back-link" data-back type="button">← Back to menu</button>
+          <h2>Browse by suit</h2>
+          <div class="filter-row" style="margin-top: 14px;">
+            <button class="btn btn-secondary" data-filter="all" type="button">All visible cards</button>
+            <button class="btn btn-diamond" data-filter="diamonds" type="button">♦ Standards</button>
+            <button class="btn btn-spade" data-filter="spades" type="button">♠ Drive</button>
+            <button class="btn btn-heart" data-filter="hearts" type="button">♥ Passion</button>
+            <button class="btn btn-club" data-filter="clubs" type="button">♣ Relationships</button>
+          </div>
+          <div class="chip-row">
+            <span class="chip" id="browse-count"></span>
+            <span class="chip" id="browse-filter-label"></span>
+          </div>
+          <div class="browse-grid" id="browse-grid" style="margin-top: 16px;"></div>
+        </div>
+        <div class="panel aside">
+          <h2>Selected card</h2>
+          <div id="browse-card"></div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      StrongSuits by <a href="https://www.strongsuits.com">strongsuits.com</a><br>
+      Team Insights Pack photographed edition based on visible cards and pack text from the supplied images.<br>
+      <!-- [NEEDS REVIEW — IMG_4476, IMG_4483, IMG_4488, IMG_4489] Only a partial sample of cards was visible clearly in the source photos, so this file includes the readable cards and leaves the rest for later transcription. -->
+    </footer>
+  </div>
+
+  <script>
+    const CARDS = [
+      {
+        rank: "5",
+        suit: "clubs",
+        symbol: "♣",
+        trait: "Agreeability",
+        lead: "I am flexible in meeting people halfway",
+        shadow: "I mustn't create any conflict"
+      },
+      {
+        rank: "9",
+        suit: "clubs",
+        symbol: "♣",
+        trait: "Collaboration",
+        lead: "I enjoy being part of a harmonious team",
+        shadow: "It's difficult to work on my own"
+      },
+      {
+        rank: "A",
+        suit: "spades",
+        symbol: "♠",
+        trait: "Vision",
+        lead: "I have a vision of where we're heading",
+        shadow: "I find it difficult to appreciate the way things are now"
+      },
+      {
+        rank: "J",
+        suit: "hearts",
+        symbol: "♥",
+        trait: "Instinct",
+        lead: "I follow my instincts and gut feelings",
+        shadow: "I don't like to be constrained by plans"
+      },
+      {
+        rank: "2",
+        suit: "diamonds",
+        symbol: "♦",
+        trait: "Objectivity",
+        lead: "I can evaluate any situation or person objectively",
+        shadow: "Sometimes I can come across as unfeeling or detached"
+      },
+      {
+        rank: "5",
+        suit: "hearts",
+        symbol: "♥",
+        trait: "Communication",
+        lead: "I like to talk and keep people up to date",
+        shadow: "I sometimes talk when I need to get into action"
+      },
+      {
+        rank: "6",
+        suit: "diamonds",
+        symbol: "♦",
+        trait: "Caution",
+        lead: "I make sure nothing goes wrong and can often see the flaws in people's plans and ideas",
+        shadow: "I can be seen as too risk averse"
+      },
+      {
+        rank: "A",
+        suit: "clubs",
+        symbol: "♣",
+        trait: "Steadiness",
+        lead: "Once I know what I'm doing I just get on with it",
+        shadow: "It is difficult to adapt to change"
+      },
+      {
+        rank: "K",
+        suit: "spades",
+        symbol: "♠",
+        trait: "Outcome-Focus",
+        lead: "I put getting the job done first",
+        shadow: "I sometimes ask too much of people"
+      },
+      {
+        rank: "A",
+        suit: "hearts",
+        symbol: "♥",
+        trait: "Responsiveness",
+        lead: "I am responsive to the immediate needs of people around me",
+        shadow: "Responding to people sometimes stops me doing what I planned"
+      },
+      {
+        rank: "7",
+        suit: "hearts",
+        symbol: "♥",
+        trait: "Passion",
+        lead: "I create a positive and enjoyable atmosphere where people enjoy what they do",
+        shadow: "I can come across as being frivolous"
+      },
+      {
+        rank: "A",
+        suit: "diamonds",
+        symbol: "♦",
+        trait: "Reliability",
+        lead: "I do what I say I will do",
+        shadow: "Doing what I've said I'll do sometimes stops me responding to the people around me"
+      },
+      {
+        rank: "8",
+        suit: "clubs",
+        symbol: "♣",
+        trait: "Sensitivity",
+        lead: "I am sensitive to how people feel",
+        shadow: "I can seem over-sensitive to others"
+      },
+      {
+        rank: "8",
+        suit: "diamonds",
+        symbol: "♦",
+        trait: "Questioning",
+        lead: "I like to question things and test ideas before accepting them",
+        shadow: "I get worried if there are details I don't fully understand"
+      },
+      {
+        rank: "3",
+        suit: "diamonds",
+        symbol: "♦",
+        trait: "Thoroughness",
+        lead: "I make sure work is complete and nothing important has been missed",
+        shadow: "I can slow things down by wanting to cover every detail before moving on"
+      },
+      {
+        rank: "4",
+        suit: "diamonds",
+        symbol: "♦",
+        trait: "Accuracy",
+        lead: "I check that information is correct before acting or sharing it",
+        shadow: "I feel uncomfortable committing to something I cannot fully verify"
+      },
+      {
+        rank: "5",
+        suit: "diamonds",
+        symbol: "♦",
+        trait: "Planning",
+        lead: "I think ahead and create clear structures that help teams get things done",
+        shadow: "I can over-engineer a plan when a simpler approach would work just as well"
+      },
+      {
+        rank: "7",
+        suit: "diamonds",
+        symbol: "♦",
+        trait: "Consistency",
+        lead: "I apply the same standards whether or not anyone is watching",
+        shadow: "I find it hard to flex when circumstances genuinely call for a different approach"
+      },
+      {
+        rank: "9",
+        suit: "diamonds",
+        symbol: "♦",
+        trait: "Analysis",
+        lead: "I examine problems carefully and build well-reasoned conclusions",
+        shadow: "I sometimes delay action while I continue looking for more information"
+      },
+      {
+        rank: "J",
+        suit: "diamonds",
+        symbol: "♦",
+        trait: "Precision",
+        lead: "I express ideas with care so that meaning is clear and exact",
+        shadow: "I can frustrate people who want the headlines by giving them too much detail"
+      },
+      {
+        rank: "2",
+        suit: "spades",
+        symbol: "♠",
+        trait: "Initiative",
+        lead: "I spot opportunities and act on them without waiting to be asked",
+        shadow: "I sometimes move so quickly that others feel left behind or not consulted"
+      },
+      {
+        rank: "3",
+        suit: "spades",
+        symbol: "♠",
+        trait: "Ambition",
+        lead: "I set challenging goals for myself and work hard to reach them",
+        shadow: "I can come across as never being satisfied with what has already been achieved"
+      },
+      {
+        rank: "4",
+        suit: "spades",
+        symbol: "♠",
+        trait: "Resilience",
+        lead: "I recover from setbacks quickly and help others find their footing again",
+        shadow: "I can underestimate how much others need time to process before they are ready to move on"
+      },
+      {
+        rank: "5",
+        suit: "spades",
+        symbol: "♠",
+        trait: "Decisiveness",
+        lead: "I can read a situation and commit to a direction even under pressure",
+        shadow: "I sometimes make calls before the people who need to act on them have had time to think"
+      },
+      {
+        rank: "6",
+        suit: "spades",
+        symbol: "♠",
+        trait: "Confidence",
+        lead: "I back myself and the team even when the situation is uncertain",
+        shadow: "My confidence can read as arrogance to people who have not yet been brought along"
+      },
+      {
+        rank: "7",
+        suit: "spades",
+        symbol: "♠",
+        trait: "Focus",
+        lead: "I keep my attention on what matters most and help others stay on track",
+        shadow: "I can miss important signals from people or the wider context when I am locked in on a goal"
+      },
+      {
+        rank: "8",
+        suit: "spades",
+        symbol: "♠",
+        trait: "Courage",
+        lead: "I will raise difficult issues and challenge the status quo when I believe it matters",
+        shadow: "I sometimes push into conflict when a quieter approach would have been more effective"
+      },
+      {
+        rank: "J",
+        suit: "spades",
+        symbol: "♠",
+        trait: "Independence",
+        lead: "I work well without close supervision and take full responsibility for my results",
+        shadow: "I can find it hard to ask for help even when I genuinely need it"
+      },
+      {
+        rank: "2",
+        suit: "hearts",
+        symbol: "♥",
+        trait: "Enthusiasm",
+        lead: "I bring energy and a sense of possibility to the things I care about",
+        shadow: "My enthusiasm can overwhelm people who need more space to think"
+      },
+      {
+        rank: "3",
+        suit: "hearts",
+        symbol: "♥",
+        trait: "Optimism",
+        lead: "I look for what is possible even in difficult situations",
+        shadow: "I sometimes underestimate real obstacles by focusing too hard on the upside"
+      },
+      {
+        rank: "4",
+        suit: "hearts",
+        symbol: "♥",
+        trait: "Creativity",
+        lead: "I make unusual connections and find fresh angles on familiar problems",
+        shadow: "I can generate so many ideas that nothing gets properly finished"
+      },
+      {
+        rank: "6",
+        suit: "hearts",
+        symbol: "♥",
+        trait: "Adaptability",
+        lead: "I adjust quickly when things change and help others see the opportunity in it",
+        shadow: "I can be seen as inconsistent when I change direction before others are ready"
+      },
+      {
+        rank: "8",
+        suit: "hearts",
+        symbol: "♥",
+        trait: "Inspiration",
+        lead: "I help people see a bigger picture and feel part of something meaningful",
+        shadow: "I sometimes pitch the vision before the groundwork is ready to support it"
+      },
+      {
+        rank: "9",
+        suit: "hearts",
+        symbol: "♥",
+        trait: "Persuasion",
+        lead: "I bring people with me by helping them see the merit in ideas they had not yet considered",
+        shadow: "I can come across as pushing my agenda when others have not yet reached the same place"
+      },
+      {
+        rank: "2",
+        suit: "clubs",
+        symbol: "♣",
+        trait: "Empathy",
+        lead: "I sense how others feel and adjust my response to what they actually need",
+        shadow: "I can absorb other people's emotions and carry them as my own"
+      },
+      {
+        rank: "3",
+        suit: "clubs",
+        symbol: "♣",
+        trait: "Listening",
+        lead: "I give people my full attention and make them feel genuinely heard",
+        shadow: "I sometimes find it hard to move a conversation forward when someone needs direction"
+      },
+      {
+        rank: "4",
+        suit: "clubs",
+        symbol: "♣",
+        trait: "Diplomacy",
+        lead: "I find ways to say difficult things that people can actually receive",
+        shadow: "I sometimes soften a message so much that the important part gets lost"
+      },
+      {
+        rank: "6",
+        suit: "clubs",
+        symbol: "♣",
+        trait: "Loyalty",
+        lead: "I stand by the people and teams I work with, especially in difficult times",
+        shadow: "I sometimes defend people or positions that I should let go of"
+      },
+      {
+        rank: "7",
+        suit: "clubs",
+        symbol: "♣",
+        trait: "Inclusion",
+        lead: "I notice who is on the edges and bring them into the conversation",
+        shadow: "I can slow decisions down by making sure everyone feels included before we move"
+      },
+      {
+        rank: "J",
+        suit: "clubs",
+        symbol: "♣",
+        trait: "Nurturing",
+        lead: "I invest time and encouragement in helping others grow",
+        shadow: "I can create dependency in others rather than building their confidence to work alone"
+      }
+    ];
+
+    const SUITS = {
+      diamonds: { label: "Standards", color: "#d97c85", meaning: "reliable, objective, thorough" },
+      spades: { label: "Drive", color: "#62656d", meaning: "determined, driven, assertive" },
+      hearts: { label: "Passion", color: "#db7b93", meaning: "energetic, enthusiastic, persuasive" },
+      clubs: { label: "Relationships", color: "#6ca38e", meaning: "patient, agreeable, diplomatic" }
+    };
+
+    let selectedIds = [];
+    let currentCard = CARDS[0];
+    let browseFilter = "all";
+    let browseCard = CARDS[0];
+
+    function showScreen(id) {
+      document.querySelectorAll(".screen").forEach((screen) => {
+        screen.classList.toggle("active", screen.id === id);
+      });
+      if (id === "screen-hand") renderHand();
+      if (id === "screen-review") renderReview();
+      if (id === "screen-draw") renderDraw();
+      if (id === "screen-browse") renderBrowse();
+    }
+
+    function cardColor(card) {
+      return SUITS[card.suit].color;
+    }
+
+    function renderPlayingCard(card) {
+      const color = cardColor(card);
+      return `
+        <div class="playing-card suit-${card.suit}" style="color: ${color};">
+          <div class="card-accent"></div>
+          <div class="corner corner-top">${card.rank}<small>${card.symbol}</small></div>
+          <div class="corner corner-bottom">${card.rank}<small>${card.symbol}</small></div>
+          <div class="card-body">
+            <div class="card-lead-section">
+              <div class="card-suit-name">${SUITS[card.suit].label}</div>
+              <div class="lead">${card.lead}</div>
+              <div class="divider">${card.symbol}</div>
+              <div class="trait">${card.trait}</div>
+            </div>
+            <div class="shadow-section">
+              <div class="shadow-eyebrow">Watch for</div>
+              <div class="shadow">${card.shadow}</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderHandCard(card, selected) {
+      const color = cardColor(card);
+      return `
+        <div class="playing-card suit-${card.suit} ${selected ? 'selected' : ''}"
+             style="color: ${color};" data-card="${card.trait}">
+          <div class="card-accent"></div>
+          <div class="corner corner-top">${card.rank}<small>${card.symbol}</small></div>
+          <div class="corner corner-bottom">${card.rank}<small>${card.symbol}</small></div>
+          <div class="card-body">
+            <div class="card-lead-section">
+              <div class="card-suit-name">${SUITS[card.suit].label}</div>
+              <div class="lead">${card.lead}</div>
+              <div class="divider">${card.symbol}</div>
+              <div class="trait">${card.trait}</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderMiniCard(card, selected) {
+      const suit = SUITS[card.suit];
+      return `
+        <button class="mini-card ${selected ? "selected" : ""}" data-card="${card.trait}" type="button">
+          <div class="mini-head" style="color: ${suit.color};">
+            <span>${card.rank}${card.symbol}</span>
+            <span>${suit.label}</span>
+          </div>
+          <div class="mini-trait">${card.trait}</div>
+          <p>${card.lead}</p>
+        </button>
+      `;
+    }
+
+    function handSummary(cards) {
+      if (!cards.length) return "No suit pattern yet";
+      const counts = { diamonds: 0, spades: 0, hearts: 0, clubs: 0 };
+      cards.forEach((card) => { counts[card.suit] += 1; });
+      const ordered = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+      const top = ordered[0][1] ? `${SUITS[ordered[0][0]].label} strongest` : "No suit pattern yet";
+      const missing = ordered.filter((entry) => entry[1] === 0).map((entry) => SUITS[entry[0]].label);
+      return missing.length ? `${top} · Missing ${missing.join(", ")}` : `${top} · All four suits present`;
+    }
+
+    function renderHand() {
+      const grid = document.getElementById("hand-grid");
+      grid.innerHTML = CARDS.map((card) => renderHandCard(card, selectedIds.includes(card.trait))).join("");
+      grid.querySelectorAll("[data-card]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const trait = button.dataset.card;
+          if (selectedIds.includes(trait)) {
+            selectedIds = selectedIds.filter((item) => item !== trait);
+          } else if (selectedIds.length < 5) {
+            selectedIds = [...selectedIds, trait];
+          }
+          renderHand();
+        });
+      });
+      const selectedCards = CARDS.filter((card) => selectedIds.includes(card.trait));
+      document.getElementById("hand-count").textContent = `${selectedIds.length} / 5 selected`;
+      document.getElementById("hand-summary").textContent = handSummary(selectedCards);
+      document.getElementById("review-hand-btn").disabled = selectedIds.length !== 5;
+    }
+
+    function renderReview() {
+      const cards = CARDS.filter((card) => selectedIds.includes(card.trait));
+      document.getElementById("review-cards").innerHTML = cards.map((card) => renderPlayingCard(card)).join("");
+      const counts = { diamonds: 0, spades: 0, hearts: 0, clubs: 0 };
+      cards.forEach((card) => { counts[card.suit] += 1; });
+      const dominant = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+      const gaps = Object.entries(counts).filter((entry) => entry[1] === 0);
+      document.getElementById("review-notes").innerHTML = `
+        <div class="note"><strong>Chosen cards</strong><p>${cards.map((card) => `${card.rank}${card.symbol} ${card.trait}`).join(" · ")}</p></div>
+        <div class="note"><strong>Dominant suit</strong><p>${dominant[1] ? `${SUITS[dominant[0]].label} appears most strongly in your hand.` : "No clear pattern yet."}</p></div>
+        <div class="note"><strong>Stretch question</strong><p>${gaps.length ? `What might shift if you deliberately borrowed from ${gaps.map((entry) => SUITS[entry[0]].label).join(" and ")}?` : "All four suits are present. Which one feels easiest, and which one takes more effort to live out?"}</p></div>
+      `;
+    }
+
+    function drawRandomCard() {
+      currentCard = CARDS[Math.floor(Math.random() * CARDS.length)];
+      renderDraw();
+    }
+
+    function renderDraw() {
+      document.getElementById("draw-card").innerHTML = renderPlayingCard(currentCard);
+    }
+
+    function filteredCards() {
+      return browseFilter === "all" ? CARDS : CARDS.filter((card) => card.suit === browseFilter);
+    }
+
+    function renderBrowse() {
+      const cards = filteredCards();
+      if (!cards.find((card) => card.trait === browseCard.trait)) browseCard = cards[0];
+      document.getElementById("browse-grid").innerHTML = cards.map((card) => renderMiniCard(card, browseCard && browseCard.trait === card.trait)).join("");
+      document.getElementById("browse-card").innerHTML = browseCard ? renderPlayingCard(browseCard) : "";
+      document.getElementById("browse-count").textContent = `${cards.length} visible cards`;
+      document.getElementById("browse-filter-label").textContent = browseFilter === "all" ? "All suits" : SUITS[browseFilter].label;
+      document.querySelectorAll("#browse-grid [data-card]").forEach((button) => {
+        button.addEventListener("click", () => {
+          browseCard = CARDS.find((card) => card.trait === button.dataset.card);
+          renderBrowse();
+        });
+      });
+    }
+
+    document.querySelectorAll("[data-open]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const target = button.dataset.open;
+        if (target === "hand") showScreen("screen-hand");
+        if (target === "draw") {
+          drawRandomCard();
+          showScreen("screen-draw");
+        }
+        if (target === "browse") showScreen("screen-browse");
+      });
+    });
+
+    document.querySelectorAll("[data-back]").forEach((button) => {
+      button.addEventListener("click", () => showScreen("screen-menu"));
+    });
+
+    document.getElementById("review-hand-btn").addEventListener("click", () => showScreen("screen-review"));
+    document.getElementById("clear-hand-btn").addEventListener("click", () => {
+      selectedIds = [];
+      renderHand();
+    });
+    document.getElementById("draw-next-btn").addEventListener("click", drawRandomCard);
+
+    document.querySelectorAll("[data-filter]").forEach((button) => {
+      button.addEventListener("click", () => {
+        browseFilter = button.dataset.filter;
+        browseCard = filteredCards()[0];
+        renderBrowse();
+      });
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (document.getElementById("screen-draw").classList.contains("active") && (event.key === " " || event.key === "Enter")) {
+        event.preventDefault();
+        drawRandomCard();
+      }
+      if (document.getElementById("screen-browse").classList.contains("active")) {
+        if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
+          const cards = filteredCards();
+          const index = cards.findIndex((card) => card.trait === browseCard.trait);
+          if (index !== -1) {
+            const nextIndex = event.key === "ArrowRight"
+              ? (index + 1) % cards.length
+              : (index - 1 + cards.length) % cards.length;
+            browseCard = cards[nextIndex];
+            renderBrowse();
+          }
+        }
+      }
+    });
+
+    renderHand();
+    renderDraw();
+    renderBrowse();
+  </script>
+</body>
+</html>

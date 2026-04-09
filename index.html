@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coaching Cards Library</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --bg: #f6efe6;
+      --paper: rgba(255, 250, 245, 0.8);
+      --panel: rgba(255, 253, 250, 0.72);
+      --panel-strong: rgba(255, 255, 255, 0.9);
+      --ink: #21191d;
+      --muted: #665b61;
+      --line: rgba(54, 35, 47, 0.12);
+      --shadow: rgba(67, 32, 35, 0.15);
+      --rose: #b54b5d;
+      --rose-deep: #8f2f43;
+      --moss: #4f7d69;
+      --moss-deep: #355849;
+      --gold: #d6a351;
+      --slate: #5c6277;
+      --plum: #6f577b;
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --max: 1240px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: "Avenir Next", "Gill Sans", "Trebuchet MS", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(214, 163, 81, 0.16), transparent 30%),
+        radial-gradient(circle at 85% 10%, rgba(181, 75, 93, 0.18), transparent 26%),
+        radial-gradient(circle at 50% 100%, rgba(79, 125, 105, 0.15), transparent 34%),
+        linear-gradient(180deg, #f9f2e8 0%, #f4ebe0 44%, #ece1d4 100%);
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: auto;
+      border-radius: 999px;
+      filter: blur(18px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::before {
+      top: 5rem;
+      right: -6rem;
+      width: 18rem;
+      height: 18rem;
+      background: rgba(181, 75, 93, 0.12);
+    }
+
+    body::after {
+      left: -5rem;
+      bottom: 6rem;
+      width: 16rem;
+      height: 16rem;
+      background: rgba(79, 125, 105, 0.14);
+    }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 28px 18px 48px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.6);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      box-shadow: 0 12px 30px rgba(67, 32, 35, 0.08);
+      backdrop-filter: blur(10px);
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .brand-mark {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--rose), var(--gold));
+      box-shadow: 18px 0 0 rgba(79, 125, 105, 0.75), 36px 0 0 rgba(111, 87, 123, 0.55);
+      margin-right: 42px;
+    }
+
+    .quick-nav {
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: flex-end;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .quick-nav::-webkit-scrollbar { display: none; }
+
+    .quick-nav a,
+    .hero-actions a,
+    .deck-link,
+    .section-link {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .quick-nav a {
+      padding: 8px 13px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.54);
+      border: 1px solid rgba(54, 35, 47, 0.1);
+      font-size: 0.88rem;
+      font-weight: 700;
+      white-space: nowrap;
+      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .quick-nav a:hover,
+    .quick-nav a:focus-visible {
+      transform: translateY(-1px);
+      background: rgba(255, 255, 255, 0.8);
+      border-color: rgba(54, 35, 47, 0.18);
+      outline: none;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+      gap: 22px;
+      align-items: stretch;
+      margin-bottom: 28px;
+    }
+
+    .hero-main,
+    .hero-side,
+    .section-panel,
+    .deck-card {
+      border: 1px solid var(--line);
+      box-shadow: 0 20px 60px var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .hero-main,
+    .hero-side,
+    .section-panel {
+      border-radius: var(--radius-xl);
+      background: linear-gradient(180deg, rgba(255, 252, 248, 0.82), rgba(255, 247, 240, 0.66));
+      overflow: hidden;
+    }
+
+    .hero-main {
+      padding: 34px;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .hero-main::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(181, 75, 93, 0.08), transparent 35%),
+        radial-gradient(circle at 82% 18%, rgba(214, 163, 81, 0.22), transparent 22%),
+        radial-gradient(circle at 18% 100%, rgba(79, 125, 105, 0.18), transparent 26%);
+      z-index: -1;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      margin-bottom: 18px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(54, 35, 47, 0.12);
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--rose), var(--moss));
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
+      font-weight: 700;
+      line-height: 1.02;
+      letter-spacing: -0.02em;
+    }
+
+    h1 {
+      max-width: 10ch;
+      font-size: clamp(3.1rem, 8vw, 5.9rem);
+      margin-bottom: 18px;
+    }
+
+    .hero-copy {
+      max-width: 52rem;
+      font-size: 1.08rem;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 48px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-size: 0.95rem;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    }
+
+    .btn-primary {
+      color: #fff8f6;
+      background: linear-gradient(135deg, var(--rose), var(--rose-deep));
+      box-shadow: 0 18px 36px rgba(143, 47, 67, 0.24);
+    }
+
+    .btn-secondary {
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.74);
+      border-color: rgba(54, 35, 47, 0.12);
+      box-shadow: 0 12px 24px rgba(33, 25, 29, 0.08);
+    }
+
+    .btn:hover,
+    .btn:focus-visible,
+    .deck-card:hover,
+    .deck-card:focus-within {
+      transform: translateY(-2px);
+      outline: none;
+    }
+
+    .hero-side {
+      padding: 26px;
+      display: grid;
+      gap: 16px;
+      align-content: start;
+    }
+
+    .hero-side .stat {
+      padding: 16px 18px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.64);
+      border: 1px solid rgba(54, 35, 47, 0.08);
+    }
+
+    .stat-label {
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.74rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.6rem;
+      line-height: 1.1;
+      margin-bottom: 4px;
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
+      font-weight: 700;
+    }
+
+    .section-panel {
+      padding: 26px;
+      margin-bottom: 22px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .section-head p {
+      max-width: 42rem;
+      color: var(--muted);
+      line-height: 1.65;
+      margin: 10px 0 0;
+    }
+
+    .section-link {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: var(--rose-deep);
+      white-space: nowrap;
+    }
+
+    .deck-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .deck-card {
+      display: grid;
+      gap: 18px;
+      min-height: 280px;
+      padding: 22px;
+      border-radius: 28px;
+      background: linear-gradient(180deg, rgba(255, 253, 250, 0.9), rgba(255, 248, 243, 0.72));
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .deck-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .deck-card:nth-child(1)::before {
+      background:
+        radial-gradient(circle at 82% 18%, rgba(214, 163, 81, 0.28), transparent 24%),
+        linear-gradient(145deg, rgba(181, 75, 93, 0.12), transparent 55%);
+    }
+
+    .deck-card:nth-child(2)::before {
+      background:
+        radial-gradient(circle at 18% 18%, rgba(79, 125, 105, 0.28), transparent 24%),
+        linear-gradient(145deg, rgba(79, 125, 105, 0.12), transparent 55%);
+    }
+
+    .deck-card:nth-child(3)::before {
+      background:
+        radial-gradient(circle at 80% 18%, rgba(111, 87, 123, 0.24), transparent 24%),
+        linear-gradient(145deg, rgba(92, 98, 119, 0.14), transparent 55%);
+    }
+
+    .deck-card:nth-child(4)::before {
+      background:
+        radial-gradient(circle at 20% 20%, rgba(214, 163, 81, 0.28), transparent 24%),
+        linear-gradient(145deg, rgba(214, 163, 81, 0.16), transparent 55%);
+    }
+
+    .deck-card:nth-child(5)::before {
+      background:
+        radial-gradient(circle at 80% 20%, rgba(181, 75, 93, 0.26), transparent 24%),
+        linear-gradient(145deg, rgba(111, 87, 123, 0.14), transparent 55%);
+    }
+
+    .deck-meta,
+    .deck-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .deck-tag,
+    .deck-size {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.76);
+      border: 1px solid rgba(54, 35, 47, 0.1);
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .deck-size {
+      color: var(--ink);
+      background: rgba(255, 252, 248, 0.92);
+    }
+
+    .deck-body {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+      position: relative;
+      z-index: 1;
+    }
+
+    .deck-body h3 {
+      font-size: clamp(1.8rem, 4vw, 2.4rem);
+    }
+
+    .deck-body p {
+      margin: 0;
+      max-width: 34rem;
+      color: var(--muted);
+      line-height: 1.66;
+      font-size: 1rem;
+    }
+
+    .sample-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .sample-list span {
+      display: block;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.58);
+      border: 1px solid rgba(54, 35, 47, 0.08);
+      color: var(--ink);
+      line-height: 1.45;
+    }
+
+    .deck-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      color: var(--rose-deep);
+    }
+
+    .deck-link::after {
+      content: "→";
+      transition: transform 0.18s ease;
+    }
+
+    .deck-card:hover .deck-link::after,
+    .deck-card:focus-within .deck-link::after {
+      transform: translateX(3px);
+    }
+
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .note {
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.58);
+      border: 1px solid rgba(54, 35, 47, 0.08);
+    }
+
+    .note strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 1rem;
+    }
+
+    .note p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    footer {
+      padding: 8px 2px 0;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.86rem;
+      line-height: 1.7;
+    }
+
+    footer a {
+      color: var(--rose-deep);
+    }
+
+    @media (max-width: 980px) {
+      .hero,
+      .notes-grid,
+      .deck-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-head {
+        align-items: start;
+        flex-direction: column;
+      }
+
+      h1 {
+        max-width: 12ch;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .shell {
+        padding: 18px 14px 34px;
+      }
+
+      .topbar {
+        align-items: start;
+        flex-direction: column;
+      }
+
+      .hero-main,
+      .hero-side,
+      .section-panel,
+      .deck-card {
+        border-radius: 24px;
+      }
+
+      .hero-main,
+      .hero-side,
+      .section-panel {
+        padding: 22px;
+      }
+
+      .deck-card {
+        min-height: 0;
+        padding: 18px;
+      }
+
+      h1 {
+        font-size: clamp(2.6rem, 14vw, 4rem);
+      }
+    }
+  </style>
+  <link rel="manifest" href="manifest.json">
+  <script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');</script>
+</head>
+<body>
+  <main class="shell">
+    <div class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        Coaching Cards Library
+      </div>
+      <nav class="quick-nav" aria-label="Deck quick links">
+        <a href="#decks">Browse decks</a>
+        <a href="coaching-cards-for-teams.html">Teams</a>
+        <a href="strong-suits.html">Strong Suits</a>
+        <a href="the-values-cards.html">Values Cards</a>
+        <a href="at-my-best.html">At My Best</a>
+        <a href="intelligent-change-closer.html">Closer</a>
+        <a href="coaching-cards-for-every-day.html">Every Day</a>
+        <a href="picture-coaching-cards-recreated-pilot.html">Picture Cards</a>
+      </nav>
+    </div>
+
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-main">
+        <div class="eyebrow">Barefoot Coaching and conversation decks</div>
+        <h1 id="page-title">Choose the right deck for the conversation you want.</h1>
+        <p class="hero-copy">
+          This library brings together reflective prompts, facilitation tools, strengths exercises, and values-based conversations in one calm, tactile-feeling space. Each deck opens as a focused experience, while this page gives you a better front door into the full collection.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#decks">Explore decks</a>
+          <a class="btn btn-secondary" href="coaching-cards-for-teams.html">Open team coaching</a>
+        </div>
+      </div>
+
+      <aside class="hero-side" aria-label="Library summary">
+        <div class="stat">
+          <div class="stat-label">Collection</div>
+          <strong>7 interactive decks</strong>
+          <span>Different formats for teams, pairs, self-reflection, and image-led conversation.</span>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Best for</div>
+          <strong>Workshops and coaching</strong>
+          <span>Use them to warm up a room, deepen a conversation, or guide a session.</span>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Designed around</div>
+          <strong>Prompt-first flow</strong>
+          <span>Fast entry points, browseable decks, and card-led reflection.</span>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section-panel" id="decks" aria-labelledby="decks-title">
+      <div class="section-head">
+        <div>
+          <h2 id="decks-title">Decks</h2>
+          <p>Each card set has a slightly different energy. Some are built for group facilitation, some for personal reflection, and some for guided conversation that becomes more candid over time.</p>
+        </div>
+        <a class="section-link" href="#notes">How to use the library</a>
+      </div>
+
+      <div class="deck-grid">
+        <article class="deck-card">
+          <div class="deck-meta">
+            <span class="deck-tag">Teams</span>
+            <span class="deck-size">50 prompts</span>
+          </div>
+          <div class="deck-body">
+            <h3>Coaching Cards for Teams</h3>
+            <p>Separate team-facing questions from facilitator process cards so you can run a session with more clarity and less clutter.</p>
+            <div class="sample-list" aria-label="Sample prompts">
+              <span>Question cards for discussion and reflection.</span>
+              <span>Process cards for structure, feedback, and facilitation moves.</span>
+            </div>
+          </div>
+          <div class="deck-footer">
+            <a class="deck-link" href="coaching-cards-for-teams.html">Open deck</a>
+            <span class="deck-size">Facilitator-friendly</span>
+          </div>
+        </article>
+
+        <article class="deck-card">
+          <div class="deck-meta">
+            <span class="deck-tag">Strengths</span>
+            <span class="deck-size">4 suits · partial deck</span>
+          </div>
+          <div class="deck-body">
+            <h3>Strong Suits</h3>
+            <p>A playing-card-inspired deck that surfaces strengths, patterns, and shadows through four distinct suits.</p>
+            <div class="sample-list" aria-label="Sample prompt types">
+              <span>Explore traits and their strengths-based expression.</span>
+              <span>Use the suit structure to compare themes across a group.</span>
+            </div>
+          </div>
+          <div class="deck-footer">
+            <a class="deck-link" href="strong-suits.html">Open deck</a>
+            <span class="deck-size">Visual and tactile</span>
+          </div>
+        </article>
+
+        <article class="deck-card">
+          <div class="deck-meta">
+            <span class="deck-tag">Connection</span>
+            <span class="deck-size">3 levels</span>
+          </div>
+          <div class="deck-body">
+            <h3>Close, Closer, Closest</h3>
+            <p>Move from lighter questions into deeper vulnerability with a gradual, level-based conversation flow.</p>
+            <div class="sample-list" aria-label="Sample flow">
+              <span>Start gently with introductory prompts.</span>
+              <span>Build toward more personal and revealing conversation.</span>
+            </div>
+          </div>
+          <div class="deck-footer">
+            <a class="deck-link" href="intelligent-change-closer.html">Open deck</a>
+            <span class="deck-size">Progressive mode</span>
+          </div>
+        </article>
+
+        <article class="deck-card">
+          <div class="deck-meta">
+            <span class="deck-tag">Values</span>
+            <span class="deck-size">Sort and compare</span>
+          </div>
+          <div class="deck-body">
+            <h3>The Values Cards</h3>
+            <p>Reflect on what matters most, what matters somewhat, and what feels less central so priorities become easier to articulate.</p>
+            <div class="sample-list" aria-label="Sample sorting approach">
+              <span>Designed for ranking, sorting, and discussion.</span>
+              <span>Useful for personal coaching, team charters, and decision-making.</span>
+            </div>
+          </div>
+          <div class="deck-footer">
+            <a class="deck-link" href="the-values-cards.html">Open deck</a>
+            <span class="deck-size">Clarify priorities</span>
+          </div>
+        </article>
+
+        <article class="deck-card">
+          <div class="deck-meta">
+            <span class="deck-tag">Reflection</span>
+            <span class="deck-size">Personal insight</span>
+          </div>
+          <div class="deck-body">
+            <h3>At My Best</h3>
+            <p>A reflective deck for understanding the conditions, behaviors, and environments that help someone show up at their strongest.</p>
+            <div class="sample-list" aria-label="Sample reflection areas">
+              <span>Identify patterns that support your best work.</span>
+              <span>Translate insight into clearer asks, habits, and boundaries.</span>
+            </div>
+          </div>
+          <div class="deck-footer">
+            <a class="deck-link" href="at-my-best.html">Open deck</a>
+            <span class="deck-size">Self-awareness</span>
+          </div>
+        </article>
+
+        <article class="deck-card">
+          <div class="deck-meta">
+            <span class="deck-tag">Images</span>
+            <span class="deck-size">51 visible photos</span>
+          </div>
+          <div class="deck-body">
+            <h3>Picture Coaching Cards</h3>
+            <p>An image-first deck for choosing the photograph that resonates, drawing one at random, or pairing two images together to explore what is true now and what is emerging next.</p>
+            <div class="sample-list" aria-label="Sample picture card uses">
+              <span>Use a single image to open up feeling, metaphor, and meaning.</span>
+              <span>Use a pair of images to compare present reality with future possibility.</span>
+            </div>
+          </div>
+          <div class="deck-footer">
+            <a class="deck-link" href="picture-coaching-cards-recreated-pilot.html">Open deck</a>
+            <span class="deck-size">Image-led reflection</span>
+          </div>
+        </article>
+
+        <article class="deck-card">
+          <div class="deck-meta">
+            <span class="deck-tag">Daily practice</span>
+            <span class="deck-size">50 prompts</span>
+          </div>
+          <div class="deck-body">
+            <h3>Coaching Cards for Every Day</h3>
+            <p>A solo reflection deck by Kim Morgan. Sort each card into comfortable or uncomfortable, then draw one from each pile for a richer, more honest conversation with yourself.</p>
+            <div class="sample-list" aria-label="Sample ways to use">
+              <span>Split the deck: sort first, then draw one from each pile.</span>
+              <span>One a day: work through the cards in order, five minutes at a time.</span>
+            </div>
+          </div>
+          <div class="deck-footer">
+            <a class="deck-link" href="coaching-cards-for-every-day.html">Open deck</a>
+            <span class="deck-size">Barefoot Coaching</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-panel" id="notes" aria-labelledby="notes-title">
+      <div class="section-head">
+        <div>
+          <h2 id="notes-title">How to use the library</h2>
+          <p>The decks are already interactive, so this page is mainly about helping you get into the right one quickly and with the right context.</p>
+        </div>
+      </div>
+
+      <div class="notes-grid">
+        <div class="note">
+          <strong>Choose by energy</strong>
+          <p>Use team coaching when you need structure, Strong Suits when you want a strengths lens, and Close, Closer, Closest when the goal is relational depth.</p>
+        </div>
+        <div class="note">
+          <strong>Use on mobile too</strong>
+          <p>The landing page and linked decks are set up to work as a compact card browser on smaller screens, not just as desktop workshop tools.</p>
+        </div>
+        <div class="note">
+          <strong>Mix and match</strong>
+          <p>It is completely reasonable to start in one deck and switch to another once the conversation reveals what the group or person needs next.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      Built as a local landing page for the coaching card collection.<br>
+      Linked decks open directly from this folder and keep the experience self-contained.
+    </footer>
+  </main>
+</body>
+</html>

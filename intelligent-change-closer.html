@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Let's Get Closer</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    :root {
+      --close: #21956f;
+      --closer: #d4ad2d;
+      --closest: #c84f5b;
+      --ink: #231f27;
+      --muted: #706776;
+      --paper: #f8f4ef;
+      --panel: rgba(255,255,255,0.84);
+      --border: rgba(48, 39, 55, 0.12);
+      --shadow: rgba(33, 23, 40, 0.14);
+      --white: #fff;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top, rgba(255,255,255,0.92), rgba(255,255,255,0) 30%),
+        linear-gradient(180deg, #efe8eb 0%, #f7f2ea 38%, #eee7d9 100%);
+      padding: 66px 16px 40px;
+    }
+    /* ── top nav ── */
+    .top-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 900;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      background: rgba(255, 252, 248, 0.82);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(0,0,0,0.07);
+    }
+    .nav-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: inherit;
+      text-decoration: none;
+      opacity: 0.5;
+      transition: opacity 0.15s;
+    }
+    .nav-back:hover { opacity: 1; }
+
+    .app { max-width: 1180px; margin: 0 auto; }
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      box-shadow: 0 14px 34px var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.76);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.76rem;
+      font-weight: 800;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 5vw, 3.8rem);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .sub {
+      max-width: 760px;
+      margin: 10px auto 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 1rem;
+    }
+
+    h2 { margin: 0 0 10px; font-size: 1.15rem; }
+    p { margin: 0; color: var(--muted); line-height: 1.6; }
+
+    .top-grid,
+    .workspace {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 18px;
+    }
+
+    .hero,
+    .rules,
+    .main,
+    .aside,
+    .browse-panel {
+      padding: 22px;
+    }
+
+    .actions,
+    .deck-actions,
+    .browse-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .actions { margin-top: 16px; }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.1s ease, opacity 0.14s ease;
+      box-shadow: 0 8px 20px rgba(33, 23, 40, 0.12);
+    }
+
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled { opacity: 0.45; cursor: default; box-shadow: none; }
+    .btn-secondary { background: rgba(255,255,255,0.92); color: var(--ink); border: 1px solid var(--border); }
+    .btn-close { background: var(--close); color: var(--white); }
+    .btn-closer { background: var(--closer); color: var(--white); }
+    .btn-closest { background: var(--closest); color: var(--white); }
+    .btn-primary { background: linear-gradient(135deg, var(--close), var(--closest)); color: var(--white); }
+
+    .back-link {
+      border: none;
+      background: none;
+      padding: 0;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .deck-card {
+      border-radius: 24px;
+      padding: 20px;
+      color: var(--white);
+      min-height: 230px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      box-shadow: 0 14px 26px rgba(33, 23, 40, 0.12);
+      transition: transform 0.14s ease, box-shadow 0.14s ease;
+    }
+
+    .deck-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 20px 32px rgba(33, 23, 40, 0.18);
+    }
+
+    .deck-card small {
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      opacity: 0.9;
+      font-weight: 800;
+      font-size: 0.72rem;
+    }
+
+    .deck-card h3 {
+      margin: 12px 0 10px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 2rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .deck-card p { color: rgba(255,255,255,0.92); }
+
+    .deck-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .card-stage {
+      padding: 18px;
+    }
+
+    .progress-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 0.83rem;
+      font-weight: 700;
+    }
+
+    .progress-bar {
+      height: 8px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(0,0,0,0.06);
+      margin-bottom: 16px;
+    }
+
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      transition: width 0.2s ease;
+    }
+
+    .question-card {
+      min-height: 420px;
+      border-radius: 28px;
+      background: var(--white);
+      padding: 28px 28px 24px;
+      box-shadow: inset 0 0 0 1px rgba(40, 34, 45, 0.06);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .question-card::before {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      border-radius: 22px;
+      border: 1px solid rgba(35, 31, 39, 0.06);
+      pointer-events: none;
+    }
+
+    .question-top {
+      text-align: center;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .question-body {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.55rem, 4vw, 2.25rem);
+      line-height: 1.35;
+      text-align: center;
+      text-wrap: balance;
+      color: var(--ink);
+      margin: 20px auto;
+      max-width: 620px;
+    }
+
+    .question-note {
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.5;
+      font-size: 1rem;
+      max-width: 540px;
+      margin: -6px auto 0;
+    }
+
+    .question-footer {
+      text-align: center;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.05rem;
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.74);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .browse-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+      max-height: 72vh;
+      overflow: auto;
+      padding-right: 6px;
+    }
+
+    .browse-item {
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.78);
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: transform 0.12s ease, border-color 0.12s ease;
+    }
+
+    .browse-item:hover {
+      transform: translateY(-1px);
+      border-color: rgba(35, 31, 39, 0.18);
+    }
+
+    .browse-item strong {
+      display: block;
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+      color: var(--muted);
+    }
+
+    .browse-item p { color: var(--ink); }
+
+    .level-close .progress-fill,
+    .level-close .question-top { color: var(--close); }
+    .level-closer .progress-fill,
+    .level-closer .question-top { color: #a67f08; }
+    .level-closest .progress-fill,
+    .level-closest .question-top { color: var(--closest); }
+    .level-close .progress-fill { background: var(--close); }
+    .level-closer .progress-fill { background: var(--closer); }
+    .level-closest .progress-fill { background: var(--closest); }
+
+    footer {
+      text-align: center;
+      margin-top: 26px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 940px) {
+      .top-grid, .workspace { grid-template-columns: 1fr; }
+      .question-card { min-height: 340px; padding: 22px; }
+    }
+  </style>
+  <link rel="manifest" href="manifest.json">
+  <script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');</script>
+</head>
+<body>
+  <nav class="top-nav" aria-label="Site navigation">
+    <a href="index.html" class="nav-back">← All card sets</a>
+  </nav>
+  <div class="app">
+    <header>
+      <div class="eyebrow">Intelligent Change · Let's Get Closer</div>
+      <h1>Close, Closer, Closest</h1>
+      <p class="sub">Choose a level directly or use progressive mode to move from introductory questions into more personal and vulnerable conversation.</p>
+    </header>
+
+    <section class="screen active" id="screen-home">
+      <div class="top-grid">
+        <div class="hero panel">
+          <h2>How this deck works</h2>
+          <p>The instruction card says the deck is separated into three levels: Close, Closer, and Closest. Each progressive level poses questions that become more personal, challenging players to share and strengthen their bond.</p>
+          <div class="actions">
+            <button class="btn btn-primary" onclick="startProgressive()">Start progressive mode</button>
+            <button class="btn btn-secondary" onclick="openLevel('close')">Go straight to Close</button>
+            <button class="btn btn-secondary" onclick="openBrowse()">Browse all levels</button>
+          </div>
+        </div>
+        <div class="rules panel">
+          <h2>Instruction card</h2>
+          <p>An easy-to-play card game that cultivates relationships by engaging friends, family members, couples, or even those who have just met in deep and meaningful conversation.</p>
+          <p style="margin-top:10px">The cards are separated into three levels: Close, Closer, and Closest. Each progressive level poses questions that become more personal, challenging players to share and strengthen their bond.</p>
+        </div>
+      </div>
+
+      <div class="deck-grid">
+        <article class="deck-card" style="background:linear-gradient(145deg,var(--close),#16735a)" onclick="openLevel('close')">
+          <div>
+            <small>Level One</small>
+            <h3>Close</h3>
+            <p>Introductory questions that build trust and make you more comfortable with each other.</p>
+          </div>
+          <small id="close-count"></small>
+        </article>
+        <article class="deck-card" style="background:linear-gradient(145deg,var(--closer),#b88b0f)" onclick="openLevel('closer')">
+          <div>
+            <small>Level Two</small>
+            <h3>Closer</h3>
+            <p>Personal questions that encourage you to share your feelings and strengthen your bond.</p>
+          </div>
+          <small id="closer-count"></small>
+        </article>
+        <article class="deck-card" style="background:linear-gradient(145deg,var(--closest),#a83d4c)" onclick="openLevel('closest')">
+          <div>
+            <small>Level Three</small>
+            <h3>Closest</h3>
+            <p>Deep questions that uncover your rawest emotions, wildest dreams, and biggest secrets.</p>
+          </div>
+          <small id="closest-count"></small>
+        </article>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-card">
+      <div class="workspace">
+        <div class="main panel card-stage" id="card-stage">
+          <button class="back-link" onclick="goHome()">← Back to menu</button>
+          <div class="progress-row">
+            <span id="mode-label">Close</span>
+            <span id="card-count-label">1 of 1</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="card-fill"></div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-top" id="question-level">Let's Get Closer</div>
+            <div>
+              <div class="question-body" id="question-text"></div>
+              <div class="question-note" id="question-note" hidden></div>
+            </div>
+            <div class="question-footer">Intelligent Change</div>
+          </div>
+
+          <div class="actions">
+            <button class="btn btn-secondary" onclick="prevCard()">← Previous</button>
+            <button class="btn btn-primary" onclick="randomCard()">Random draw</button>
+            <button class="btn btn-secondary" onclick="nextCard()">Next →</button>
+            <button class="btn btn-secondary" id="step-up-btn" onclick="stepUp()" hidden>Move deeper →</button>
+          </div>
+        </div>
+
+        <aside class="aside panel">
+          <h2 id="aside-title">Current level</h2>
+          <p id="aside-copy"></p>
+          <div class="chip-row">
+            <span class="chip" id="aside-chip"></span>
+            <span class="chip" id="aside-mode"></span>
+          </div>
+          <div class="actions">
+            <button class="btn btn-close" onclick="openLevel('close')">Close</button>
+            <button class="btn btn-closer" onclick="openLevel('closer')">Closer</button>
+            <button class="btn btn-closest" onclick="openLevel('closest')">Closest</button>
+          </div>
+          <p style="margin-top:14px">Progressive mode starts in Close, then offers a step up into Closer and Closest when you’re ready.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-browse">
+      <div class="browse-panel panel">
+        <button class="back-link" onclick="goHome()">← Back to menu</button>
+        <h2>Browse all cards</h2>
+        <p>This is a transcription-first browse view. Click any prompt to open it.</p>
+        <div class="deck-actions" style="margin-top:14px">
+          <button class="btn btn-close" onclick="filterBrowse('close')">Close</button>
+          <button class="btn btn-closer" onclick="filterBrowse('closer')">Closer</button>
+          <button class="btn btn-closest" onclick="filterBrowse('closest')">Closest</button>
+          <button class="btn btn-secondary" onclick="filterBrowse('all')">All</button>
+        </div>
+        <div class="browse-list" id="browse-list"></div>
+      </div>
+    </section>
+
+    <footer>
+      Cards by Intelligent Change
+    </footer>
+  </div>
+
+  <script>
+    // [NEEDS REVIEW] Level assignment is inferred from photographed sequence and deck-back shots:
+    // green deck -> close, yellow deck -> closer, red deck -> closest.
+    const CARDS = [
+      { level: "close", text: "What is a song that you can listen to over and over again? Sing it.", note: "" },
+      { level: "close", text: "Where do you find meaning in your life?", note: "" },
+      { level: "close", text: "What are you most grateful for?", note: "" },
+      { level: "close", text: "What is the greatest struggle you have overcome?", note: "" },
+      { level: "close", text: "Have you ever seen something you cannot explain?", note: "" },
+      { level: "close", text: "What do you think my closet looks like?", note: "" },
+      { level: "close", text: "What is your favorite thing about yourself?", note: "" },
+      { level: "close", text: "What do you take for granted?", note: "" },
+      { level: "close", text: "What is the most exciting thing that has ever happened to you?", note: "" },
+      { level: "close", text: "What is the first thing you noticed about me?", note: "" },
+      { level: "close", text: "If you could change your first name, what would you change it to?", note: "" },
+      { level: "close", text: "What is an obstacle you are currently trying to overcome?", note: "" },
+      { level: "close", text: "What do you value most in a friendship or relationship?", note: "" },
+      { level: "close", text: "What does my body language say about me?", note: "" },
+      { level: "close", text: "What do you do or where do you go when you need to be alone?", note: "" },
+      { level: "close", text: "When and why did you last cry?", note: "" },
+      { level: "close", text: "Can you remember a time in your life when you felt the most alive? Tell me about it.", note: "" },
+      { level: "close", text: "If your life was a movie or a book, what would you title it?", note: "" },
+      { level: "close", text: "What is your most cherished childhood memory?", note: "" },
+      { level: "close", text: "What was your honest first impression of me?", note: "" },
+      { level: "close", text: "What makes you smile?", note: "" },
+      { level: "close", text: "What is your definition of success?", note: "" },
+      { level: "close", text: "How do you think people see you?", note: "" },
+      { level: "close", text: "What makes you cry?", note: "" },
+      { level: "close", text: "What is one thing you would like to change about yourself?", note: "" },
+      { level: "close", text: "If I was an animal, what animal would I be and why?", note: "" },
+      { level: "close", text: "Wild Card", note: "Draw each other's portraits." },
+      { level: "close", text: "What is something that has made you happy lately?", note: "" },
+      { level: "close", text: "Do you ever judge a book by its cover? Be honest.", note: "" },
+      { level: "close", text: "What is the most adventurous thing you have ever done?", note: "" },
+      { level: "close", text: "If I was a colour, what colour would I be and why?", note: "" },
+      { level: "close", text: "Wild Card", note: "Create a one minute dance routine by using your favorite dance moves. Teach it to me." },
+      { level: "close", text: "Wild Card", note: "Sit close to each other, hold hands and stare into each other's eyes for 5 minutes. (Set a timer)" },
+
+      { level: "closer", text: "What is the best advice you have ever received?", note: "" },
+      { level: "closer", text: "What is your biggest fear in life and why does it frighten you?", note: "" },
+      { level: "closer", text: "Do you like who you are?", note: "" },
+      { level: "closer", text: "What is the first lie you can remember telling?", note: "" },
+      { level: "closer", text: "What is your biggest regret in life?", note: "" },
+      { level: "closer", text: "Wild Card", note: "Trust Fall! Both participants face the same way, one in front of the other. The person in front then must cross their arms and fall backwards. The goal is for the person in front to trust the person behind to catch them." },
+      { level: "closer", text: "What difference would it make in your life if you felt completely safe, accepted and loved?", note: "" },
+      { level: "closer", text: "Who is someone you trust?", note: "" },
+      { level: "closer", text: "What makes you sad?", note: "" },
+      { level: "closer", text: "What do you miss about being a kid?", note: "" },
+      { level: "closer", text: "Are you living the life of your dreams?", note: "" },
+      { level: "closer", text: "What was the biggest lesson you've learnt the hard way?", note: "" },
+      { level: "closer", text: "What is your favorite memory with me?", note: "" },
+      { level: "closer", text: "What is one thing people always misunderstand about you?", note: "" },
+      { level: "closer", text: "Wild Card", note: "Each player must come up with three statements about themselves. Two must be truthful and one a lie. Then each player tries to guess which of the three was the lie." },
+      { level: "closer", text: "What do you think about most?", note: "" },
+      { level: "closer", text: "What is the most embarrassing thing that has ever happened to you?", note: "" },
+      { level: "closer", text: "What is the most miraculous thing that has ever happened to you?", note: "" },
+      { level: "closer", text: "What is something I have done for you that you are grateful for?", note: "" },
+      { level: "closer", text: "What characteristics do you admire most in others?", note: "" },
+      { level: "closer", text: "What is the most painful thing that happened to you in your life?", note: "" },
+      { level: "closer", text: "What makes you happy?", note: "" },
+      { level: "closer", text: "What or who do you need to let go of in life?", note: "" },
+      { level: "closer", text: "When was the last time you have asked for help?", note: "Dig Deeper (Optional): Are you comfortable asking for help when in need?" },
+      { level: "closer", text: "What is something you have never told anyone about yourself?", note: "" },
+      { level: "closer", text: "What is a belief you hold that most people around you do not share?", note: "" },
+      { level: "closer", text: "What does your ideal life look like five years from now?", note: "" },
+      { level: "closer", text: "When do you feel most like yourself?", note: "" },
+      { level: "closer", text: "What is something you are still trying to forgive yourself for?", note: "" },
+      { level: "closer", text: "What do you wish people understood about you without you having to explain it?", note: "" },
+
+      { level: "closest", text: "Are there any relationships in your life you would like to improve or repair?", note: "" },
+      { level: "closest", text: "Who or what has changed your life?", note: "" },
+      { level: "closest", text: "What three qualities make me special to you?", note: "Once you are done, I will share what three qualities make you special to me." },
+      { level: "closest", text: "What are you addicted to?", note: "" },
+      { level: "closest", text: "What are three things we have in common?", note: "" },
+      { level: "closest", text: "What is your guilty pleasure?", note: "" },
+      { level: "closest", text: "What is your idea of a perfect life?", note: "" },
+      { level: "closest", text: "How would you summarize your life purpose?", note: "" },
+      { level: "closest", text: "Wild Card", note: "Give each other a hug and hold it for 5 minutes. (Set a timer)" },
+      { level: "closest", text: "Have you ever questioned your sanity? Why did you?", note: "" },
+      { level: "closest", text: "What embarrasses you the most in front of other people?", note: "" },
+      { level: "closest", text: "What was the most memorable toy you played with when you were little?", note: "" },
+      { level: "closest", text: "When and with whom did you lose your virginity?", note: "" },
+      { level: "closest", text: "What do you dream about the most often?", note: "" },
+      { level: "closest", text: "When you are sad or upset about something, how do you like to be comforted?", note: "" },
+      { level: "closest", text: "Do you think that you take good care of yourself?", note: "If so, how? If not, why don't you?" },
+      { level: "closest", text: "What do you want your final words to be?", note: "" },
+      { level: "closest", text: "Wild Card", note: "Blindfold the person you are playing the game with and get them to try three different foods. They have to guess what those foods are." },
+      { level: "closest", text: "Have you ever broken anyone's heart? Tell me how it happened.", note: "" },
+      { level: "closest", text: "How do you relieve stress?", note: "" },
+      { level: "closest", text: "What is one thing you wish someone did or would do for you?", note: "" },
+      { level: "closest", text: "What motivates you to get up every morning?", note: "" },
+      { level: "closest", text: "What is the greatest accomplishment of your life?", note: "" },
+      { level: "closest", text: "Do you believe in God or a Higher Power?", note: "What is your relationship with it?" },
+      { level: "closest", text: "Have you ever stolen anything?", note: "" },
+      { level: "closest", text: "How do you wish to be remembered?", note: "" },
+      { level: "closest", text: "Wild Card", note: "Laugh for 5 minutes together. Start with a fake laugh and keep going. (Set a timer)" },
+      { level: "closest", text: "Wild Card", note: "Take turns imitating each other. Be kind." },
+      { level: "closest", text: "What are three ways I can improve to become a better human being?", note: "" },
+      { level: "closest", text: "What is your greatest gift or talent?", note: "" },
+      { level: "closest", text: "Wild Card", note: "On a piece of paper, give each other 5 specific compliments and then read them out loud to each other. Gift the paper to the player." },
+      { level: "closest", text: "What emotion do you experience the most?", note: "" },
+      { level: "closest", text: "How would you rate our relationship on a scale of 1 to 10?", note: "How can I make it a 10?" },
+      { level: "closest", text: "Do you carry any wounds you still have not healed?", note: "" },
+      { level: "closest", text: "Do you have an old item you cannot let go of? Tell me about it.", note: "" },
+      { level: "closest", text: "Is there something in your life that you ignore because you are not ready to face it?", note: "" },
+      { level: "closest", text: "What is the darkest thing you have never told anybody?", note: "" },
+      { level: "closest", text: "What is the darkest thought you ever had?", note: "" },
+      { level: "closest", text: "What is my greatest gift or talent?", note: "" },
+      { level: "closest", text: "What's the nicest thing anyone has done for you?", note: "" },
+      { level: "closest", text: "What is something you would like to do but are too scared to try?", note: "" },
+      { level: "closest", text: "Who is the closest person you have lost?", note: "" },
+      { level: "closest", text: "What is the biggest lie you have ever told?", note: "" }
+    ];
+
+    const LEVEL_META = {
+      close: {
+        title: "Close",
+        desc: "Introductory questions that build trust and make you more comfortable with each other.",
+        className: "level-close",
+        chip: "Level One",
+        next: "closer"
+      },
+      closer: {
+        title: "Closer",
+        desc: "Personal questions that encourage you to share your feelings and strengthen your bond.",
+        className: "level-closer",
+        chip: "Level Two",
+        next: "closest"
+      },
+      closest: {
+        title: "Closest",
+        desc: "Deep questions that uncover your rawest emotions, wildest dreams, and biggest secrets.",
+        className: "level-closest",
+        chip: "Level Three",
+        next: null
+      }
+    };
+
+    let currentLevel = "close";
+    let currentCards = [];
+    let currentIndex = 0;
+    let currentMode = "deck";
+    let progressive = false;
+    let browseFilter = "all";
+
+    function cardsFor(level) {
+      return CARDS.filter(card => card.level === level);
+    }
+
+    function shuffle(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function goHome() {
+      document.querySelectorAll(".screen").forEach(screen => screen.classList.remove("active"));
+      document.getElementById("screen-home").classList.add("active");
+    }
+
+    function setCounts() {
+      document.getElementById("close-count").textContent = `${cardsFor("close").length} cards`;
+      document.getElementById("closer-count").textContent = `${cardsFor("closer").length} cards`;
+      document.getElementById("closest-count").textContent = `${cardsFor("closest").length} cards`;
+    }
+
+    function openLevel(level, randomize = false) {
+      currentLevel = level;
+      currentMode = "deck";
+      progressive = false;
+      currentCards = randomize ? shuffle(cardsFor(level)) : cardsFor(level);
+      currentIndex = 0;
+      renderCard();
+      document.querySelectorAll(".screen").forEach(screen => screen.classList.remove("active"));
+      document.getElementById("screen-card").classList.add("active");
+    }
+
+    function startProgressive() {
+      progressive = true;
+      currentMode = "progressive";
+      currentLevel = "close";
+      currentCards = shuffle(cardsFor("close"));
+      currentIndex = 0;
+      renderCard();
+      document.querySelectorAll(".screen").forEach(screen => screen.classList.remove("active"));
+      document.getElementById("screen-card").classList.add("active");
+    }
+
+    function renderCard() {
+      const meta = LEVEL_META[currentLevel];
+      const card = currentCards[currentIndex];
+      const stage = document.getElementById("card-stage");
+      stage.className = `main panel card-stage ${meta.className}`;
+      document.getElementById("mode-label").textContent = progressive ? `Progressive · ${meta.title}` : meta.title;
+      document.getElementById("card-count-label").textContent = `${currentIndex + 1} of ${currentCards.length}`;
+      document.getElementById("card-fill").style.width = `${((currentIndex + 1) / currentCards.length) * 100}%`;
+      document.getElementById("question-level").textContent = "Let's Get Closer";
+      document.getElementById("question-text").textContent = card.text;
+      const note = document.getElementById("question-note");
+      note.hidden = !card.note;
+      note.textContent = card.note || "";
+      document.getElementById("aside-title").textContent = meta.title;
+      document.getElementById("aside-copy").textContent = meta.desc;
+      document.getElementById("aside-chip").textContent = meta.chip;
+      document.getElementById("aside-mode").textContent = progressive ? "Progressive mode" : "Direct deck mode";
+      const stepBtn = document.getElementById("step-up-btn");
+      stepBtn.hidden = !(progressive && currentIndex === currentCards.length - 1 && meta.next);
+    }
+
+    function prevCard() {
+      currentIndex = (currentIndex - 1 + currentCards.length) % currentCards.length;
+      renderCard();
+    }
+
+    function nextCard() {
+      currentIndex = (currentIndex + 1) % currentCards.length;
+      renderCard();
+    }
+
+    function randomCard() {
+      currentIndex = Math.floor(Math.random() * currentCards.length);
+      renderCard();
+    }
+
+    function stepUp() {
+      const next = LEVEL_META[currentLevel].next;
+      if (!next) return;
+      currentLevel = next;
+      currentCards = shuffle(cardsFor(next));
+      currentIndex = 0;
+      renderCard();
+    }
+
+    function openBrowse() {
+      filterBrowse("all");
+      document.querySelectorAll(".screen").forEach(screen => screen.classList.remove("active"));
+      document.getElementById("screen-browse").classList.add("active");
+    }
+
+    function filterBrowse(filter) {
+      browseFilter = filter;
+      const list = document.getElementById("browse-list");
+      list.innerHTML = "";
+      const cards = filter === "all" ? CARDS : cardsFor(filter);
+      cards.forEach((card, index) => {
+        const item = document.createElement("button");
+        item.className = "browse-item";
+        item.innerHTML = `<strong>${LEVEL_META[card.level].title}</strong><p>${card.text}</p>${card.note ? `<p style="margin-top:6px;color:var(--muted)">${card.note}</p>` : ""}`;
+        item.onclick = () => {
+          currentLevel = card.level;
+          currentCards = cardsFor(card.level);
+          currentIndex = currentCards.findIndex(candidate => candidate.text === card.text && candidate.note === card.note);
+          currentMode = "deck";
+          progressive = false;
+          renderCard();
+          document.querySelectorAll(".screen").forEach(screen => screen.classList.remove("active"));
+          document.getElementById("screen-card").classList.add("active");
+        };
+        list.appendChild(item);
+      });
+    }
+
+    document.addEventListener("keydown", event => {
+      if (!document.getElementById("screen-card").classList.contains("active")) return;
+      if (event.key === "ArrowRight") nextCard();
+      if (event.key === "ArrowLeft") prevCard();
+      if (event.key === " " || event.key === "Enter") {
+        event.preventDefault();
+        randomCard();
+      }
+    });
+
+    setCounts();
+  </script>
+</body>
+</html>

@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Values Cards</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    :root {
+      --bg: #f5f0e9;
+      --panel: rgba(255,255,255,0.82);
+      --ink: #2d2830;
+      --muted: #6f6570;
+      --border: rgba(54, 42, 58, 0.12);
+      --shadow: rgba(31, 19, 31, 0.12);
+      --really: #4d9c73;
+      --slightly: #c8903e;
+      --unimportant: #c56558;
+      --blue: #4f8de7;
+      --teal: #2f9fa3;
+      --green: #71a55c;
+      --yellow: #d0c44a;
+      --orange: #d7964d;
+      --red: #c55e55;
+      --purple: #5c4eb5;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top, rgba(255,255,255,0.9), rgba(255,255,255,0) 30%),
+        linear-gradient(180deg, #ece4ef 0%, var(--bg) 42%, #efe6da 100%);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      padding: 64px 14px 40px;
+    }
+    /* ── top nav ── */
+    .top-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 900;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      background: rgba(255, 252, 248, 0.82);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(0,0,0,0.07);
+    }
+    .nav-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: inherit;
+      text-decoration: none;
+      opacity: 0.5;
+      transition: opacity 0.15s;
+    }
+    .nav-back:hover { opacity: 1; }
+
+    .app {
+      max-width: 1220px;
+      margin: 0 auto;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: 0 12px 34px var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.75);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .sub {
+      margin: 10px auto 0;
+      max-width: 760px;
+      line-height: 1.6;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    .top-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .intro,
+    .instructions,
+    .summary,
+    .final-panel {
+      padding: 20px;
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      font-size: 1.12rem;
+    }
+
+    p {
+      margin: 0;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    .actions,
+    .choice-row,
+    .summary-grid,
+    .selection-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .actions { margin-top: 14px; }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font-size: 0.94rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.1s ease, opacity 0.14s ease;
+      box-shadow: 0 8px 20px rgba(31, 19, 31, 0.12);
+    }
+
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled { opacity: 0.45; cursor: default; box-shadow: none; }
+
+    .btn-primary { background: linear-gradient(135deg, var(--purple), var(--blue)); color: white; }
+    .btn-secondary { background: rgba(255,255,255,0.92); color: var(--ink); border: 1px solid var(--border); }
+    .btn-really { background: var(--really); color: white; }
+    .btn-slightly { background: var(--slightly); color: white; }
+    .btn-unimportant { background: var(--unimportant); color: white; }
+
+    .back-link {
+      border: none;
+      background: none;
+      padding: 0;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .progress {
+      margin-bottom: 14px;
+    }
+
+    .progress-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 0.83rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: rgba(92, 78, 181, 0.12);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--purple), var(--blue));
+      transition: width 0.2s ease;
+    }
+
+    .board {
+      padding: 18px;
+    }
+
+    .helper {
+      margin-bottom: 14px;
+      font-size: 0.93rem;
+    }
+
+    .choice-row {
+      margin-bottom: 14px;
+    }
+
+    .assign-btn.active {
+      outline: 3px solid rgba(45, 40, 48, 0.14);
+      transform: translateY(-1px);
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+      gap: 10px;
+    }
+
+    .value-card {
+      position: relative;
+      min-height: 84px;
+      border: none;
+      border-radius: 18px;
+      padding: 12px 10px 10px;
+      color: white;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(31, 19, 31, 0.12);
+      transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
+      overflow: hidden;
+    }
+
+    .value-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 24px rgba(31, 19, 31, 0.16);
+    }
+
+    .value-card::before {
+      content: attr(data-mark);
+      position: absolute;
+      inset: auto auto -10px -4px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 4rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.09);
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .value-card .word {
+      position: relative;
+      z-index: 1;
+      font-size: 0.95rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      line-height: 1.25;
+      text-wrap: balance;
+    }
+
+    .value-card .num {
+      position: relative;
+      z-index: 1;
+      margin-top: 8px;
+      font-size: 0.7rem;
+      opacity: 0.78;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+
+    .value-card .status {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      padding: 4px 7px;
+      border-radius: 999px;
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 900;
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.24);
+    }
+
+    .value-card.status-really { box-shadow: 0 0 0 3px rgba(77, 156, 115, 0.55), 0 10px 20px rgba(31, 19, 31, 0.12); }
+    .value-card.status-slightly { box-shadow: 0 0 0 3px rgba(200, 144, 62, 0.55), 0 10px 20px rgba(31, 19, 31, 0.12); }
+    .value-card.status-unimportant { box-shadow: 0 0 0 3px rgba(197, 101, 88, 0.58), 0 10px 20px rgba(31, 19, 31, 0.12); }
+    .value-card.selected { box-shadow: 0 0 0 4px rgba(45, 40, 48, 0.2), 0 12px 24px rgba(31, 19, 31, 0.18); transform: translateY(-1px); }
+
+    .summary-grid {
+      margin-top: 14px;
+    }
+
+    .stat {
+      flex: 1;
+      min-width: 120px;
+      border-radius: 18px;
+      padding: 14px;
+      color: white;
+    }
+
+    .stat small {
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.68rem;
+      font-weight: 800;
+      opacity: 0.9;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 6px;
+      font-size: 1.6rem;
+      font-weight: 900;
+    }
+
+    .really { background: linear-gradient(135deg, #55a77a, var(--really)); }
+    .slightly { background: linear-gradient(135deg, #d29b4f, var(--slightly)); }
+    .unimportant { background: linear-gradient(135deg, #d06d60, var(--unimportant)); }
+
+    .selection-bar {
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .selection-note {
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.78);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .final-list {
+      margin-top: 14px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .final-block {
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.62);
+      border: 1px solid var(--border);
+    }
+
+    .final-block strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.84rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.7;
+    }
+
+    footer a {
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    @media (max-width: 940px) {
+      .top-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+  <link rel="manifest" href="manifest.json">
+  <script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');</script>
+</head>
+<body>
+  <nav class="top-nav" aria-label="Site navigation">
+    <a href="index.html" class="nav-back">← All card sets</a>
+  </nav>
+  <div class="app">
+    <header>
+      <div class="eyebrow">Qcards · 56 Laminated Cards</div>
+      <h1>The Values Cards</h1>
+      <p class="sub">This version follows the booklet method more closely: start with the whole deck visible together, sort into three piles, discard the lower two piles, then narrow what remains to 10, 5, 3, and finally 1.</p>
+    </header>
+
+    <section class="screen active" id="screen-home">
+      <div class="top-grid">
+        <div class="intro panel">
+          <h2>How the booklet says to use them</h2>
+          <p>“With the issue in mind, take your values cards in hand. Clear your mind of everything else as much as you can, and make your selections quickly, instinctively.”</p>
+          <div class="actions">
+            <button class="btn btn-primary" onclick="startDetailedSort()">Start the detailed sort</button>
+          </div>
+        </div>
+        <div class="instructions panel">
+          <h2>Detailed Sorting Method</h2>
+          <p>1. Sort the deck into <strong>really important</strong>, <strong>slightly important</strong>, and <strong>unimportant</strong>.</p>
+          <p>2. Discard the slightly important and unimportant piles.</p>
+          <p>3. Sort the really important pile again and set aside any values chosen only to solve a troubling issue.</p>
+          <p>4. Narrow what is left to your top 10, then 5, then 3 core values, then your number one value.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-board">
+      <div class="board panel">
+        <button class="back-link" onclick="goHome()">← Back to menu</button>
+        <div class="progress">
+          <div class="progress-row">
+            <span id="stage-title">Initial sort</span>
+            <span id="stage-progress">0 / 56 sorted</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="stage-fill"></div>
+          </div>
+        </div>
+
+        <p class="helper" id="stage-copy"></p>
+
+        <div class="choice-row" id="assign-row">
+          <button class="btn btn-really assign-btn active" data-bucket="really" onclick="setActiveBucket('really')">Click cards into Really Important</button>
+          <button class="btn btn-slightly assign-btn" data-bucket="slightly" onclick="setActiveBucket('slightly')">Click cards into Slightly Important</button>
+          <button class="btn btn-unimportant assign-btn" data-bucket="unimportant" onclick="setActiveBucket('unimportant')">Click cards into Unimportant</button>
+          <button class="btn btn-secondary" id="clear-btn" onclick="clearAssignments()">Clear this round</button>
+        </div>
+
+        <div class="selection-bar" id="selection-row" hidden>
+          <div class="selection-note" id="selection-note"></div>
+          <div class="actions" style="margin-top:0">
+            <div class="pill" id="selection-count"></div>
+            <button class="btn btn-secondary" id="clear-selection-btn" onclick="clearAssignments()" type="button">Clear selection</button>
+          </div>
+        </div>
+
+        <div class="card-grid" id="card-grid"></div>
+
+        <div class="actions">
+          <button class="btn btn-primary" id="continue-btn" onclick="advanceStage()" disabled>Continue</button>
+        </div>
+      </div>
+
+      <div class="summary-grid">
+        <div class="summary panel">
+          <h2>Current piles</h2>
+          <div class="summary-grid">
+            <div class="stat really"><small>Really important</small><span id="really-count">0</span></div>
+            <div class="stat slightly"><small>Slightly important</small><span id="slightly-count">0</span></div>
+            <div class="stat unimportant"><small>Unimportant</small><span id="unimportant-count">0</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-final">
+      <div class="final-panel panel">
+        <button class="back-link" onclick="goHome()">← Back to menu</button>
+        <h2>Your Values Summary</h2>
+        <p>The booklet finishes by asking: Does this surprise you? Does this change your plans? How do you want to change? Where to from here?</p>
+
+        <div class="final-list">
+          <div class="final-block">
+            <strong>Top 10</strong>
+            <div id="final-top10"></div>
+          </div>
+          <div class="final-block">
+            <strong>Core 3</strong>
+            <div id="final-core3"></div>
+          </div>
+          <div class="final-block">
+            <strong>Number One</strong>
+            <div id="final-top1"></div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-primary" onclick="startDetailedSort()">Start again</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-review">
+      <div class="final-panel panel">
+        <button class="back-link" onclick="goHome()">← Back to menu</button>
+        <h2>Review your piles</h2>
+        <p>Anything you left unset has now been discarded. Review the three piles before continuing with the booklet method.</p>
+
+        <div class="summary-grid" style="margin-top:14px">
+          <div class="stat really"><small>Really important</small><span id="review-really-count">0</span></div>
+          <div class="stat slightly"><small>Slightly important</small><span id="review-slightly-count">0</span></div>
+          <div class="stat unimportant"><small>Unimportant</small><span id="review-unimportant-count">0</span></div>
+        </div>
+
+        <div class="final-list">
+          <div class="final-block">
+            <strong>Really important</strong>
+            <div id="review-really-list"></div>
+          </div>
+          <div class="final-block">
+            <strong>Slightly important</strong>
+            <div id="review-slightly-list"></div>
+          </div>
+          <div class="final-block">
+            <strong>Unimportant</strong>
+            <div id="review-unimportant-list"></div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-primary" onclick="continueFromReview()">Continue with really important pile</button>
+          <button class="btn btn-secondary" onclick="startDetailedSort()">Start over</button>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      The Values Cards by <a href="https://www.qcards.com.au" target="_blank" rel="noopener">Qcards</a><br>
+      Published in Australia by Qcards · Marie McNamara &amp; John Veeken
+    </footer>
+  </div>
+
+  <script>
+    // [NEEDS REVIEW] Consolidated from photographed spreads plus deck-count reconciliation.
+    const CARDS = [
+      { value: "Acceptance", number: 1, color: "var(--purple)", mark: "A" },
+      { value: "Achievement", number: 2, color: "var(--blue)", mark: "A" },
+      { value: "Adventure", number: 3, color: "var(--teal)", mark: "A" },
+      { value: "Beauty", number: 4, color: "var(--green)", mark: "B" },
+      { value: "Challenge", number: 5, color: "var(--green)", mark: "C" },
+      { value: "Consistency", number: 6, color: "var(--orange)", mark: "C" },
+      { value: "Connection", number: 7, color: "var(--orange)", mark: "C" },
+      { value: "Compassion", number: 8, color: "var(--yellow)", mark: "C" },
+      { value: "Courage", number: 9, color: "var(--red)", mark: "C" },
+      { value: "Creativity", number: 10, color: "var(--red)", mark: "C" },
+      { value: "Dignity", number: 11, color: "var(--purple)", mark: "D" },
+      { value: "Encouragement", number: 12, color: "var(--purple)", mark: "E" },
+      { value: "Fairness", number: 13, color: "var(--blue)", mark: "F" },
+      { value: "Family", number: 14, color: "var(--blue)", mark: "F" },
+      { value: "Freedom", number: 15, color: "var(--green)", mark: "F" },
+      { value: "Friendship", number: 16, color: "var(--green)", mark: "F" },
+      { value: "Fulfilment", number: 17, color: "var(--yellow)", mark: "F" },
+      { value: "Fun", number: 18, color: "var(--yellow)", mark: "F" },
+      { value: "Gratitude", number: 19, color: "var(--orange)", mark: "G" },
+      { value: "Happiness", number: 20, color: "var(--orange)", mark: "H" },
+      { value: "Health", number: 21, color: "var(--red)", mark: "H" },
+      { value: "Home", number: 22, color: "var(--purple)", mark: "H" },
+      { value: "Honesty", number: 23, color: "var(--purple)", mark: "H" },
+      { value: "Hope", number: 24, color: "var(--blue)", mark: "H" },
+      { value: "Independence", number: 25, color: "var(--teal)", mark: "I" },
+      { value: "Inner Peace", number: 26, color: "var(--green)", mark: "I" },
+      { value: "Inner Strength", number: 27, color: "var(--green)", mark: "I" },
+      { value: "Integrity", number: 28, color: "var(--yellow)", mark: "I" },
+      { value: "Joy", number: 29, color: "var(--yellow)", mark: "J" },
+      { value: "Leadership", number: 30, color: "var(--orange)", mark: "L" },
+      { value: "Learning", number: 31, color: "var(--orange)", mark: "L" },
+      { value: "Love", number: 32, color: "var(--red)", mark: "L" },
+      { value: "Loyalty", number: 33, color: "var(--purple)", mark: "L" },
+      { value: "Nature", number: 34, color: "var(--purple)", mark: "N" },
+      { value: "Nurture", number: 35, color: "var(--blue)", mark: "N" },
+      { value: "Order", number: 36, color: "var(--teal)", mark: "O" },
+      { value: "Passion", number: 37, color: "var(--green)", mark: "P" },
+      { value: "Patience", number: 38, color: "var(--green)", mark: "P" },
+      { value: "Peace", number: 39, color: "var(--yellow)", mark: "P" },
+      { value: "Power", number: 40, color: "var(--yellow)", mark: "P" },
+      { value: "Respect", number: 41, color: "var(--orange)", mark: "R" },
+      { value: "Safety", number: 42, color: "var(--orange)", mark: "S" },
+      { value: "Security", number: 43, color: "var(--red)", mark: "S" },
+      { value: "Self Respect", number: 44, color: "var(--purple)", mark: "S" },
+      { value: "Sensuality", number: 45, color: "var(--purple)", mark: "S" },
+      { value: "Structure", number: 46, color: "var(--green)", mark: "S" },
+      { value: "Spirituality", number: 47, color: "var(--teal)", mark: "S" },
+      { value: "Support", number: 48, color: "var(--green)", mark: "S" },
+      { value: "Service", number: 49, color: "var(--blue)", mark: "S" },
+      { value: "Trust", number: 50, color: "var(--yellow)", mark: "T" },
+      { value: "Wealth", number: 51, color: "var(--yellow)", mark: "W" },
+      { value: "Winning", number: 52, color: "var(--orange)", mark: "W" },
+      { value: "Wisdom", number: 53, color: "var(--red)", mark: "W" },
+      { value: "Authenticity", number: 54, color: "var(--teal)", mark: "A" },
+      { value: "Balance", number: 55, color: "var(--purple)", mark: "B" },
+      { value: "Community", number: 56, color: "var(--blue)", mark: "C" }
+    ];
+
+    const stageConfig = {
+      initial: {
+        title: "Initial sort",
+        copy: "All the values are laid out together. Choose your active pile, then click only the cards you want to place. Anything left unset will be discarded before the next step.",
+        mode: "assign"
+      },
+      issues: {
+        title: "Set aside issue-driven cards",
+        copy: "Now look only at the really important pile. Click any value you chose because you felt compelled to choose it to solve a troubling issue. Those will be set aside for later.",
+        mode: "select"
+      },
+      top10: {
+        title: "Choose your top 10",
+        copy: "Take what's left and sort them according to what is most important to you. Click exactly 10 cards.",
+        mode: "select",
+        max: 10
+      },
+      top5: {
+        title: "Choose your top 5",
+        copy: "Select again, down to five cards.",
+        mode: "select",
+        max: 5
+      },
+      top3: {
+        title: "Choose your core 3",
+        copy: "Select again, down to three. These should be your core values.",
+        mode: "select",
+        max: 3
+      },
+      top1: {
+        title: "Choose your number one value",
+        copy: "Finally, pick one, your number one, most vital value in your life.",
+        mode: "select",
+        max: 1
+      }
+    };
+
+    let currentStage = "initial";
+    let activeBucket = "really";
+    let assignments = {};
+    let selected = new Set();
+    let issuePile = [];
+    let top10 = [];
+    let top5 = [];
+    let top3 = [];
+    let top1 = [];
+    let discardedUnset = [];
+    let stageFilter = "really";
+
+    function goHome() {
+      showScreen("screen-home");
+    }
+
+    function showScreen(id) {
+      document.querySelectorAll(".screen").forEach(screen => screen.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+    }
+
+    function startDetailedSort() {
+      currentStage = "initial";
+      activeBucket = "really";
+      assignments = {};
+      selected = new Set();
+      issuePile = [];
+      top10 = [];
+      top5 = [];
+      top3 = [];
+      top1 = [];
+      discardedUnset = [];
+      stageFilter = "really";
+      renderBoard();
+      showScreen("screen-board");
+    }
+
+    function setActiveBucket(bucket) {
+      if (currentStage === "issues") {
+        stageFilter = bucket;
+        renderBoard();
+        return;
+      }
+      activeBucket = bucket;
+      document.querySelectorAll(".assign-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.bucket === bucket));
+    }
+
+    function currentPool() {
+      if (currentStage === "initial") return CARDS;
+      if (currentStage === "issues") return CARDS.filter(card => assignments[card.number] === "really");
+      if (currentStage === "top10") return CARDS.filter(card => assignments[card.number] === "really" && !issuePile.includes(card.number));
+      if (currentStage === "top5") return CARDS.filter(card => top10.includes(card.number));
+      if (currentStage === "top3") return CARDS.filter(card => top5.includes(card.number));
+      if (currentStage === "top1") return CARDS.filter(card => top3.includes(card.number));
+      return [];
+    }
+
+    function renderBoard() {
+      const config = stageConfig[currentStage];
+      const pool = currentPool();
+      const grid = document.getElementById("card-grid");
+      const assignRow = document.getElementById("assign-row");
+      const selectionRow = document.getElementById("selection-row");
+      const continueBtn = document.getElementById("continue-btn");
+
+      document.getElementById("stage-title").textContent = config.title;
+      document.getElementById("stage-copy").textContent = config.copy;
+
+      if (config.mode === "assign") {
+        assignRow.hidden = false;
+        selectionRow.hidden = true;
+        document.querySelector('[data-bucket="really"]').textContent = "Click cards into Really Important";
+        document.querySelector('[data-bucket="slightly"]').textContent = "Click cards into Slightly Important";
+        document.querySelector('[data-bucket="unimportant"]').textContent = "Click cards into Unimportant";
+        setActiveBucket(activeBucket);
+        document.getElementById("clear-btn").textContent = "Clear this round";
+      } else {
+        assignRow.hidden = currentStage !== "issues";
+        selectionRow.hidden = false;
+        const limit = config.max || pool.length;
+        document.getElementById("selection-note").textContent = currentStage === "issues"
+          ? "Click a category button to view that pile. When the really important pile is visible, click cards to set aside issue-driven choices."
+          : `Click exactly ${limit} card${limit === 1 ? "" : "s"}.`;
+        document.getElementById("selection-count").textContent = `${selected.size}${config.max ? ` / ${config.max}` : ""} selected`;
+        if (currentStage === "issues") {
+          updateFilterButtons();
+        }
+      }
+
+      const progressInfo = progressForStage(pool.length);
+      document.getElementById("stage-progress").textContent = progressInfo.label;
+      document.getElementById("stage-fill").style.width = `${progressInfo.percent}%`;
+
+      grid.innerHTML = "";
+      visiblePool(pool).forEach(card => {
+        const button = document.createElement("button");
+        button.className = "value-card";
+        button.style.background = `linear-gradient(145deg, ${card.color}, color-mix(in srgb, ${card.color} 72%, black))`;
+        button.dataset.mark = card.mark;
+
+        const status = assignmentLabel(card.number);
+        if (status) {
+          button.classList.add(`status-${status}`);
+        }
+        if (selected.has(card.number)) button.classList.add("selected");
+
+        button.innerHTML = `
+          <div class="status">${status ? status.replace("unimportant", "not") : "unset"}</div>
+          <div class="word">${card.value}</div>
+          <div class="num">${String(card.number).padStart(2, "0")}</div>
+        `;
+        button.onclick = () => onCardClick(card.number);
+        grid.appendChild(button);
+      });
+
+      updateCounts();
+      continueBtn.disabled = !canContinue(pool.length);
+      continueBtn.textContent = continueLabel();
+    }
+
+    function visiblePool(pool) {
+      if (currentStage === "issues") {
+        if (stageFilter === "really") return pool;
+        return CARDS.filter(card => assignments[card.number] === stageFilter);
+      }
+      return pool;
+    }
+
+    function assignmentLabel(number) {
+      if (currentStage === "issues") return selected.has(number) ? "slightly" : "really";
+      if (currentStage === "top10" || currentStage === "top5" || currentStage === "top3" || currentStage === "top1") {
+        return selected.has(number) ? "really" : "";
+      }
+      return assignments[number] || "";
+    }
+
+    function onCardClick(number) {
+      const config = stageConfig[currentStage];
+      if (config.mode === "assign") {
+        assignments[number] = assignments[number] === activeBucket ? "" : activeBucket;
+      } else {
+        if (currentStage === "issues" && stageFilter !== "really") return;
+        if (selected.has(number)) {
+          selected.delete(number);
+        } else {
+          if (config.max && selected.size >= config.max) return;
+          selected.add(number);
+        }
+      }
+      renderBoard();
+    }
+
+    function clearAssignments() {
+      if (currentStage === "initial") {
+        assignments = {};
+      } else if (currentStage === "issues" || stageConfig[currentStage]?.mode === "select") {
+        selected = new Set();
+      }
+      renderBoard();
+    }
+
+    function updateFilterButtons() {
+      if (currentStage !== "issues") return;
+      document.querySelector('[data-bucket="really"]').textContent = "Really Important";
+      document.querySelector('[data-bucket="slightly"]').textContent = "Slightly Important";
+      document.querySelector('[data-bucket="unimportant"]').textContent = "Unimportant";
+      document.querySelectorAll(".assign-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.bucket === stageFilter);
+      });
+      document.getElementById("clear-btn").textContent = "Clear set-asides";
+    }
+
+    function updateCounts() {
+      const really = Object.values(assignments).filter(v => v === "really").length;
+      const slightly = Object.values(assignments).filter(v => v === "slightly").length;
+      const unimportant = Object.values(assignments).filter(v => v === "unimportant").length;
+      document.getElementById("really-count").textContent = really;
+      document.getElementById("slightly-count").textContent = slightly;
+      document.getElementById("unimportant-count").textContent = unimportant;
+    }
+
+    function canContinue(poolLength) {
+      if (currentStage === "initial") return Object.keys(assignments).filter(k => assignments[k]).length > 0;
+      if (currentStage === "issues") return true;
+      const max = stageConfig[currentStage].max;
+      if (max) return selected.size === max;
+      return true;
+    }
+
+    function continueLabel() {
+      if (currentStage === "initial") return "Discard unset cards and review piles";
+      if (currentStage === "issues") return "Continue to top 10";
+      if (currentStage === "top10") return "Continue to top 5";
+      if (currentStage === "top5") return "Continue to core 3";
+      if (currentStage === "top3") return "Choose number one";
+      if (currentStage === "top1") return "See summary";
+      return "Continue";
+    }
+
+    function advanceStage() {
+      if (currentStage === "initial") {
+        discardedUnset = CARDS.filter(card => !assignments[card.number]).map(card => card.number);
+        renderReview();
+        showScreen("screen-review");
+        return;
+      } else if (currentStage === "issues") {
+        issuePile = [...selected];
+        currentStage = "top10";
+        selected = new Set();
+      } else if (currentStage === "top10") {
+        top10 = [...selected];
+        currentStage = "top5";
+        selected = new Set();
+      } else if (currentStage === "top5") {
+        top5 = [...selected];
+        currentStage = "top3";
+        selected = new Set();
+      } else if (currentStage === "top3") {
+        top3 = [...selected];
+        currentStage = "top1";
+        selected = new Set();
+      } else if (currentStage === "top1") {
+        top1 = [...selected];
+        renderFinal();
+        showScreen("screen-final");
+        return;
+      }
+      renderBoard();
+    }
+
+    function continueFromReview() {
+      currentStage = "issues";
+      selected = new Set();
+      stageFilter = "really";
+      renderBoard();
+      showScreen("screen-board");
+    }
+
+    function progressForStage(poolLength) {
+      if (currentStage === "initial") {
+        const done = Object.keys(assignments).filter(k => assignments[k]).length;
+        return { label: `${done} / ${CARDS.length} sorted`, percent: (done / CARDS.length) * 100 };
+      }
+      const max = stageConfig[currentStage].max || poolLength;
+      return { label: `${selected.size} / ${max} selected`, percent: max ? (selected.size / max) * 100 : 0 };
+    }
+
+    function names(numbers) {
+      return numbers.map(number => CARDS.find(card => card.number === number)?.value || "").join(", ");
+    }
+
+    function renderFinal() {
+      document.getElementById("final-top10").textContent = names(top10);
+      document.getElementById("final-core3").textContent = names(top3);
+      document.getElementById("final-top1").textContent = names(top1);
+    }
+
+    function renderReview() {
+      const really = CARDS.filter(card => assignments[card.number] === "really").map(card => card.number);
+      const slightly = CARDS.filter(card => assignments[card.number] === "slightly").map(card => card.number);
+      const unimportant = CARDS.filter(card => assignments[card.number] === "unimportant").map(card => card.number);
+      document.getElementById("review-really-count").textContent = really.length;
+      document.getElementById("review-slightly-count").textContent = slightly.length;
+      document.getElementById("review-unimportant-count").textContent = unimportant.length;
+      document.getElementById("review-really-list").textContent = names(really) || "None selected.";
+      document.getElementById("review-slightly-list").textContent = names(slightly) || "None selected.";
+      document.getElementById("review-unimportant-list").textContent = names(unimportant) || "None selected.";
+    }
+
+    document.addEventListener("keydown", event => {
+      if (!document.getElementById("screen-board").classList.contains("active")) return;
+      if (currentStage === "initial") {
+        if (event.key === "1") setActiveBucket("really");
+        if (event.key === "2") setActiveBucket("slightly");
+        if (event.key === "3") setActiveBucket("unimportant");
+      } else if (currentStage === "issues") {
+        if (event.key === "1") setActiveBucket("really");
+        if (event.key === "2") setActiveBucket("slightly");
+        if (event.key === "3") setActiveBucket("unimportant");
+      }
+    });
+  </script>
+</body>
+</html>
