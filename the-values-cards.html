@@ -16,13 +16,13 @@
       --really: #4d9c73;
       --slightly: #c8903e;
       --unimportant: #c56558;
-      --blue: #4f8de7;
-      --teal: #2f9fa3;
-      --green: #71a55c;
-      --yellow: #d0c44a;
-      --orange: #d7964d;
-      --red: #c55e55;
-      --purple: #5c4eb5;
+      --blue: #3D7BC4;
+      --teal: #1F8A8E;
+      --green: #3D8B5E;
+      --yellow: #C4A020;
+      --orange: #D4622A;
+      --red: #B83030;
+      --purple: #5040A8;
     }
 
     body {
@@ -263,6 +263,21 @@
       line-height: 1;
       pointer-events: none;
     }
+
+    .value-card::after {
+      content: "";
+      position: absolute;
+      bottom: -20px;
+      right: -20px;
+      width: 140px;
+      height: 140px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cpath d='M100,10 C145,10 180,45 180,90 C180,135 145,170 100,170 C55,170 20,135 20,90 C20,55 45,30 70,25 C95,20 115,35 115,55 C115,75 100,85 85,82 C70,79 62,68 65,58 C68,48 78,44 85,48' fill='none' stroke='rgba(255,255,255,0.18)' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M130,30 C155,45 168,75 160,105 C152,135 128,155 100,158' fill='none' stroke='rgba(255,255,255,0.12)' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-size: contain;
+      background-repeat: no-repeat;
+      pointer-events: none;
+      opacity: 0.9;
+    }
+
 
     .value-card .word {
       position: relative;
