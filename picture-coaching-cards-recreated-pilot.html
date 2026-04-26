@@ -4,114 +4,105 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Picture Coaching Cards</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     :root {
-      --forest: #21463d;
-      --forest-deep: #18322c;
-      --moss: #6f9685;
-      --sand: #f0e7db;
-      --paper: rgba(255, 252, 247, 0.92);
-      --ink: #202925;
-      --muted: #61726b;
-      --line: rgba(33, 70, 61, 0.12);
-      --shadow: rgba(24, 39, 33, 0.18);
-      --gold: #c8a55c;
+      --red:         #E3120B;
+      --near-black:  #0D0D0D;
+      --dark:        #262626;
+      --mid-gray:    #666666;
+      --light-gray:  #AAAAAA;
+      --off-white:   #F5F4EE;
+      --white:       #FFFFFF;
+      --stone:       #A89F94;
+      --stone-light: #E8E3DD;
+      --stone-dark:  #7A7168;
+      --warm-white:  #FDFBF8;
     }
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: var(--ink);
-      background:
-        radial-gradient(circle at top left, rgba(111,150,133,0.18), transparent 28%),
-        radial-gradient(circle at 85% 12%, rgba(200,165,92,0.16), transparent 22%),
-        linear-gradient(180deg, #f7f0e6 0%, #ede2d5 100%);
-      padding: 54px 18px 40px;
+      font-family: 'Inter', sans-serif;
+      color: var(--near-black);
+      background: var(--warm-white);
+      padding: 56px 18px 40px;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--red);
+      z-index: 9999;
     }
     .top-nav {
       position: fixed;
-      top: 0; left: 0; right: 0;
+      top: 3px; left: 0; right: 0;
       z-index: 900;
       height: 44px;
       display: flex;
       align-items: center;
       padding: 0 20px;
-      background: rgba(255, 252, 248, 0.82);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-bottom: 1px solid rgba(0,0,0,0.07);
+      background: var(--near-black);
     }
     .nav-back {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: inherit;
+      color: var(--stone);
       text-decoration: none;
-      opacity: 0.5;
-      transition: opacity 0.15s;
+      transition: color 0.15s;
     }
-    .nav-back:hover { opacity: 1; }
+    .nav-back:hover { color: var(--white); }
     .app { max-width: 1220px; margin: 0 auto; }
-    header { text-align: center; margin-bottom: 22px; }
+    header { text-align: center; margin-bottom: 28px; }
     .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 14px;
-      border-radius: 999px;
+      display: inline-block;
       margin-bottom: 14px;
-      background: rgba(255,255,255,0.72);
-      border: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 0.78rem;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      font-weight: 800;
-    }
-    .eyebrow::before {
-      content: "";
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: linear-gradient(135deg, var(--forest), var(--gold));
+      color: var(--stone);
     }
     h1 {
       margin: 0;
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(2.4rem, 5vw, 4.2rem);
-      line-height: 0.96;
-      color: var(--forest-deep);
+      font-family: 'Archivo Narrow', sans-serif;
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 700;
+      line-height: 1.05;
+      color: var(--near-black);
     }
     .sub {
       max-width: 780px;
       margin: 14px auto 0;
-      color: var(--muted);
-      font-size: 1rem;
+      color: var(--mid-gray);
+      font-size: 15px;
       line-height: 1.7;
     }
     .layout {
       display: grid;
       grid-template-columns: 1.1fr 0.9fr;
-      gap: 20px;
+      gap: 16px;
     }
     .panel {
-      background: var(--paper);
-      border: 1px solid var(--line);
-      border-radius: 30px;
+      background: var(--white);
+      border: 1px solid var(--stone-light);
+      border-radius: 4px;
       padding: 24px;
-      box-shadow: 0 22px 52px var(--shadow);
-      backdrop-filter: blur(12px);
+      box-shadow: 0 2px 12px rgba(13,13,13,0.06);
     }
     .viewer { display: grid; gap: 16px; }
     .viewer-stage {
-      border-radius: 22px;
-      background: #f4ede3;
-      border: 1px solid rgba(33,70,61,0.08);
+      border-radius: 2px;
+      background: var(--off-white);
+      border: 1px solid var(--stone-light);
       overflow: hidden;
       aspect-ratio: 3 / 4;
       display: flex;
@@ -134,74 +125,72 @@
     .chip {
       display: inline-flex;
       align-items: center;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(33,70,61,0.08);
-      color: var(--forest-deep);
-      font-size: 0.8rem;
-      font-weight: 800;
-      letter-spacing: 0.06em;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
+      color: var(--stone);
     }
     .btn {
       border: none;
-      border-radius: 999px;
-      padding: 12px 18px;
-      font: inherit;
-      font-size: 0.95rem;
-      font-weight: 800;
+      border-radius: 2px;
+      padding: 10px 18px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
       cursor: pointer;
-      transition: transform 0.12s ease, opacity 0.12s ease;
-      box-shadow: 0 6px 16px rgba(33,23,40,0.1);
+      transition: background 0.12s ease, color 0.12s ease;
     }
-    .btn:active { transform: scale(0.97); }
+    .btn:active { opacity: 0.85; }
     .btn-primary {
-      background: linear-gradient(135deg, var(--forest), var(--moss));
-      color: white;
+      background: var(--near-black);
+      color: var(--white);
     }
+    .btn-primary:hover { background: var(--dark); }
     .btn-secondary {
-      background: rgba(255,255,255,0.9);
-      color: var(--forest-deep);
-      border: 1px solid var(--line);
-      box-shadow: none;
+      background: transparent;
+      color: var(--stone-dark);
+      border: 1px solid var(--stone-light);
     }
-    .aside { display: grid; gap: 16px; align-content: start; }
+    .btn-secondary:hover { border-color: var(--stone); color: var(--stone); }
+    .aside { display: grid; gap: 12px; align-content: start; }
     .note {
-      border-radius: 22px;
-      border: 1px solid var(--line);
-      padding: 16px;
-      background: rgba(255,255,255,0.8);
+      border-left: 2px solid var(--stone);
+      padding: 12px 16px;
+      background: var(--off-white);
     }
     .note strong {
       display: block;
       margin-bottom: 6px;
-      color: var(--forest-deep);
+      font-family: 'Archivo Narrow', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--near-black);
     }
-    .note p { margin: 0; line-height: 1.6; color: var(--muted); }
+    .note p { margin: 0; line-height: 1.6; color: var(--mid-gray); font-size: 13px; }
     .thumb-scroll {
       max-height: 420px;
       overflow-y: auto;
-      border-radius: 18px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.6);
+      border: 1px solid var(--stone-light);
+      background: var(--warm-white);
       padding: 10px;
     }
     .thumb-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
+      gap: 6px;
     }
     .thumb {
       border: 2px solid transparent;
-      border-radius: 12px;
+      border-radius: 2px;
       overflow: hidden;
       cursor: pointer;
-      background: #f4ede3;
+      background: var(--off-white);
       aspect-ratio: 3 / 4;
       transition: border-color 0.15s, transform 0.12s;
     }
     .thumb:hover { transform: translateY(-1px); }
-    .thumb.active { border-color: var(--moss); }
+    .thumb.active { border-color: var(--stone); }
     .thumb img {
       width: 100%;
       height: 100%;
@@ -209,19 +198,31 @@
       display: block;
     }
     footer {
-      text-align: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-top: 24px;
-      color: var(--muted);
-      font-size: 0.85rem;
-      line-height: 1.6;
+      padding-top: 20px;
+      border-top: 1px solid var(--stone-light);
+    }
+    .footer-identity {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--stone-dark);
+    }
+    .footer-tagline {
+      font-family: 'Archivo Narrow', sans-serif;
+      font-size: 13px;
+      font-style: italic;
+      color: var(--stone);
     }
     @media (max-width: 900px) {
       .layout { grid-template-columns: 1fr; }
       .viewer-stage { aspect-ratio: 4 / 3; }
     }
   </style>
-  <link rel="manifest" href="manifest.json">
-  <script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');</script>
 </head>
 <body>
   <nav class="top-nav">
@@ -270,64 +271,64 @@
     </section>
 
     <footer>
-      Picture Coaching Cards by Barefoot Coaching Ltd · 55 photographs to inspire powerful coaching conversations<br>
-      Images sourced from Pexels (free to use).
+      <span class="footer-identity">coaching · the economist</span>
+      <span class="footer-tagline">life begins at the end of your comfort zone</span>
     </footer>
   </main>
 
   <script>
     const CARDS = [
-      { id: 1, title: "Spider web", src: "https://picsum.photos/seed/1/800/600" },
-      { id: 2, title: "Grand piano", src: "https://picsum.photos/seed/2/800/600" },
-      { id: 3, title: "Fireworks", src: "https://picsum.photos/seed/3/800/600" },
-      { id: 4, title: "Stone church", src: "https://picsum.photos/seed/4/800/600" },
-      { id: 5, title: "Daffodils", src: "https://picsum.photos/seed/5/800/600" },
-      { id: 6, title: "Catacombs", src: "https://picsum.photos/seed/6/800/600" },
-      { id: 7, title: "Vintage VW Beetle", src: "https://picsum.photos/seed/7/800/600" },
-      { id: 8, title: "Brahman cow", src: "https://picsum.photos/seed/8/800/600" },
-      { id: 9, title: "Blue dreadlocks", src: "https://picsum.photos/seed/9/800/600" },
-      { id: 10, title: "Bald eagle", src: "https://picsum.photos/seed/10/800/600" },
-      { id: 11, title: "Intertwined bodies", src: "https://picsum.photos/seed/11/800/600" },
-      { id: 12, title: "Red rooster", src: "https://picsum.photos/seed/12/800/600" },
-      { id: 13, title: "Volcanic lava", src: "https://picsum.photos/seed/13/800/600" },
-      { id: 14, title: "Beach hammock", src: "https://picsum.photos/seed/14/800/600" },
-      { id: 15, title: "Misty winter lake", src: "https://picsum.photos/seed/15/800/600" },
-      { id: 16, title: "Starting blocks", src: "https://picsum.photos/seed/16/800/600" },
-      { id: 17, title: "Intense portrait", src: "https://picsum.photos/seed/17/800/600" },
-      { id: 18, title: "Abstract painted lines", src: "https://picsum.photos/seed/18/800/600" },
-      { id: 19, title: "Nuns in street", src: "https://picsum.photos/seed/19/800/600" },
-      { id: 20, title: "Temple guardian", src: "https://picsum.photos/seed/20/800/600" },
-      { id: 21, title: "Lighthouse", src: "https://picsum.photos/seed/21/800/600" },
-      { id: 22, title: "Wedding hands", src: "https://picsum.photos/seed/22/800/600" },
-      { id: 23, title: "Conductor", src: "https://picsum.photos/seed/23/800/600" },
-      { id: 24, title: "F1 pit stop", src: "https://picsum.photos/seed/24/800/600" },
-      { id: 25, title: "Silver cocktail", src: "https://picsum.photos/seed/25/800/600" },
-      { id: 26, title: "Cupcakes", src: "https://picsum.photos/seed/26/800/600" },
-      { id: 27, title: "Elderly man with hat", src: "https://picsum.photos/seed/27/800/600" },
-      { id: 28, title: "Sleeping baby", src: "https://picsum.photos/seed/28/800/600" },
-      { id: 29, title: "Operating theatre", src: "https://picsum.photos/seed/29/800/600" },
-      { id: 30, title: "Colourful salad", src: "https://picsum.photos/seed/30/800/600" },
-      { id: 31, title: "Business meeting", src: "https://picsum.photos/seed/31/800/600" },
-      { id: 32, title: "Football stadium", src: "https://picsum.photos/seed/32/800/600" },
-      { id: 33, title: "Snow mountains", src: "https://picsum.photos/seed/33/800/600" },
-      { id: 34, title: "Desert road", src: "https://picsum.photos/seed/34/800/600" },
-      { id: 35, title: "Balancing on rock", src: "https://picsum.photos/seed/35/800/600" },
-      { id: 36, title: "Venice gondolas", src: "https://picsum.photos/seed/36/800/600" },
-      { id: 37, title: "Industrial machinery", src: "https://picsum.photos/seed/37/800/600" },
-      { id: 38, title: "Stacked logs", src: "https://picsum.photos/seed/38/800/600" },
-      { id: 39, title: "Tomatoes on vine", src: "https://picsum.photos/seed/39/800/600" },
-      { id: 40, title: "Dragon fruit", src: "https://picsum.photos/seed/40/800/600" },
-      { id: 41, title: "Garden bench", src: "https://picsum.photos/seed/41/800/600" },
-      { id: 42, title: "Skydivers", src: "https://picsum.photos/seed/42/800/600" },
-      { id: 43, title: "Glass architecture", src: "https://picsum.photos/seed/43/800/600" },
-      { id: 44, title: "Gold coins", src: "https://picsum.photos/seed/44/800/600" },
-      { id: 45, title: "Ancient mask", src: "https://picsum.photos/seed/45/800/600" },
-      { id: 46, title: "Motorcycle", src: "https://picsum.photos/seed/46/800/600" },
-      { id: 47, title: "Elder portrait", src: "https://picsum.photos/seed/47/800/600" },
-      { id: 48, title: "Flock of sheep", src: "https://picsum.photos/seed/48/800/600" },
-      { id: 49, title: "Tiger", src: "https://picsum.photos/seed/49/800/600" },
-      { id: 50, title: "Astronomical clock", src: "https://picsum.photos/seed/50/800/600" },
-      { id: 51, title: "Abstract motion", src: "https://picsum.photos/seed/51/800/600" }
+      { id: 1, title: "Spider web", src: "https://images.pexels.com/photos/28462915/pexels-photo-28462915.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 2, title: "Grand piano", src: "https://images.pexels.com/photos/4092518/pexels-photo-4092518.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 3, title: "Fireworks", src: "https://images.pexels.com/photos/13696817/pexels-photo-13696817.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 4, title: "Stone church", src: "https://images.pexels.com/photos/5571696/pexels-photo-5571696.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 5, title: "Daffodils", src: "https://images.pexels.com/photos/96603/pexels-photo-96603.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 6, title: "Catacombs", src: "https://images.pexels.com/photos/6440968/pexels-photo-6440968.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 7, title: "Vintage VW Beetle", src: "https://images.pexels.com/photos/5726586/pexels-photo-5726586.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 8, title: "Brahman cow", src: "https://images.pexels.com/photos/30010791/pexels-photo-30010791.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 9, title: "Blue dreadlocks", src: "https://images.pexels.com/photos/19484028/pexels-photo-19484028.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 10, title: "Bald eagle", src: "https://images.pexels.com/photos/16024508/pexels-photo-16024508.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 11, title: "Intertwined bodies", src: "https://images.pexels.com/photos/17816694/pexels-photo-17816694.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 12, title: "Red rooster", src: "https://images.pexels.com/photos/12310957/pexels-photo-12310957.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 13, title: "Volcanic lava", src: "https://images.pexels.com/photos/27245741/pexels-photo-27245741.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 14, title: "Beach hammock", src: "https://images.pexels.com/photos/104750/pexels-photo-104750.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 15, title: "Misty winter lake", src: "https://images.pexels.com/photos/5421054/pexels-photo-5421054.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 16, title: "Starting blocks", src: "https://images.pexels.com/photos/12585946/pexels-photo-12585946.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 17, title: "Intense portrait", src: "https://images.pexels.com/photos/30429776/pexels-photo-30429776.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 18, title: "Abstract painted lines", src: "https://images.pexels.com/photos/1269968/pexels-photo-1269968.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 19, title: "Nuns in street", src: "https://images.pexels.com/photos/27063881/pexels-photo-27063881.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 20, title: "Temple guardian", src: "https://images.pexels.com/photos/28969319/pexels-photo-28969319.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 21, title: "Lighthouse", src: "https://images.pexels.com/photos/2332705/pexels-photo-2332705.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 22, title: "Wedding hands", src: "https://images.pexels.com/photos/18628263/pexels-photo-18628263.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 23, title: "Conductor", src: "https://images.pexels.com/photos/32024630/pexels-photo-32024630.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 24, title: "F1 pit stop", src: "https://images.pexels.com/photos/29327972/pexels-photo-29327972.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 25, title: "Silver cocktail", src: "https://images.pexels.com/photos/616834/pexels-photo-616834.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 26, title: "Cupcakes", src: "https://images.pexels.com/photos/306070/pexels-photo-306070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 27, title: "Elderly man with hat", src: "https://images.pexels.com/photos/13906963/pexels-photo-13906963.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 28, title: "Sleeping baby", src: "https://images.pexels.com/photos/10998327/pexels-photo-10998327.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 29, title: "Operating theatre", src: "https://images.pexels.com/photos/263337/pexels-photo-263337.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 30, title: "Colourful salad", src: "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 31, title: "Business meeting", src: "https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 32, title: "Football stadium", src: "https://images.pexels.com/photos/9739469/pexels-photo-9739469.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 33, title: "Snow mountains", src: "https://images.pexels.com/photos/691668/pexels-photo-691668.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 34, title: "Desert road", src: "https://images.pexels.com/photos/29307263/pexels-photo-29307263.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 35, title: "Balancing on rock", src: "https://images.pexels.com/photos/7640/pexels-photo-7640.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 36, title: "Venice gondolas", src: "https://images.pexels.com/photos/3546189/pexels-photo-3546189.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 37, title: "Industrial machinery", src: "https://images.pexels.com/photos/1579356/pexels-photo-1579356.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 38, title: "Stacked logs", src: "https://images.pexels.com/photos/1405720/pexels-photo-1405720.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 39, title: "Tomatoes on vine", src: "https://images.pexels.com/photos/6332370/pexels-photo-6332370.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 40, title: "Dragon fruit", src: "https://images.pexels.com/photos/52577/pexels-photo-52577.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 41, title: "Garden bench", src: "https://images.pexels.com/photos/4119/pexels-photo-4119.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 42, title: "Skydivers", src: "https://images.pexels.com/photos/2827400/pexels-photo-2827400.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 43, title: "Glass architecture", src: "https://images.pexels.com/photos/813435/pexels-photo-813435.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 44, title: "Gold coins", src: "https://images.pexels.com/photos/3790639/pexels-photo-3790639.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 45, title: "Ancient mask", src: "https://images.pexels.com/photos/13704987/pexels-photo-13704987.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 46, title: "Motorcycle", src: "https://images.pexels.com/photos/1416169/pexels-photo-1416169.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 47, title: "Elder portrait", src: "https://images.pexels.com/photos/29716433/pexels-photo-29716433.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 48, title: "Flock of sheep", src: "https://images.pexels.com/photos/2452308/pexels-photo-2452308.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 49, title: "Tiger", src: "https://images.pexels.com/photos/7123239/pexels-photo-7123239.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 50, title: "Astronomical clock", src: "https://images.pexels.com/photos/820735/pexels-photo-820735.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      { id: 51, title: "Abstract motion", src: "https://images.pexels.com/photos/5253574/pexels-photo-5253574.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" }
     ];
 
     let current = 0;

@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Immunity to Change</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red: #E3120B;
+  --near-black: #0D0D0D;
+  --off-white: #F5F4EE;
+  --mid-gray: #666666;
+  --stone: #A89F94;
+  --stone-dark: #7A7168;
+  --stone-light: #E8E3DD;
+  --warm-white: #FDFBF8;
+  --white: #FFFFFF;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--warm-white);
+  color: var(--near-black);
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  line-height: 1.72;
+  min-height: 100vh;
+  padding-top: 120px;
+}
+
+/* ── Top rule ── */
+.top-rule {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: 3px; background: var(--red); z-index: 200;
+}
+
+/* ── Site header ── */
+.site-header {
+  position: fixed; top: 3px; left: 0; right: 0;
+  background: var(--warm-white);
+  border-bottom: 1px solid var(--stone-light);
+  z-index: 150; padding: 0 24px;
+}
+.header-inner {
+  max-width: 720px; margin: 0 auto;
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+.identity-mark {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500; font-size: 10px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--stone-dark);
+}
+.save-badge {
+  font-size: 11px; color: var(--stone);
+  letter-spacing: 0.03em; opacity: 0;
+  transition: opacity 0.4s;
+}
+.save-badge.visible { opacity: 1; }
+
+/* ── Journey map ── */
+.journey-bar {
+  position: fixed; top: 49px; left: 0; right: 0;
+  background: var(--warm-white);
+  border-bottom: 1px solid var(--stone-light);
+  z-index: 140; padding: 0 24px;
+  display: none;
+}
+.journey-bar.visible { display: block; }
+.journey-inner {
+  max-width: 720px; margin: 0 auto;
+  display: flex; align-items: center;
+  padding: 14px 0; gap: 0;
+}
+.journey-step {
+  display: flex; align-items: center; flex: 1;
+  cursor: default;
+}
+.journey-step:last-child { flex: 0; }
+.step-node {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 1.5px solid var(--stone-light);
+  background: var(--warm-white);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-size: 10px; font-weight: 500;
+  color: var(--stone); transition: all 0.3s;
+  position: relative;
+}
+.step-node.done {
+  background: var(--stone-light);
+  border-color: var(--stone);
+  color: var(--stone-dark);
+}
+.step-node.active {
+  background: var(--near-black);
+  border-color: var(--near-black);
+  color: var(--white);
+}
+.step-label {
+  font-size: 9px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--stone);
+  position: absolute; top: 34px; left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap; font-family: 'Inter', sans-serif;
+  font-weight: 500; transition: color 0.3s;
+}
+.step-node.active .step-label { color: var(--near-black); }
+.step-node.done .step-label { color: var(--stone-dark); }
+.step-connector {
+  flex: 1; height: 1px;
+  background: var(--stone-light); margin: 0 4px;
+  transition: background 0.3s;
+}
+.step-connector.done { background: var(--stone); }
+
+/* ── Main content ── */
+.main { max-width: 720px; margin: 0 auto; padding: 0 24px 80px; }
+
+/* ── Stage panels ── */
+.stage { display: none; }
+.stage.active { display: block; }
+
+/* ── Welcome stage ── */
+.welcome-wrap {
+  padding: 64px 0 48px;
+  max-width: 560px;
+}
+.welcome-eyebrow {
+  font-size: 10px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--stone);
+  font-weight: 500; margin-bottom: 24px;
+  font-family: 'Inter', sans-serif;
+}
+.welcome-title {
+  font-family: 'Archivo Narrow', sans-serif;
+  font-weight: 700; font-size: 42px;
+  line-height: 1.05; color: var(--near-black);
+  margin-bottom: 32px;
+}
+.welcome-body {
+  color: var(--near-black); margin-bottom: 24px;
+}
+.welcome-body p { margin-bottom: 16px; }
+.welcome-divider {
+  width: 40px; height: 2px;
+  background: var(--stone-light); margin: 32px 0;
+}
+.disclaimer {
+  background: var(--stone-light); padding: 20px 24px;
+  border-radius: 2px; margin-bottom: 40px;
+}
+.disclaimer p {
+  font-size: 13px; color: var(--stone-dark); line-height: 1.6;
+}
+.disclaimer strong {
+  font-weight: 500; display: block; margin-bottom: 4px;
+  font-size: 10px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--stone-dark);
+}
+
+/* ── Stage content ── */
+.stage-header { padding: 48px 0 36px; }
+.stage-eyebrow {
+  font-size: 10px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--stone);
+  font-weight: 500; margin-bottom: 16px;
+  font-family: 'Inter', sans-serif;
+}
+.stage-title {
+  font-family: 'Archivo Narrow', sans-serif;
+  font-weight: 700; font-size: 34px;
+  line-height: 1.08; color: var(--near-black);
+  margin-bottom: 12px;
+}
+.stage-illustration { margin: 24px 0 32px; }
+
+.coaching-prompt {
+  border-left: 2px solid var(--stone);
+  padding: 0 0 0 20px; margin-bottom: 36px;
+}
+.coaching-prompt p {
+  color: var(--near-black); margin-bottom: 12px;
+  font-size: 15px; line-height: 1.75;
+}
+.coaching-prompt p:last-child { margin-bottom: 0; }
+
+/* ── Context echo (shows previous answers) ── */
+.context-echo {
+  background: var(--off-white); border-radius: 2px;
+  padding: 18px 22px; margin-bottom: 32px;
+  border-left: 2px solid var(--stone-light);
+}
+.context-echo-label {
+  font-size: 10px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--stone);
+  font-weight: 500; margin-bottom: 8px;
+}
+.context-echo-text {
+  color: var(--mid-gray); font-style: italic;
+  font-size: 14px; line-height: 1.65;
+}
+
+/* ── Inputs ── */
+.input-group { margin-bottom: 32px; }
+.input-label {
+  display: block; font-size: 12px;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--stone-dark); font-weight: 500;
+  margin-bottom: 10px;
+}
+textarea {
+  width: 100%; min-height: 120px;
+  border: 1px solid var(--stone-light);
+  border-radius: 2px; padding: 16px;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px; line-height: 1.7;
+  color: var(--near-black); background: var(--white);
+  resize: vertical; transition: border-color 0.2s;
+  outline: none;
+}
+textarea:focus { border-color: var(--stone); }
+textarea::placeholder { color: var(--stone); }
+
+/* ── Follow-up reflection ── */
+.follow-up {
+  background: var(--stone-light); border-radius: 2px;
+  padding: 18px 22px; margin-top: 12px;
+  display: none;
+}
+.follow-up.visible { display: block; }
+.follow-up p {
+  font-size: 14px; color: var(--stone-dark);
+  font-style: italic; line-height: 1.65;
+}
+
+/* ── Exercises accordion ── */
+.exercises-toggle {
+  background: none; border: none; cursor: pointer;
+  display: flex; align-items: center; gap: 10px;
+  padding: 0; margin-bottom: 20px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--stone-dark);
+  font-weight: 500;
+}
+.exercises-toggle svg {
+  transition: transform 0.25s;
+}
+.exercises-toggle.open svg { transform: rotate(180deg); }
+
+.exercises-panel {
+  display: none; margin-bottom: 28px;
+}
+.exercises-panel.open { display: block; }
+
+.exercise-cards {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 540px) {
+  .exercise-cards { grid-template-columns: 1fr; }
+}
+.exercise-card {
+  background: var(--white);
+  border: 1px solid var(--stone-light);
+  border-radius: 2px; padding: 18px;
+  cursor: default;
+}
+.exercise-card-title {
+  font-family: 'Archivo Narrow', sans-serif;
+  font-weight: 600; font-size: 15px;
+  color: var(--near-black); margin-bottom: 8px;
+}
+.exercise-card-body {
+  font-size: 13px; color: var(--mid-gray);
+  line-height: 1.65;
+}
+.exercise-card-body ol, .exercise-card-body ul {
+  padding-left: 16px; margin-top: 8px;
+}
+.exercise-card-body li { margin-bottom: 4px; }
+
+/* ── Navigation buttons ── */
+.stage-nav {
+  display: flex; align-items: center;
+  gap: 16px; padding-top: 8px; margin-top: 8px;
+}
+.btn-primary {
+  background: var(--near-black); color: var(--white);
+  border: none; padding: 14px 32px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px; letter-spacing: 0.06em;
+  text-transform: uppercase; font-weight: 500;
+  cursor: pointer; border-radius: 2px;
+  transition: background 0.2s;
+}
+.btn-primary:hover { background: #2a2a2a; }
+.btn-secondary {
+  background: none; border: 1px solid var(--stone-light);
+  color: var(--stone-dark); padding: 14px 24px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px; letter-spacing: 0.06em;
+  text-transform: uppercase; font-weight: 500;
+  cursor: pointer; border-radius: 2px;
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-secondary:hover {
+  border-color: var(--stone); color: var(--near-black);
+}
+.btn-ghost {
+  background: none; border: none; cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px; color: var(--stone);
+  letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 0; text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.btn-ghost:hover { color: var(--stone-dark); }
+
+/* ── Completed map (stage 6) ── */
+.map-view { padding: 48px 0; }
+.map-title {
+  font-family: 'Archivo Narrow', sans-serif;
+  font-weight: 700; font-size: 34px;
+  color: var(--near-black); margin-bottom: 8px;
+}
+.map-subtitle {
+  color: var(--mid-gray); font-size: 14px;
+  margin-bottom: 40px;
+}
+.map-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px; margin-bottom: 48px;
+  border: 1px solid var(--stone-light);
+}
+@media (max-width: 600px) {
+  .map-grid { grid-template-columns: 1fr; }
+}
+.map-cell {
+  background: var(--white);
+  padding: 24px 20px;
+}
+.map-cell-label {
+  font-size: 9px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--stone);
+  font-weight: 500; font-family: 'Inter', sans-serif;
+  margin-bottom: 12px;
+}
+.map-cell-content {
+  font-size: 14px; line-height: 1.65;
+  color: var(--near-black); font-style: italic;
+}
+.map-cell.highlight {
+  background: var(--off-white);
+}
+
+.experiment-block {
+  border: 1px solid var(--stone-light);
+  padding: 28px; margin-bottom: 40px;
+  border-radius: 2px;
+}
+.experiment-block-title {
+  font-family: 'Archivo Narrow', sans-serif;
+  font-weight: 600; font-size: 18px;
+  color: var(--near-black); margin-bottom: 20px;
+}
+.experiment-row {
+  margin-bottom: 16px;
+}
+.experiment-row-label {
+  font-size: 10px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--stone);
+  font-weight: 500; margin-bottom: 4px;
+}
+.experiment-row-value {
+  font-size: 14px; color: var(--near-black);
+  line-height: 1.65; font-style: italic;
+}
+
+.final-reflection-block {
+  background: var(--stone-light);
+  padding: 28px; margin-bottom: 40px;
+  border-radius: 2px;
+}
+.final-reflection-label {
+  font-size: 10px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--stone-dark);
+  font-weight: 500; margin-bottom: 12px;
+}
+
+.export-row {
+  display: flex; gap: 12px; flex-wrap: wrap;
+  margin-bottom: 60px;
+}
+
+/* ── Footer / tagline ── */
+.site-footer {
+  border-top: 1px solid var(--stone-light);
+  padding: 32px 24px; margin-top: 80px;
+}
+.footer-inner {
+  max-width: 720px; margin: 0 auto;
+  display: flex; align-items: center;
+  justify-content: space-between;
+}
+.footer-mark {
+  font-size: 10px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--stone-dark);
+  font-family: 'Inter', sans-serif; font-weight: 500;
+}
+.footer-tagline {
+  font-family: 'Archivo Narrow', sans-serif;
+  font-style: italic; font-size: 13px;
+  color: var(--stone);
+}
+
+/* ── Divider ── */
+.section-divider {
+  width: 40px; height: 1px;
+  background: var(--stone-light); margin: 32px 0;
+}
+
+/* ── Print styles ── */
+@media print {
+  .top-rule, .site-header, .journey-bar,
+  .stage-nav, .exercises-toggle, .exercises-panel,
+  .export-row, .final-reflection-block textarea { display: none !important; }
+  body { padding-top: 0; font-size: 12px; }
+  .map-grid { break-inside: avoid; }
+  .site-footer { margin-top: 40px; }
+}
+</style>
+</head>
+<body>
+
+<div class="top-rule"></div>
+
+<!-- Site header -->
+<header class="site-header">
+  <div class="header-inner">
+    <span class="identity-mark">coaching &middot; the economist</span>
+    <div style="display:flex; align-items:center; gap:20px;">
+      <button class="btn-ghost" id="resetHeaderBtn" onclick="confirmReset()" style="display:none; font-size:11px;">Start over</button>
+      <span class="save-badge" id="saveBadge">Saved</span>
+    </div>
+  </div>
+</header>
+
+<!-- Journey map bar -->
+<nav class="journey-bar" id="journeyBar">
+  <div class="journey-inner">
+    <div class="journey-step">
+      <div class="step-node" id="node1">1<span class="step-label">Goal</span></div>
+    </div>
+    <div class="step-connector" id="conn1"></div>
+    <div class="journey-step">
+      <div class="step-node" id="node2">2<span class="step-label">Behaviours</span></div>
+    </div>
+    <div class="step-connector" id="conn2"></div>
+    <div class="journey-step">
+      <div class="step-node" id="node3">3<span class="step-label">Competing Commitments</span></div>
+    </div>
+    <div class="step-connector" id="conn3"></div>
+    <div class="journey-step">
+      <div class="step-node" id="node4">4<span class="step-label">Big Assumptions</span></div>
+    </div>
+    <div class="step-connector" id="conn4"></div>
+    <div class="journey-step">
+      <div class="step-node" id="node5">5<span class="step-label">Experiment</span></div>
+    </div>
+  </div>
+</nav>
+
+<main class="main">
+
+  <!-- ══ STAGE 0: Welcome ══ -->
+  <section class="stage active" id="stage0">
+    <div class="welcome-wrap">
+      <p class="welcome-eyebrow">A coaching tool for real change</p>
+      <h1 class="welcome-title">Immunity to Change</h1>
+
+      <div class="welcome-body">
+        <p>Most of us have tried to change something that genuinely matters to us. We know what we want. We know, roughly, what we should do. And we still do not do it.</p>
+        <p>This is not a failure of will. It is a system at work.</p>
+        <p>The Immunity to Change framework, developed by Robert Kegan and Lisa Laskow Lahey at Harvard, reveals the hidden structure beneath the surface of our self-defeating behaviour. Underneath every stuck place is a competing commitment we do not know we have, and beneath that, a big assumption we have never tested.</p>
+        <p>This session will take you through that structure, one stage at a time. You will build your own map. You will design one small experiment. And you will leave with something more useful than advice: clarity about what is actually going on.</p>
+      </div>
+
+      <div class="welcome-divider"></div>
+
+      <p style="color: var(--mid-gray); font-size: 14px; margin-bottom: 32px;">
+        The session takes most people between 40 and 60 minutes. Your answers are saved automatically as you go, so you can leave and return at any time. Nothing is shared or stored outside your browser.
+      </p>
+
+      <div class="disclaimer">
+        <strong>A note before you begin</strong>
+        <p>This tool is a structured reflection experience, not a substitute for therapy or professional mental health support. If difficult emotions come up as you work through it, please take a break and reach out to someone you trust. The Economist's Employee Assistance Programme is available if you need it.</p>
+      </div>
+
+      <div class="stage-nav">
+        <button class="btn-primary" onclick="goToStage(1)">Begin the session</button>
+        <button class="btn-ghost" id="resumeBtn" onclick="resumeSession()" style="display:none;">Resume where I left off</button>
+        <button class="btn-ghost" id="resetWelcomeBtn" onclick="confirmReset()" style="display:none; color: var(--stone);">Clear saved answers</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ STAGE 1: Improvement Goal ══ -->
+  <section class="stage" id="stage1">
+    <div class="stage-header">
+      <p class="stage-eyebrow">Stage 1 of 5 &middot; Improvement Goal</p>
+      <h2 class="stage-title">What do you genuinely want to change?</h2>
+    </div>
+
+    <!-- SVG: Compass rose (direction, aspiration) -->
+    <div class="stage-illustration">
+      <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="36" cy="36" r="28" stroke="#A89F94" stroke-width="1.5"/>
+        <circle cx="36" cy="36" r="3" fill="#A89F94"/>
+        <line x1="36" y1="8" x2="36" y2="22" stroke="#A89F94" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="36" y1="50" x2="36" y2="64" stroke="#A89F94" stroke-width="1" stroke-linecap="round"/>
+        <line x1="8" y1="36" x2="22" y2="36" stroke="#A89F94" stroke-width="1" stroke-linecap="round"/>
+        <line x1="50" y1="36" x2="64" y2="36" stroke="#A89F94" stroke-width="1" stroke-linecap="round"/>
+        <polygon points="36,10 33,22 39,22" fill="#A89F94" opacity="0.5"/>
+      </svg>
+    </div>
+
+    <div class="coaching-prompt">
+      <p>Think about something you genuinely want to change or improve. Not something you feel you should do, and not a task to complete. Something that actually matters to you: in your work, your relationships, your leadership, or the way you show up.</p>
+      <p>The more honest and specific you are here, the more useful the rest of the session will be.</p>
+    </div>
+
+    <!-- Exercises -->
+    <button class="exercises-toggle" onclick="toggleExercises(this, 'ex1')" aria-expanded="false">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 5l5 5 5-5" stroke="#7A7168" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Not sure where to start? Try an exercise
+    </button>
+    <div class="exercises-panel" id="ex1">
+      <div class="exercise-cards">
+        <div class="exercise-card">
+          <div class="exercise-card-title">Wheel of Life</div>
+          <div class="exercise-card-body">
+            Score these eight areas of your life from 1 (low) to 10 (high): Career, Relationships, Health, Finance, Personal Growth, Fun, Environment, Purpose. Where is the gap between where you are and where you want to be? That gap often points toward a meaningful goal.
+          </div>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-card-title">Values Sort</div>
+          <div class="exercise-card-body">
+            Name your three most important values right now (examples: honesty, courage, connection, impact, calm, creativity). Ask yourself: which of those values is not being honoured in the way I am living or working? A goal that connects to a core value tends to be the real one.
+          </div>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-card-title">Future Self Letter</div>
+          <div class="exercise-card-body">
+            Imagine it is two years from now and something significant has shifted. Write the first sentence of a letter from that future version of yourself: "Something that changed was..." What does that sentence want to say?
+          </div>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-card-title">The Aliveness Test</div>
+          <div class="exercise-card-body">
+            Write down two or three things you are considering as your goal. Read each one aloud. Notice the difference in how your body responds. Does one feel more energising, more alive, more true? The goal that has a charge to it is usually the right place to work.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label class="input-label" for="input-goal">Your improvement goal</label>
+      <textarea id="input-goal" placeholder="I want to..." oninput="onInput('goal', this.value, 'followup1')"></textarea>
+      <div class="follow-up" id="followup1">
+        <p>Read what you have just written. Does it feel honest? Is there a more specific or more courageous version waiting underneath? Take a moment. You can revise it before moving on.</p>
+      </div>
+    </div>
+
+    <div class="stage-nav">
+      <button class="btn-primary" onclick="saveAndAdvance(1)">Continue</button>
+      <button class="btn-ghost" onclick="goToStage(0)">Back</button>
+    </div>
+  </section>
+
+  <!-- ══ STAGE 2: Behaviours ══ -->
+  <section class="stage" id="stage2">
+    <div class="stage-header">
+      <p class="stage-eyebrow">Stage 2 of 5 &middot; Behaviours</p>
+      <h2 class="stage-title">What are you doing that works against this?</h2>
+    </div>
+
+    <!-- SVG: Magnifying glass (observation) -->
+    <div class="stage-illustration">
+      <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="30" cy="30" r="20" stroke="#A89F94" stroke-width="1.5"/>
+        <circle cx="30" cy="30" r="12" stroke="#A89F94" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="45" y1="45" x2="60" y2="60" stroke="#A89F94" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <div class="context-echo" id="echo-stage2">
+      <div class="context-echo-label">Your goal</div>
+      <div class="context-echo-text" id="echo-goal-2"></div>
+    </div>
+
+    <div class="coaching-prompt">
+      <p>Now comes honest observation. What are you doing, or not doing, that actively works against the goal you just named? These are behaviours, not character flaws. They are data.</p>
+      <p>Include things you do too much of, things you avoid, and things you do instead of what would actually move you forward.</p>
+    </div>
+
+    <button class="exercises-toggle" onclick="toggleExercises(this, 'ex2')" aria-expanded="false">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 5l5 5 5-5" stroke="#7A7168" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Need help seeing clearly? Try an exercise
+    </button>
+    <div class="exercises-panel" id="ex2">
+      <div class="exercise-cards">
+        <div class="exercise-card">
+          <div class="exercise-card-title">Fly on the Wall</div>
+          <div class="exercise-card-body">
+            Imagine a small camera has been following you this past week. It has recorded everything you actually did, not what you intended to do. What would it have captured that works against your goal? List what it saw without judging it. Just observe.
+          </div>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-card-title">Time Audit</div>
+          <div class="exercise-card-body">
+            Think about where your time and energy actually went last week. What did you spend most time on? Now compare that to what would genuinely move your goal forward. What is the gap? What fills the space that your goal could occupy?
+          </div>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-card-title">The "Instead" List</div>
+          <div class="exercise-card-body">
+            Complete this sentence as many times as you can: "Instead of [doing the thing that would serve my goal], I..." Often our patterns are most visible when we name what we do in their place.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label class="input-label" for="input-behaviours">Behaviours working against your goal</label>
+      <textarea id="input-behaviours" placeholder="I am... / I am not... / Instead of doing X, I tend to..." oninput="onInput('behaviours', this.value, 'followup2')"></textarea>
+      <div class="follow-up" id="followup2">
+        <p>Notice how it feels to write this. Guilt or shame? Curiosity? Neither is wrong. These behaviours have been doing a job. The next stage starts to reveal what that job is.</p>
+      </div>
+    </div>
+
+    <div class="stage-nav">
+      <button class="btn-primary" onclick="saveAndAdvance(2)">Continue</button>
+      <button class="btn-ghost" onclick="goToStage(1)">Back</button>
+    </div>
+  </section>
+
+  <!-- ══ STAGE 3: Competing Commitments ══ -->
+  <section class="stage" id="stage3">
+    <div class="stage-header">
+      <p class="stage-eyebrow">Stage 3 of 5 &middot; Competing Commitments</p>
+      <h2 class="stage-title">What are you also committed to?</h2>
+    </div>
+
+    <!-- SVG: Two curved arrows in tension -->
+    <div class="stage-illustration">
+      <svg width="80" height="72" viewBox="0 0 80 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 36 C10 16 36 8 54 20" stroke="#A89F94" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <polygon points="54,14 58,24 48,22" fill="#A89F94" opacity="0.6"/>
+        <path d="M70 36 C70 56 44 64 26 52" stroke="#A89F94" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <polygon points="26,58 22,48 32,50" fill="#A89F94" opacity="0.6"/>
+        <circle cx="40" cy="36" r="4" stroke="#A89F94" stroke-width="1.5"/>
+      </svg>
+    </div>
+
+    <div class="context-echo">
+      <div class="context-echo-label">Your goal</div>
+      <div class="context-echo-text" id="echo-goal-3"></div>
+    </div>
+
+    <div class="coaching-prompt">
+      <p>This is the heart of the work. Here is what we know so far: you have a goal you care about, and you have behaviours that undermine it. The question is not "why don't you just stop those behaviours?" The question is: what are they protecting?</p>
+      <p>Start by imagining that you commit fully to your goal, right now. You change the behaviours. You do the thing. What worries come up? What feels risky or unsafe about that?</p>
+    </div>
+
+    <button class="exercises-toggle" onclick="toggleExercises(this, 'ex3')" aria-expanded="false">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 5l5 5 5-5" stroke="#7A7168" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Tools for finding what's underneath
+    </button>
+    <div class="exercises-panel" id="ex3">
+      <div class="exercise-cards">
+        <div class="exercise-card">
+          <div class="exercise-card-title">The Worry Cascade</div>
+          <div class="exercise-card-body">
+            Take one worry and ask: "And if that happened, what would be the worst part?" Then ask it again. And again. You are looking for the thing that feels genuinely threatening, not just uncomfortable. That is where the real commitment lives.
+          </div>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-card-title">The "Yes, and" Move</div>
+          <div class="exercise-card-body">
+            Complete this: "I want to [my goal], AND I also want..." List as many "ands" as you can without filtering. Often the competing commitment is hiding in one of them. Look for the one that creates the most tension with your goal.
+          </div>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-card-title">Whose Voice Is That?</div>
+          <div class="exercise-card-body">
+            When you imagine committing fully to your goal, whose face comes to mind? Whose reaction do you find yourself anticipating or managing? Often our worries are less about us and more about how we will be seen. Notice if a particular person or group appears.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label class="input-label" for="input-worries">If I committed fully to my goal, I worry that...</label>
+      <textarea id="input-worries" placeholder="Write as many worries as come up. Do not filter them." oninput="onInput('worries', this.value, null)" style="min-height:100px;"></textarea>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <div class="coaching-prompt">
+      <p>Now look at those worries. Each one contains a signal about something you are also committed to protecting. These are not failures. They are competing commitments: real, legitimate, often long-held.</p>
+      <p>For each worry, try completing this: "Beneath this worry, I notice I am also committed to..." You might find you are committed to being seen as competent, to not disrupting relationships, to staying safe from a particular kind of judgment. Name them as clearly as you can.</p>
+    </div>
+
+    <div class="input-group">
+      <label class="input-label" for="input-commitments">Beneath these worries, I am also committed to...</label>
+      <textarea id="input-commitments" placeholder="I am also committed to..." oninput="onInput('commitments', this.value, 'followup3')"></textarea>
+      <div class="follow-up" id="followup3">
+        <p>Read these back. Do any of them surprise you? Which one has the most charge, the feeling of "yes, that is the one"? That is probably the most important. Carry it with you into the next stage.</p>
+      </div>
+    </div>
+
+    <div class="stage-nav">
+      <button class="btn-primary" onclick="saveAndAdvance(3)">Continue</button>
+      <button class="btn-ghost" onclick="goToStage(2)">Back</button>
+    </div>
+  </section>
+
+  <!-- ══ STAGE 4: Big Assumptions ══ -->
+  <section class="stage" id="stage4">
+    <div class="stage-header">
+      <p class="stage-eyebrow">Stage 4 of 5 &middot; Big Assumptions</p>
+      <h2 class="stage-title">What must be true for this to make sense?</h2>
+    </div>
+
+    <!-- SVG: Iceberg -->
+    <div class="stage-illustration">
+      <svg width="72" height="80" viewBox="0 0 72 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="4" y1="38" x2="68" y2="38" stroke="#A89F94" stroke-width="1" stroke-dasharray="4 3"/>
+        <polygon points="36,6 20,36 52,36" stroke="#A89F94" stroke-width="1.5" fill="#E8E3DD" stroke-linejoin="round"/>
+        <polygon points="36,38 14,62 58,62 62,50 10,50" stroke="#A89F94" stroke-width="1" fill="#E8E3DD" opacity="0.5" stroke-linejoin="round"/>
+        <text x="36" y="76" text-anchor="middle" font-family="Inter" font-size="7" fill="#A89F94" letter-spacing="1">below the surface</text>
+      </svg>
+    </div>
+
+    <div class="context-echo">
+      <div class="context-echo-label">Your competing commitments</div>
+      <div class="context-echo-text" id="echo-commitments-4"></div>
+    </div>
+
+    <div class="coaching-prompt">
+      <p>Your competing commitments do not arise from nowhere. Underneath each one is a belief, something that feels so obviously true that it does not feel like a belief at all. It feels like reality.</p>
+      <p>These are your Big Assumptions. They are often old. They were probably formed in response to real experiences. They have been doing useful work for a long time. But they may be running on outdated information.</p>
+      <p>For each competing commitment you named, try completing this: "I assume that if I let go of this commitment... then..." What is the consequence that feels inevitable?</p>
+    </div>
+
+    <button class="exercises-toggle" onclick="toggleExercises(this, 'ex4')" aria-expanded="false">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 5l5 5 5-5" stroke="#7A7168" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Exercises for finding the assumption
+    </button>
+    <div class="exercises-panel" id="ex4">
+      <div class="exercise-cards">
+        <div class="exercise-card">
+          <div class="exercise-card-title">Timeline Trace</div>
+          <div class="exercise-card-body">
+            Think about your big assumption. How old were you when this first felt true? What was happening then? You do not need to analyse it, just notice. Often the assumption was a very reasonable response to something that happened a long time ago, in a very different context.
+          </div>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-card-title">Evidence Audit</div>
+          <div class="exercise-card-body">
+            Ask yourself: what evidence do I have that this assumption is true? Then ask: what evidence exists that it might not always be true, or might not be true in every case? You are not trying to disprove the assumption. You are just checking whether it has been tested recently.
+          </div>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-card-title">The Scientist Stance</div>
+          <div class="exercise-card-body">
+            A scientist does not believe or disbelieve a hypothesis: they design a test. Try saying this to yourself: "I am treating this assumption as a hypothesis, not a fact. What would I need to observe to know whether it is accurate?" Notice how this changes your relationship to it.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label class="input-label" for="input-assumptions">I assume that if I... then...</label>
+      <textarea id="input-assumptions" placeholder="I assume that if I stopped protecting [competing commitment], then..." oninput="onInput('assumptions', this.value, 'followup4')"></textarea>
+      <div class="follow-up" id="followup4">
+        <p>How long have you held this assumption? Where might it have come from? You do not need to answer those questions now. Simply notice that this is an assumption, not a certainty. That is already significant.</p>
+      </div>
+    </div>
+
+    <div class="stage-nav">
+      <button class="btn-primary" onclick="saveAndAdvance(4)">Continue</button>
+      <button class="btn-ghost" onclick="goToStage(3)">Back</button>
+    </div>
+  </section>
+
+  <!-- ══ STAGE 5: Experiment ══ -->
+  <section class="stage" id="stage5">
+    <div class="stage-header">
+      <p class="stage-eyebrow">Stage 5 of 5 &middot; Experiment</p>
+      <h2 class="stage-title">What small experiment will you run?</h2>
+    </div>
+
+    <!-- SVG: Seedling / spark -->
+    <div class="stage-illustration">
+      <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="36" y1="60" x2="36" y2="32" stroke="#A89F94" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M36 44 C36 34 48 24 56 28 C52 38 40 40 36 44" stroke="#A89F94" stroke-width="1.5" fill="#E8E3DD" stroke-linejoin="round"/>
+        <path d="M36 38 C36 28 24 20 16 26 C20 36 32 38 36 38" stroke="#A89F94" stroke-width="1" fill="#E8E3DD" opacity="0.6" stroke-linejoin="round"/>
+        <line x1="20" y1="60" x2="52" y2="60" stroke="#A89F94" stroke-width="1" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <div class="context-echo">
+      <div class="context-echo-label">Your big assumption</div>
+      <div class="context-echo-text" id="echo-assumptions-5"></div>
+    </div>
+
+    <div class="coaching-prompt">
+      <p>The way to change a Big Assumption is not to believe it or disbelieve it. It is to test it. Carefully. Safely. With curiosity rather than a need to prove anything.</p>
+      <p>A good experiment is small and low-risk. It creates a situation where your assumption will either be confirmed or contradicted by real data, not by argument. It is something you can do in the next one to two weeks.</p>
+      <p>You are not trying to change yet. You are trying to learn something.</p>
+    </div>
+
+    <button class="exercises-toggle" onclick="toggleExercises(this, 'ex5')" aria-expanded="false">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 5l5 5 5-5" stroke="#7A7168" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Frameworks for designing your experiment
+    </button>
+    <div class="exercises-panel" id="ex5">
+      <div class="exercise-cards">
+        <div class="exercise-card">
+          <div class="exercise-card-title">Minimum Viable Experiment</div>
+          <div class="exercise-card-body">
+            Ask: what is the smallest possible action that would still give me real information about my assumption? Not a gesture, something that actually tests the belief. Small enough that failure would not be devastating. Real enough that success would mean something.
+          </div>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-card-title">WOOP</div>
+          <div class="exercise-card-body">
+            Wish: what is the outcome you want from this experiment? Outcome: what would that look like in practice? Obstacle: what might get in the way (inner or outer)? Plan: when [obstacle occurs], I will [specific action]. WOOP turns good intentions into if-then commitments.
+          </div>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-card-title">The Pre-mortem</div>
+          <div class="exercise-card-body">
+            Imagine the experiment has happened and it did not go as hoped. What went wrong? Walk backwards from that imagined failure. Now design around those risks before you start. This is not pessimism, it is useful preparation.
+          </div>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-card-title">The Observation Frame</div>
+          <div class="exercise-card-body">
+            After you run the experiment, what will you look for? Name in advance the two or three things you will notice. How did others respond? How did you feel? What happened that you did not expect? Deciding what to observe before the experiment makes the data more useful.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <div class="input-group">
+      <label class="input-label" for="input-experiment">My experiment</label>
+      <textarea id="input-experiment" placeholder="I will try..." oninput="onInput('experiment', this.value, null)" style="min-height:90px;"></textarea>
+    </div>
+
+    <div class="input-group">
+      <label class="input-label" for="input-notice">What I will notice</label>
+      <textarea id="input-notice" placeholder="I will pay attention to..." oninput="onInput('notice', this.value, null)" style="min-height:80px;"></textarea>
+    </div>
+
+    <div class="input-group">
+      <label class="input-label" for="input-byWhen">I will do this by</label>
+      <textarea id="input-byWhen" placeholder="A specific date or moment..." oninput="onInput('byWhen', this.value, null)" style="min-height:60px;"></textarea>
+    </div>
+
+    <div class="input-group">
+      <label class="input-label" for="input-accountability">Who will I tell about this?</label>
+      <textarea id="input-accountability" placeholder="Naming someone creates accountability. Who will you share this with?" oninput="onInput('accountability', this.value, 'followup5')" style="min-height:60px;"></textarea>
+      <div class="follow-up" id="followup5">
+        <p>Sharing an experiment with someone you trust is one of the most reliable ways to follow through. It also creates someone to reflect with afterwards.</p>
+      </div>
+    </div>
+
+    <div class="stage-nav">
+      <button class="btn-primary" onclick="saveAndAdvance(5)">See my map</button>
+      <button class="btn-ghost" onclick="goToStage(4)">Back</button>
+    </div>
+  </section>
+
+  <!-- ══ STAGE 6: Your Map ══ -->
+  <section class="stage" id="stage6">
+    <div class="map-view">
+      <p class="stage-eyebrow">Your completed map</p>
+      <h2 class="map-title">Your Immunity to Change</h2>
+      <p class="map-subtitle">This is what the system looks like. It has been protecting something. The question now is whether that protection is still serving you.</p>
+
+      <div class="map-grid" id="completedMap">
+        <div class="map-cell">
+          <div class="map-cell-label">Improvement Goal</div>
+          <div class="map-cell-content" id="mapGoal"></div>
+        </div>
+        <div class="map-cell">
+          <div class="map-cell-label">Behaviours</div>
+          <div class="map-cell-content" id="mapBehaviours"></div>
+        </div>
+        <div class="map-cell highlight">
+          <div class="map-cell-label">Competing Commitments</div>
+          <div class="map-cell-content" id="mapCommitments"></div>
+        </div>
+        <div class="map-cell highlight">
+          <div class="map-cell-label">Big Assumptions</div>
+          <div class="map-cell-content" id="mapAssumptions"></div>
+        </div>
+      </div>
+
+      <div class="experiment-block">
+        <div class="experiment-block-title">My experiment</div>
+        <div class="experiment-row">
+          <div class="experiment-row-label">I will try</div>
+          <div class="experiment-row-value" id="mapExperiment"></div>
+        </div>
+        <div class="experiment-row">
+          <div class="experiment-row-label">I will notice</div>
+          <div class="experiment-row-value" id="mapNotice"></div>
+        </div>
+        <div class="experiment-row">
+          <div class="experiment-row-label">By</div>
+          <div class="experiment-row-value" id="mapByWhen"></div>
+        </div>
+        <div class="experiment-row">
+          <div class="experiment-row-label">I will tell</div>
+          <div class="experiment-row-value" id="mapAccountability"></div>
+        </div>
+      </div>
+
+      <div class="final-reflection-block">
+        <div class="final-reflection-label">One thing I am taking away</div>
+        <textarea id="input-reflection" placeholder="What do you notice, looking at this whole map?" oninput="onInput('reflection', this.value, null)" style="background: transparent; border-color: var(--stone-light); min-height:100px;"></textarea>
+      </div>
+
+      <div class="export-row">
+        <button class="btn-primary" onclick="window.print()">Print or save as PDF</button>
+        <button class="btn-secondary" onclick="copyForGoogleDocs()">Copy for Google Docs</button>
+        <button class="btn-ghost" onclick="goToStage(5)">Go back and edit</button>
+        <button class="btn-ghost" onclick="confirmReset()" style="color: var(--stone);">Start a new session</button>
+      </div>
+
+      <div id="copyConfirm" style="display:none; padding: 12px 0; font-size:13px; color: var(--stone-dark);">
+        Copied. Open a Google Doc, press Cmd+V (or Ctrl+V) to paste your formatted map.
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Reset confirmation modal -->
+<div id="resetModal" style="
+  display:none; position:fixed; inset:0; z-index:500;
+  background: rgba(13,13,13,0.5); align-items:center; justify-content:center;">
+  <div style="
+    background: var(--warm-white); max-width:400px; width:90%;
+    padding:40px; border-top: 3px solid var(--red);">
+    <p style="font-family:'Archivo Narrow',sans-serif; font-weight:700; font-size:22px; margin-bottom:16px;">Start a new session?</p>
+    <p style="font-size:14px; color:var(--mid-gray); line-height:1.65; margin-bottom:32px;">
+      This will clear all your saved answers and return to the beginning. Your current map will be lost unless you have printed or copied it first.
+    </p>
+    <div style="display:flex; gap:12px;">
+      <button class="btn-primary" style="background:var(--red);" onclick="doReset()">Yes, start over</button>
+      <button class="btn-secondary" onclick="closeResetModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span class="footer-mark">coaching &middot; the economist</span>
+    <span class="footer-tagline">life begins at the end of your comfort zone</span>
+  </div>
+</footer>
+
+<script>
+// ── State ──────────────────────────────────────────────────────
+const STORAGE_KEY = 'itc_session_v1';
+
+let state = {
+  currentStage: 0,
+  goal: '', goalReflection: '',
+  behaviours: '',
+  worries: '', commitments: '',
+  assumptions: '',
+  experiment: '', notice: '', byWhen: '', accountability: '',
+  reflection: ''
+};
+
+// ── Init ───────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = loadState();
+  if (saved && saved.currentStage > 0) {
+    document.getElementById('resumeBtn').style.display = 'inline-block';
+    document.getElementById('resetWelcomeBtn').style.display = 'inline-block';
+    document.getElementById('resetHeaderBtn').style.display = 'inline-block';
+  }
+  restoreInputs();
+});
+
+// ── Persistence ────────────────────────────────────────────────
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  const badge = document.getElementById('saveBadge');
+  badge.classList.add('visible');
+  setTimeout(() => badge.classList.remove('visible'), 1800);
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const saved = JSON.parse(raw);
+    Object.assign(state, saved);
+    return saved;
+  } catch(e) { return null; }
+}
+
+function resumeSession() {
+  loadState();
+  restoreInputs();
+  goToStage(state.currentStage || 1);
+}
+
+function restoreInputs() {
+  const map = {
+    'input-goal': 'goal',
+    'input-behaviours': 'behaviours',
+    'input-worries': 'worries',
+    'input-commitments': 'commitments',
+    'input-assumptions': 'assumptions',
+    'input-experiment': 'experiment',
+    'input-notice': 'notice',
+    'input-byWhen': 'byWhen',
+    'input-accountability': 'accountability',
+    'input-reflection': 'reflection'
+  };
+  for (const [id, key] of Object.entries(map)) {
+    const el = document.getElementById(id);
+    if (el && state[key]) {
+      el.value = state[key];
+      autoResize(el);
+    }
+  }
+}
+
+// ── Input handling ─────────────────────────────────────────────
+function onInput(key, value, followupId) {
+  state[key] = value;
+  saveState();
+  if (followupId && value.trim().length > 30) {
+    document.getElementById(followupId).classList.add('visible');
+  }
+  autoResize(event.target);
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.max(el.scrollHeight, 80) + 'px';
+}
+
+// ── Navigation ─────────────────────────────────────────────────
+function goToStage(n) {
+  document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
+  document.getElementById('stage' + n).classList.add('active');
+  state.currentStage = n;
+  saveState();
+  updateJourneyBar(n);
+  populateEchos(n);
+  // Show/hide header reset
+  const headerReset = document.getElementById('resetHeaderBtn');
+  if (headerReset) headerReset.style.display = n > 0 ? 'inline-block' : 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function saveAndAdvance(currentStage) {
+  if (currentStage === 5) {
+    populateMap();
+  }
+  goToStage(currentStage + 1);
+}
+
+// ── Journey bar ────────────────────────────────────────────────
+function updateJourneyBar(stage) {
+  const bar = document.getElementById('journeyBar');
+  if (stage === 0) { bar.classList.remove('visible'); return; }
+  bar.classList.add('visible');
+
+  // Update body padding for the extra bar height
+  document.body.style.paddingTop = stage > 0 ? '160px' : '120px';
+
+  for (let i = 1; i <= 5; i++) {
+    const node = document.getElementById('node' + i);
+    const conn = document.getElementById('conn' + i);
+    node.classList.remove('active', 'done');
+    if (conn) conn.classList.remove('done');
+
+    if (i < stage || stage === 6) {
+      node.classList.add('done');
+      node.innerHTML = '&#10003;<span class="step-label">' + getStepLabel(i) + '</span>';
+      if (conn) conn.classList.add('done');
+    } else if (i === stage) {
+      node.classList.add('active');
+      node.innerHTML = i + '<span class="step-label">' + getStepLabel(i) + '</span>';
+    } else {
+      node.innerHTML = i + '<span class="step-label">' + getStepLabel(i) + '</span>';
+    }
+  }
+}
+
+function getStepLabel(i) {
+  const labels = ['', 'Goal', 'Behaviours', 'Commitments', 'Assumptions', 'Experiment'];
+  return labels[i] || '';
+}
+
+// ── Context echos ──────────────────────────────────────────────
+function populateEchos(stage) {
+  if (stage === 2) {
+    const el = document.getElementById('echo-goal-2');
+    if (el) el.textContent = state.goal || '(your goal will appear here)';
+  }
+  if (stage === 3) {
+    const el = document.getElementById('echo-goal-3');
+    if (el) el.textContent = state.goal || '(your goal will appear here)';
+  }
+  if (stage === 4) {
+    const el = document.getElementById('echo-commitments-4');
+    if (el) el.textContent = state.commitments || '(your competing commitments will appear here)';
+  }
+  if (stage === 5) {
+    const el = document.getElementById('echo-assumptions-5');
+    if (el) el.textContent = state.assumptions || '(your big assumption will appear here)';
+  }
+}
+
+// ── Completed map ──────────────────────────────────────────────
+function populateMap() {
+  setText('mapGoal', state.goal);
+  setText('mapBehaviours', state.behaviours);
+  setText('mapCommitments', state.commitments);
+  setText('mapAssumptions', state.assumptions);
+  setText('mapExperiment', state.experiment);
+  setText('mapNotice', state.notice);
+  setText('mapByWhen', state.byWhen);
+  setText('mapAccountability', state.accountability);
+}
+
+function setText(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val || '';
+}
+
+// ── Exercises toggle ───────────────────────────────────────────
+function toggleExercises(btn, panelId) {
+  const panel = document.getElementById(panelId);
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open', !isOpen);
+  btn.classList.toggle('open', !isOpen);
+  btn.setAttribute('aria-expanded', String(!isOpen));
+}
+
+// ── Reset ──────────────────────────────────────────────────────
+function confirmReset() {
+  const modal = document.getElementById('resetModal');
+  modal.style.display = 'flex';
+}
+
+function closeResetModal() {
+  document.getElementById('resetModal').style.display = 'none';
+}
+
+function doReset() {
+  localStorage.removeItem(STORAGE_KEY);
+  state = {
+    currentStage: 0,
+    goal: '', goalReflection: '',
+    behaviours: '',
+    worries: '', commitments: '',
+    assumptions: '',
+    experiment: '', notice: '', byWhen: '', accountability: '',
+    reflection: ''
+  };
+  // Clear all textareas
+  document.querySelectorAll('textarea').forEach(ta => { ta.value = ''; ta.style.height = 'auto'; });
+  // Hide follow-ups
+  document.querySelectorAll('.follow-up').forEach(f => f.classList.remove('visible'));
+  // Hide resume/reset buttons on welcome
+  document.getElementById('resumeBtn').style.display = 'none';
+  document.getElementById('resetWelcomeBtn').style.display = 'none';
+  document.getElementById('resetHeaderBtn').style.display = 'none';
+  closeResetModal();
+  goToStage(0);
+}
+
+// Close modal on backdrop click
+document.getElementById('resetModal').addEventListener('click', function(e) {
+  if (e.target === this) closeResetModal();
+});
+
+// ── Export: Copy for Google Docs ───────────────────────────────
+function copyForGoogleDocs() {
+  const lines = [
+    'IMMUNITY TO CHANGE MAP',
+    'Generated: ' + new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }),
+    '',
+    '─────────────────────────────────────',
+    'IMPROVEMENT GOAL',
+    '─────────────────────────────────────',
+    state.goal || '',
+    '',
+    '─────────────────────────────────────',
+    'BEHAVIOURS WORKING AGAINST MY GOAL',
+    '─────────────────────────────────────',
+    state.behaviours || '',
+    '',
+    '─────────────────────────────────────',
+    'COMPETING COMMITMENTS',
+    '─────────────────────────────────────',
+    'Worries that came up:',
+    state.worries || '',
+    '',
+    'Beneath these, I am also committed to:',
+    state.commitments || '',
+    '',
+    '─────────────────────────────────────',
+    'BIG ASSUMPTIONS',
+    '─────────────────────────────────────',
+    state.assumptions || '',
+    '',
+    '─────────────────────────────────────',
+    'MY EXPERIMENT',
+    '─────────────────────────────────────',
+    'I will try: ' + (state.experiment || ''),
+    'I will notice: ' + (state.notice || ''),
+    'By: ' + (state.byWhen || ''),
+    'I will tell: ' + (state.accountability || ''),
+    '',
+    '─────────────────────────────────────',
+    'ONE THING I AM TAKING AWAY',
+    '─────────────────────────────────────',
+    state.reflection || '',
+    '',
+    '─────────────────────────────────────',
+    'coaching · the economist',
+  ];
+
+  const text = lines.join('\n');
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => {
+      const confirm = document.getElementById('copyConfirm');
+      confirm.style.display = 'block';
+      setTimeout(() => confirm.style.display = 'none', 4000);
+    });
+  } else {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus(); ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    const confirm = document.getElementById('copyConfirm');
+    confirm.style.display = 'block';
+    setTimeout(() => confirm.style.display = 'none', 4000);
+  }
+}
+</script>
+</body>
+</html>

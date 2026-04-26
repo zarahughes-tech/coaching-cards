@@ -4,69 +4,75 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Coaching Cards for Teams</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     :root {
-      --brand: #a93242;
-      --brand-dark: #7d1f2d;
-      --brand-soft: #d46673;
-      --ink: #2a2327;
-      --muted: #6e666d;
-      --paper: #f6f1eb;
-      --panel: rgba(255,255,255,0.86);
-      --border: rgba(53, 43, 49, 0.12);
-      --shadow: rgba(33, 23, 40, 0.14);
-      --process: #355d98;
-      --question: #4e925f;
-      --white: #fff;
+      --red:         #E3120B;
+      --near-black:  #0D0D0D;
+      --dark:        #262626;
+      --mid-gray:    #666666;
+      --light-gray:  #AAAAAA;
+      --off-white:   #F5F4EE;
+      --white:       #FFFFFF;
+      --stone:       #A89F94;
+      --stone-light: #E8E3DD;
+      --stone-dark:  #7A7168;
+      --warm-white:  #FDFBF8;
+      --question:    #4e925f;
+      --process:     #355d98;
     }
     body {
       margin: 0;
       min-height: 100vh;
-      background:
-        radial-gradient(circle at top, rgba(255,255,255,0.92), rgba(255,255,255,0) 30%),
-        linear-gradient(180deg, #f0e3e3 0%, #f7f2ea 40%, #eee6dd 100%);
-      color: var(--ink);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--warm-white);
+      color: var(--near-black);
+      font-family: 'Inter', sans-serif;
       padding: 66px 16px 40px;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--red);
+      z-index: 9999;
     }
     /* ── top nav ── */
     .top-nav {
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 900;
-      height: 44px;
+      height: 48px;
       display: flex;
       align-items: center;
       padding: 0 20px;
-      background: rgba(255, 252, 248, 0.82);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-bottom: 1px solid rgba(0,0,0,0.07);
+      background: var(--near-black);
+      border-bottom: none;
     }
     .nav-back {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
+      font-size: 0.75rem;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: inherit;
+      color: var(--stone);
       text-decoration: none;
-      opacity: 0.5;
-      transition: opacity 0.15s;
+      transition: color 0.15s;
     }
-    .nav-back:hover { opacity: 1; }
+    .nav-back:hover { color: var(--white); }
     .app { max-width: 1180px; margin: 0 auto; }
     .screen { display: none; }
     .screen.active { display: block; }
     .panel {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 26px;
-      box-shadow: 0 14px 34px var(--shadow);
-      backdrop-filter: blur(10px);
+      background: var(--white);
+      border: 1px solid var(--stone-light);
+      border-radius: 6px;
+      box-shadow: 0 2px 12px rgba(13,13,13,0.06);
     }
     header {
       text-align: center;
@@ -75,32 +81,30 @@
     .eyebrow {
       display: inline-block;
       margin-bottom: 10px;
-      padding: 7px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.76);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 0.76rem;
-      font-weight: 800;
+      color: var(--stone);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 500;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.12em;
     }
     h1 {
       margin: 0;
-      font-family: Georgia, "Times New Roman", serif;
+      font-family: 'Archivo Narrow', sans-serif;
       font-size: clamp(2rem, 5vw, 3.8rem);
       font-weight: 600;
       letter-spacing: 0.04em;
+      color: var(--near-black);
     }
     .sub {
       max-width: 760px;
       margin: 10px auto 0;
-      color: var(--muted);
+      color: var(--mid-gray);
       line-height: 1.6;
       font-size: 1rem;
     }
-    h2 { margin: 0 0 10px; font-size: 1.15rem; }
-    p { margin: 0; color: var(--muted); line-height: 1.6; }
+    h2 { margin: 0 0 10px; font-size: 1.15rem; font-family: 'Archivo Narrow', sans-serif; font-weight: 600; }
+    p { margin: 0; color: var(--mid-gray); line-height: 1.6; }
     .grid {
       display: grid;
       grid-template-columns: 1.05fr 0.95fr;
@@ -115,26 +119,29 @@
     .actions { margin-top: 16px; }
     .btn {
       border: none;
-      border-radius: 999px;
+      border-radius: 3px;
       padding: 12px 18px;
+      font-family: 'Inter', sans-serif;
       font-size: 0.95rem;
-      font-weight: 800;
+      font-weight: 500;
       cursor: pointer;
-      transition: transform 0.1s ease, opacity 0.14s ease;
-      box-shadow: 0 8px 20px rgba(33, 23, 40, 0.12);
+      transition: background 0.15s ease, color 0.15s ease;
     }
-    .btn:active { transform: scale(0.98); }
-    .btn-secondary { background: rgba(255,255,255,0.92); color: var(--ink); border: 1px solid var(--border); }
+    .btn:active { opacity: 0.85; }
+    .btn-secondary { background: transparent; color: var(--stone-dark); border: 1px solid var(--stone-dark); }
+    .btn-secondary:hover { border-color: var(--stone); color: var(--stone); }
     .btn-question { background: var(--question); color: var(--white); }
     .btn-process { background: var(--process); color: var(--white); }
-    .btn-primary { background: linear-gradient(135deg, var(--brand), var(--brand-dark)); color: var(--white); }
+    .btn-primary { background: var(--near-black); color: var(--white); }
+    .btn-primary:hover { background: var(--dark); }
     .back-link {
       border: none;
       background: none;
       padding: 0;
       margin-bottom: 12px;
-      color: var(--muted);
-      font-weight: 700;
+      color: var(--mid-gray);
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
       cursor: pointer;
     }
     .card-wrap { padding: 18px; }
@@ -143,28 +150,29 @@
       justify-content: space-between;
       gap: 12px;
       margin-bottom: 8px;
-      color: var(--muted);
+      color: var(--mid-gray);
       font-size: 0.83rem;
-      font-weight: 700;
+      font-weight: 500;
     }
     .progress-bar {
-      height: 8px;
-      border-radius: 999px;
+      height: 6px;
+      border-radius: 3px;
       overflow: hidden;
-      background: rgba(0,0,0,0.06);
+      background: var(--stone-light);
       margin-bottom: 16px;
     }
     .progress-fill {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, var(--brand), var(--brand-dark));
+      background: var(--stone);
     }
     .team-card {
       min-height: 420px;
-      border-radius: 28px;
-      background: var(--white);
+      border-radius: 4px;
+      background: var(--warm-white);
+      border: 1px solid var(--stone-light);
       padding: 28px 28px 24px;
-      box-shadow: inset 0 0 0 1px rgba(40, 34, 45, 0.06);
+      box-shadow: 0 2px 12px rgba(13,13,13,0.06);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -175,34 +183,36 @@
       content: "";
       position: absolute;
       inset: 18px;
-      border-radius: 22px;
-      border: 1px solid rgba(35, 31, 39, 0.06);
+      border-radius: 2px;
+      border: 1px solid var(--stone-light);
       pointer-events: none;
     }
     .card-top {
       text-align: center;
-      font-size: 0.74rem;
-      font-weight: 800;
-      letter-spacing: 0.08em;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
+      color: var(--stone);
     }
     .card-body {
-      font-family: Georgia, "Times New Roman", serif;
+      font-family: 'Archivo Narrow', sans-serif;
       font-size: clamp(1.45rem, 4vw, 2.1rem);
       line-height: 1.35;
       text-align: center;
       text-wrap: balance;
-      color: var(--ink);
+      color: var(--near-black);
       margin: 20px auto;
       max-width: 620px;
       white-space: pre-line;
     }
     .card-footer {
       text-align: center;
-      font-family: Georgia, "Times New Roman", serif;
+      font-family: 'Archivo Narrow', sans-serif;
       font-size: 1rem;
-      color: var(--brand-dark);
-      font-weight: 700;
+      color: var(--stone-dark);
+      font-weight: 600;
     }
     .list {
       display: grid;
@@ -213,24 +223,25 @@
       padding-right: 6px;
     }
     .item {
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      background: rgba(255,255,255,0.8);
+      border: 1px solid var(--stone-light);
+      border-radius: 4px;
+      background: var(--warm-white);
       padding: 14px 16px;
       cursor: pointer;
-      transition: transform 0.12s ease, border-color 0.12s ease;
+      transition: border-color 0.12s ease;
     }
     .item:hover {
-      transform: translateY(-1px);
-      border-color: rgba(35,31,39,0.18);
+      border-color: var(--stone);
     }
     .item strong {
       display: block;
       margin-bottom: 6px;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-size: 0.74rem;
-      color: var(--muted);
+      letter-spacing: 0.12em;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 500;
+      color: var(--stone);
     }
     .chip-row {
       display: flex;
@@ -239,30 +250,38 @@
       margin-top: 14px;
     }
     .chip {
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.74);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 0.76rem;
-      font-weight: 800;
+      color: var(--stone);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 500;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.12em;
     }
     footer {
-      text-align: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-top: 26px;
-      color: var(--muted);
-      font-size: 0.78rem;
-      line-height: 1.7;
+      padding: 0 4px;
+    }
+    footer .footer-left {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--stone-dark);
+    }
+    footer .footer-right {
+      font-family: 'Archivo Narrow', sans-serif;
+      font-style: italic;
+      font-size: 13px;
+      color: var(--stone);
     }
     @media (max-width: 940px) {
       .grid { grid-template-columns: 1fr; }
       .team-card { min-height: 340px; padding: 22px; }
     }
   </style>
-  <link rel="manifest" href="manifest.json">
-  <script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');</script>
 </head>
 <body>
   <nav class="top-nav" aria-label="Site navigation">
@@ -346,8 +365,9 @@
     </section>
 
     <footer>
-      Cards by Barefoot Coaching · <a href="https://www.barefootcoaching.co.uk" target="_blank" rel="noopener">barefootcoaching.co.uk</a><br>
-      </footer>
+      <span class="footer-left">coaching · the economist</span>
+      <span class="footer-right">life begins at the end of your comfort zone</span>
+    </footer>
   </div>
 
   <script>

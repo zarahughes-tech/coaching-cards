@@ -4,48 +4,64 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Coaching Cards for Every Day</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --teal:        #3AAEAE;
-      --teal-dark:   #2E9898;
-      --teal-light:  #a8dede;
-      --teal-bg:     #e6f5f5;
-      --white:       #ffffff;
-      --text:        #2a2a2a;
-      --text-mid:    #555;
-      --comfortable: #4caf85;
+      --red:           #E3120B;
+      --near-black:    #0D0D0D;
+      --dark:          #262626;
+      --mid-gray:      #666666;
+      --white:         #FFFFFF;
+      --stone:         #A89F94;
+      --stone-light:   #E8E3DD;
+      --stone-dark:    #7A7168;
+      --warm-white:    #FDFBF8;
+      --comfortable:   #4caf85;
       --uncomfortable: #e07b5a;
-      --shadow:      rgba(0,0,0,0.12);
+      --shadow:        rgba(13,13,13,0.10);
+      /* keep teal for functional card header color */
+      --teal:          #5bbfbf;
     }
 
     body {
       min-height: 100vh;
-      background: var(--teal-bg);
-      font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--warm-white);
+      font-family: 'Inter', sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 24px 16px 48px;
-      color: var(--text);
+      padding: 56px 16px 48px;
+      color: var(--near-black);
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--red);
+      z-index: 9999;
     }
 
     /* ── SHARED HEADER ───────────────────────────────────────────── */
     .site-title {
-      font-family: 'Brush Script MT', 'Segoe Script', 'Bradley Hand ITC', cursive;
+      font-family: 'Archivo Narrow', sans-serif;
       font-size: clamp(1.7rem, 5vw, 2.4rem);
-      color: var(--teal-dark);
+      font-weight: 600;
+      color: var(--near-black);
       text-align: center;
-      line-height: 1.25;
+      line-height: 1.2;
       margin-bottom: 6px;
     }
     .site-sub {
       text-align: center;
-      font-size: 0.82rem;
-      color: var(--teal-dark);
-      opacity: 0.75;
-      letter-spacing: 0.04em;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      color: var(--stone);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
       margin-bottom: 28px;
     }
 
@@ -63,29 +79,28 @@
 
     .menu-card {
       background: var(--white);
-      border-radius: 16px;
+      border-radius: 4px;
       padding: 20px 22px;
       cursor: pointer;
-      box-shadow: 0 3px 12px var(--shadow);
-      border: 2px solid transparent;
-      transition: border-color 0.18s, transform 0.14s, box-shadow 0.18s;
+      box-shadow: 0 2px 8px var(--shadow);
+      border: 1px solid var(--stone-light);
+      transition: border-color 0.18s;
       text-align: left;
     }
     .menu-card:hover {
-      border-color: var(--teal-light);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px var(--shadow);
+      border-color: var(--stone);
     }
     .menu-card .mc-icon { font-size: 1.6rem; margin-bottom: 6px; }
     .menu-card .mc-title {
+      font-family: 'Archivo Narrow', sans-serif;
       font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--teal-dark);
+      font-weight: 600;
+      color: var(--near-black);
       margin-bottom: 4px;
     }
     .menu-card .mc-desc {
       font-size: 0.82rem;
-      color: var(--text-mid);
+      color: var(--mid-gray);
       line-height: 1.5;
     }
 
@@ -97,8 +112,8 @@
     .card {
       width: 100%;
       aspect-ratio: 2 / 3;
-      border-radius: 18px;
-      box-shadow: 0 8px 32px var(--shadow);
+      border-radius: 4px;
+      box-shadow: 0 2px 12px var(--shadow);
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -114,8 +129,9 @@
       flex-shrink: 0;
     }
     .card-top h2 {
-      font-family: 'Brush Script MT', 'Segoe Script', 'Bradley Hand ITC', cursive;
+      font-family: 'Archivo Narrow', sans-serif;
       font-size: clamp(1.2rem, 3.8vw, 1.55rem);
+      font-weight: 600;
       color: var(--white);
       line-height: 1.3;
     }
@@ -127,8 +143,9 @@
       padding: 26px 22px;
     }
     .card-body p {
+      font-family: 'Archivo Narrow', sans-serif;
       font-size: clamp(1rem, 3vw, 1.18rem);
-      color: var(--text);
+      color: var(--near-black);
       text-align: center;
       line-height: 1.7;
     }
@@ -154,21 +171,22 @@
       gap: 6px;
     }
     .progress-label {
-      font-size: 0.8rem;
-      color: var(--teal-dark);
+      font-size: 0.78rem;
+      font-family: 'Inter', sans-serif;
+      color: var(--mid-gray);
       display: flex;
       justify-content: space-between;
     }
     .progress-bar-bg {
       width: 100%;
-      height: 6px;
-      background: var(--teal-light);
+      height: 5px;
+      background: var(--stone-light);
       border-radius: 3px;
       overflow: hidden;
     }
     .progress-bar-fill {
       height: 100%;
-      background: var(--teal-dark);
+      background: var(--stone);
       border-radius: 3px;
       transition: width 0.3s;
     }
@@ -186,22 +204,22 @@
       min-width: 80px;
       padding: 13px 14px;
       border: none;
-      border-radius: 50px;
+      border-radius: 3px;
+      font-family: 'Inter', sans-serif;
       font-size: 0.9rem;
-      font-weight: 700;
+      font-weight: 500;
       cursor: pointer;
       letter-spacing: 0.02em;
-      transition: background 0.15s, transform 0.1s;
-      box-shadow: 0 2px 8px var(--shadow);
+      transition: background 0.15s;
     }
-    .btn:active { transform: scale(0.96); }
+    .btn:active { opacity: 0.85; }
     .btn:disabled { opacity: 0.4; cursor: default; }
 
-    .btn-teal  { background: var(--teal); color: var(--white); }
-    .btn-teal:hover:not(:disabled)  { background: var(--teal-dark); }
+    .btn-teal  { background: var(--near-black); color: var(--white); }
+    .btn-teal:hover:not(:disabled)  { background: var(--dark); }
 
-    .btn-ghost { background: var(--white); color: var(--teal-dark); border: 2px solid var(--teal-light); }
-    .btn-ghost:hover { background: #d4f0f0; }
+    .btn-ghost { background: var(--white); color: var(--stone-dark); border: 1px solid var(--stone-dark); }
+    .btn-ghost:hover { border-color: var(--stone); color: var(--stone); }
 
     .btn-comfortable   { background: var(--comfortable); color: var(--white); }
     .btn-uncomfortable { background: var(--uncomfortable); color: var(--white); }
@@ -224,37 +242,40 @@
     .pool-pill {
       flex: 1;
       padding: 10px 12px;
-      border-radius: 12px;
+      border-radius: 3px;
       text-align: center;
+      font-family: 'Inter', sans-serif;
       font-size: 0.8rem;
-      font-weight: 700;
+      font-weight: 600;
       cursor: pointer;
       border: none;
-      transition: opacity 0.15s, transform 0.1s;
+      transition: opacity 0.15s;
       box-shadow: 0 2px 8px var(--shadow);
     }
-    .pool-pill:active { transform: scale(0.96); }
+    .pool-pill:active { opacity: 0.85; }
     .pool-pill:disabled { opacity: 0.35; cursor: default; }
     .pool-pill.c { background: var(--comfortable); color: var(--white); }
     .pool-pill.u { background: var(--uncomfortable); color: var(--white); }
-    .pool-pill span { display: block; font-size: 1.1rem; font-weight: 900; }
+    .pool-pill span { display: block; font-family: 'Archivo Narrow', sans-serif; font-size: 1.1rem; font-weight: 700; }
 
     /* ── RESULT BANNER ───────────────────────────────────────────── */
     .sort-result {
       width: 100%;
       background: var(--white);
-      border-radius: 14px;
+      border-radius: 4px;
+      border: 1px solid var(--stone-light);
       padding: 20px;
-      box-shadow: 0 3px 12px var(--shadow);
+      box-shadow: 0 2px 8px var(--shadow);
       text-align: center;
       margin-bottom: 16px;
     }
-    .sort-result h3 { font-size: 1.05rem; color: var(--teal-dark); margin-bottom: 14px; }
+    .sort-result h3 { font-family: 'Archivo Narrow', sans-serif; font-size: 1.05rem; color: var(--near-black); margin-bottom: 14px; }
     .result-pills { display: flex; gap: 12px; justify-content: center; margin-bottom: 16px; }
     .result-pill {
       padding: 10px 20px;
-      border-radius: 50px;
-      font-weight: 700;
+      border-radius: 3px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
       font-size: 0.9rem;
       color: var(--white);
     }
@@ -263,12 +284,12 @@
 
     /* ── DAILY COUNTER ───────────────────────────────────────────── */
     .daily-counter {
-      font-size: 0.82rem;
-      color: var(--teal-dark);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      color: var(--mid-gray);
       text-align: center;
       margin-top: 6px;
       margin-bottom: 14px;
-      opacity: 0.8;
     }
 
     /* ── BACK LINK ───────────────────────────────────────────────── */
@@ -276,71 +297,81 @@
       align-self: flex-start;
       background: none;
       border: none;
-      color: var(--teal-dark);
+      color: var(--stone-dark);
+      font-family: 'Inter', sans-serif;
       font-size: 0.82rem;
-      font-weight: 600;
+      font-weight: 500;
       cursor: pointer;
       padding: 0;
       margin-bottom: 18px;
       display: flex;
       align-items: center;
       gap: 4px;
-      opacity: 0.8;
     }
-    .back-link:hover { opacity: 1; }
+    .back-link:hover { color: var(--stone); }
 
     /* ── EMPTY STATE ─────────────────────────────────────────────── */
     .empty-msg {
       background: var(--white);
-      border-radius: 14px;
+      border-radius: 4px;
+      border: 1px solid var(--stone-light);
       padding: 28px 22px;
       text-align: center;
-      box-shadow: 0 3px 12px var(--shadow);
+      box-shadow: 0 2px 8px var(--shadow);
       width: 100%;
     }
     .empty-msg .e-icon { font-size: 2.5rem; margin-bottom: 10px; }
-    .empty-msg p { font-size: 0.9rem; color: var(--text-mid); line-height: 1.6; }
+    .empty-msg p { font-size: 0.9rem; color: var(--mid-gray); line-height: 1.6; }
 
     /* ── FOOTER ──────────────────────────────────────────────────── */
     footer {
       margin-top: 32px;
-      text-align: center;
-      font-size: 0.73rem;
-      color: #7aadad;
-      line-height: 1.7;
+      width: 100%;
+      max-width: 400px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 4px;
     }
-    footer a { color: var(--teal-dark); text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
+    footer .footer-left {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--stone-dark);
+    }
+    footer .footer-right {
+      font-family: 'Archivo Narrow', sans-serif;
+      font-style: italic;
+      font-size: 13px;
+      color: var(--stone);
+    }
     .top-nav {
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 900;
-      height: 44px;
+      height: 48px;
       display: flex;
       align-items: center;
       padding: 0 20px;
-      background: rgba(230, 245, 245, 0.88);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-bottom: 1px solid rgba(91, 191, 191, 0.18);
+      background: var(--near-black);
+      border-bottom: none;
     }
     .nav-back {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--teal-dark);
+      color: var(--stone);
       text-decoration: none;
-      opacity: 0.6;
-      transition: opacity 0.15s;
+      transition: color 0.15s;
     }
-    .nav-back:hover { opacity: 1; }
+    .nav-back:hover { color: var(--white); }
   </style>
-  <link rel="manifest" href="manifest.json">
-  <script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');</script>
 </head>
 <body>
   <nav class="top-nav" aria-label="Site navigation">
@@ -504,8 +535,8 @@
   </div>
 
   <footer>
-    Cards by <a href="https://barefootcoaching.co.uk" target="_blank" rel="noopener">Barefoot Coaching</a> · Kim Morgan<br>
-    Recreated digitally for personal use
+    <span class="footer-left">coaching · the economist</span>
+    <span class="footer-right">life begins at the end of your comfort zone</span>
   </footer>
 
   <script>

@@ -4,68 +4,79 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Let's Get Closer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     :root {
+      --red:         #E3120B;
+      --near-black:  #0D0D0D;
+      --dark:        #262626;
+      --mid-gray:    #666666;
+      --light-gray:  #AAAAAA;
+      --off-white:   #F5F4EE;
+      --white:       #FFFFFF;
+      --stone:       #A89F94;
+      --stone-light: #E8E3DD;
+      --stone-dark:  #7A7168;
+      --warm-white:  #FDFBF8;
       --close: #21956f;
       --closer: #d4ad2d;
       --closest: #c84f5b;
-      --ink: #231f27;
-      --muted: #706776;
-      --paper: #ffffff;
-      --panel: #ffffff;
-      --border: rgba(48, 39, 55, 0.12);
-      --shadow: rgba(33, 23, 40, 0.14);
-      --white: #fff;
     }
 
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: var(--ink);
-      background: #ffffff;
+      font-family: 'Inter', sans-serif;
+      color: var(--near-black);
+      background: var(--warm-white);
       padding: 66px 16px 40px;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--red);
+      z-index: 9999;
     }
     /* ── top nav ── */
     .top-nav {
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 900;
-      height: 44px;
+      height: 48px;
       display: flex;
       align-items: center;
       padding: 0 20px;
-      background: rgba(255, 252, 248, 0.82);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-bottom: 1px solid rgba(0,0,0,0.07);
+      background: var(--near-black);
+      border-bottom: none;
     }
     .nav-back {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
+      font-size: 0.75rem;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: inherit;
+      color: var(--stone);
       text-decoration: none;
-      opacity: 0.5;
-      transition: opacity 0.15s;
+      transition: color 0.15s;
     }
-    .nav-back:hover { opacity: 1; }
+    .nav-back:hover { color: var(--white); }
 
     .app { max-width: 1180px; margin: 0 auto; }
     .screen { display: none; }
     .screen.active { display: block; }
 
     .panel {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 26px;
-      box-shadow: 0 14px 34px var(--shadow);
-      
+      background: var(--white);
+      border: 1px solid var(--stone-light);
+      border-radius: 6px;
+      box-shadow: 0 2px 12px rgba(13,13,13,0.06);
     }
 
     header {
@@ -76,35 +87,33 @@
     .eyebrow {
       display: inline-block;
       margin-bottom: 10px;
-      padding: 7px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.76);
-      border: 1px solid var(--border);
-      color: var(--muted);
+      color: var(--stone);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 500;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-size: 0.76rem;
-      font-weight: 800;
+      letter-spacing: 0.12em;
     }
 
     h1 {
       margin: 0;
-      font-family: Georgia, "Times New Roman", serif;
+      font-family: 'Archivo Narrow', sans-serif;
       font-size: clamp(2rem, 5vw, 3.8rem);
       font-weight: 600;
       letter-spacing: 0.04em;
+      color: var(--near-black);
     }
 
     .sub {
       max-width: 760px;
       margin: 10px auto 0;
-      color: var(--muted);
+      color: var(--mid-gray);
       line-height: 1.6;
       font-size: 1rem;
     }
 
-    h2 { margin: 0 0 10px; font-size: 1.15rem; }
-    p { margin: 0; color: var(--muted); line-height: 1.6; }
+    h2 { margin: 0 0 10px; font-size: 1.15rem; font-family: 'Archivo Narrow', sans-serif; font-weight: 600; }
+    p { margin: 0; color: var(--mid-gray); line-height: 1.6; }
 
     .top-grid,
     .workspace {
@@ -133,35 +142,38 @@
 
     .btn {
       border: none;
-      border-radius: 999px;
+      border-radius: 3px;
       padding: 12px 18px;
+      font-family: 'Inter', sans-serif;
       font-size: 0.95rem;
-      font-weight: 800;
+      font-weight: 500;
       cursor: pointer;
-      transition: transform 0.1s ease, opacity 0.14s ease;
-      box-shadow: 0 8px 20px rgba(33, 23, 40, 0.12);
+      transition: background 0.15s ease;
     }
 
-    .btn:active { transform: scale(0.98); }
-    .btn:disabled { opacity: 0.45; cursor: default; box-shadow: none; }
-    .btn-secondary { background: rgba(255,255,255,0.92); color: var(--ink); border: 1px solid var(--border); }
+    .btn:active { opacity: 0.85; }
+    .btn:disabled { opacity: 0.45; cursor: default; }
+    .btn-secondary { background: transparent; color: var(--stone-dark); border: 1px solid var(--stone-dark); }
+    .btn-secondary:hover { border-color: var(--stone); color: var(--stone); }
     .btn-close { background: var(--close); color: var(--white); }
     .btn-closer { background: var(--closer); color: var(--white); }
     .btn-closest { background: var(--closest); color: var(--white); }
-    .btn-primary { background: linear-gradient(135deg, var(--close), var(--closest)); color: var(--white); }
+    .btn-primary { background: var(--near-black); color: var(--white); }
+    .btn-primary:hover { background: var(--dark); }
 
     .back-link {
       border: none;
       background: none;
       padding: 0;
       margin-bottom: 12px;
-      color: var(--muted);
-      font-weight: 700;
+      color: var(--mid-gray);
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
       cursor: pointer;
     }
 
     .deck-card {
-      border-radius: 24px;
+      border-radius: 4px;
       padding: 20px;
       color: var(--white);
       min-height: 230px;
@@ -169,13 +181,12 @@
       flex-direction: column;
       justify-content: space-between;
       cursor: pointer;
-      box-shadow: 0 14px 26px rgba(33, 23, 40, 0.12);
-      transition: transform 0.14s ease, box-shadow 0.14s ease;
+      box-shadow: 0 2px 12px rgba(13,13,13,0.12);
+      transition: transform 0.14s ease;
     }
 
     .deck-card:hover {
       transform: translateY(-2px);
-      box-shadow: 0 20px 32px rgba(33, 23, 40, 0.18);
     }
 
     .deck-card small {
@@ -183,13 +194,14 @@
       text-transform: uppercase;
       letter-spacing: 0.1em;
       opacity: 0.9;
-      font-weight: 800;
-      font-size: 0.72rem;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 0.7rem;
     }
 
     .deck-card h3 {
       margin: 12px 0 10px;
-      font-family: Georgia, "Times New Roman", serif;
+      font-family: 'Archivo Narrow', sans-serif;
       font-size: 2rem;
       font-weight: 600;
       letter-spacing: 0.04em;
@@ -213,16 +225,16 @@
       justify-content: space-between;
       gap: 12px;
       margin-bottom: 8px;
-      color: var(--muted);
+      color: var(--mid-gray);
       font-size: 0.83rem;
-      font-weight: 700;
+      font-weight: 500;
     }
 
     .progress-bar {
-      height: 8px;
-      border-radius: 999px;
+      height: 6px;
+      border-radius: 3px;
       overflow: hidden;
-      background: rgba(0,0,0,0.06);
+      background: var(--stone-light);
       margin-bottom: 16px;
     }
 
@@ -234,10 +246,11 @@
 
     .question-card {
       min-height: 420px;
-      border-radius: 28px;
-      background: var(--white);
+      border-radius: 6px;
+      background: var(--warm-white);
+      border: 1px solid var(--stone-light);
       padding: 28px 28px 24px;
-      box-shadow: inset 0 0 0 1px rgba(40, 34, 45, 0.06);
+      box-shadow: 0 2px 12px rgba(13,13,13,0.06);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -249,33 +262,35 @@
       content: "";
       position: absolute;
       inset: 18px;
-      border-radius: 22px;
-      border: 1px solid rgba(35, 31, 39, 0.06);
+      border-radius: 2px;
+      border: 1px solid var(--stone-light);
       pointer-events: none;
     }
 
     .question-top {
       text-align: center;
-      font-size: 0.72rem;
-      font-weight: 800;
-      letter-spacing: 0.08em;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
+      color: var(--stone);
     }
 
     .question-body {
-      font-family: Georgia, "Times New Roman", serif;
+      font-family: 'Archivo Narrow', sans-serif;
       font-size: clamp(1.55rem, 4vw, 2.25rem);
       line-height: 1.35;
       text-align: center;
       text-wrap: balance;
-      color: var(--ink);
+      color: var(--near-black);
       margin: 20px auto;
       max-width: 620px;
     }
 
     .question-note {
-      font-family: Georgia, "Times New Roman", serif;
-      color: var(--muted);
+      font-family: 'Archivo Narrow', sans-serif;
+      color: var(--mid-gray);
       text-align: center;
       line-height: 1.5;
       font-size: 1rem;
@@ -285,10 +300,10 @@
 
     .question-footer {
       text-align: center;
-      font-family: Georgia, "Times New Roman", serif;
+      font-family: 'Archivo Narrow', sans-serif;
       font-size: 1.05rem;
-      color: var(--ink);
-      font-weight: 700;
+      color: var(--stone-dark);
+      font-weight: 600;
     }
 
     .chip-row {
@@ -299,15 +314,12 @@
     }
 
     .chip {
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.74);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 0.76rem;
-      font-weight: 800;
+      color: var(--stone);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 500;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.12em;
     }
 
     .browse-list {
@@ -320,46 +332,54 @@
     }
 
     .browse-item {
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      background: rgba(255,255,255,0.78);
+      border: 1px solid var(--stone-light);
+      border-radius: 4px;
+      background: var(--warm-white);
       padding: 14px 16px;
       cursor: pointer;
-      transition: transform 0.12s ease, border-color 0.12s ease;
+      transition: border-color 0.12s ease;
     }
 
     .browse-item:hover {
-      transform: translateY(-1px);
-      border-color: rgba(35, 31, 39, 0.18);
+      border-color: var(--stone);
     }
 
     .browse-item strong {
       display: block;
-      font-size: 0.76rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 500;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.12em;
       margin-bottom: 6px;
-      color: var(--muted);
+      color: var(--stone);
     }
 
-    .browse-item p { color: var(--ink); }
+    .browse-item p { color: var(--near-black); }
 
-    .level-close .progress-fill,
-    .level-close .question-top { color: var(--close); }
-    .level-closer .progress-fill,
-    .level-closer .question-top { color: #a67f08; }
-    .level-closest .progress-fill,
-    .level-closest .question-top { color: var(--closest); }
     .level-close .progress-fill { background: var(--close); }
     .level-closer .progress-fill { background: var(--closer); }
     .level-closest .progress-fill { background: var(--closest); }
 
     footer {
-      text-align: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-top: 26px;
-      color: var(--muted);
-      font-size: 0.78rem;
-      line-height: 1.7;
+      padding: 0 4px;
+    }
+    footer .footer-left {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--stone-dark);
+    }
+    footer .footer-right {
+      font-family: 'Archivo Narrow', sans-serif;
+      font-style: italic;
+      font-size: 13px;
+      color: var(--stone);
     }
 
     @media (max-width: 940px) {
@@ -367,8 +387,6 @@
       .question-card { min-height: 340px; padding: 22px; }
     }
   </style>
-  <link rel="manifest" href="manifest.json">
-  <script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');</script>
 </head>
 <body>
   <nav class="top-nav" aria-label="Site navigation">
@@ -400,7 +418,7 @@
       </div>
 
       <div class="deck-grid">
-        <article class="deck-card" style="background:linear-gradient(145deg,var(--close),#16735a)" onclick="openLevel('close')">
+        <article class="deck-card" style="background:var(--close)" onclick="openLevel('close')">
           <div>
             <small>Level One</small>
             <h3>Close</h3>
@@ -408,7 +426,7 @@
           </div>
           <small id="close-count"></small>
         </article>
-        <article class="deck-card" style="background:linear-gradient(145deg,var(--closer),#b88b0f)" onclick="openLevel('closer')">
+        <article class="deck-card" style="background:var(--closer)" onclick="openLevel('closer')">
           <div>
             <small>Level Two</small>
             <h3>Closer</h3>
@@ -416,7 +434,7 @@
           </div>
           <small id="closer-count"></small>
         </article>
-        <article class="deck-card" style="background:linear-gradient(145deg,var(--closest),#a83d4c)" onclick="openLevel('closest')">
+        <article class="deck-card" style="background:var(--closest)" onclick="openLevel('closest')">
           <div>
             <small>Level Three</small>
             <h3>Closest</h3>
@@ -489,7 +507,8 @@
     </section>
 
     <footer>
-      Cards by Intelligent Change
+      <span class="footer-left">coaching · the economist</span>
+      <span class="footer-right">life begins at the end of your comfort zone</span>
     </footer>
   </div>
 

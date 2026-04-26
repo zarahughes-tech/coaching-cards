@@ -4,65 +4,76 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The Values Cards</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     :root {
-      --bg: #f5f0e9;
-      --panel: rgba(255,255,255,0.82);
-      --ink: #2d2830;
-      --muted: #6f6570;
-      --border: rgba(54, 42, 58, 0.12);
-      --shadow: rgba(31, 19, 31, 0.12);
+      --red-brand:   #E3120B;
+      --near-black:  #0D0D0D;
+      --dark:        #262626;
+      --mid-gray:    #666666;
+      --light-gray:  #AAAAAA;
+      --off-white:   #F5F4EE;
+      --white:       #FFFFFF;
+      --stone:       #A89F94;
+      --stone-light: #E8E3DD;
+      --stone-dark:  #7A7168;
+      --warm-white:  #FDFBF8;
       --really: #4d9c73;
       --slightly: #c8903e;
       --unimportant: #c56558;
-      --blue: #3D7BC4;
-      --teal: #1F8A8E;
-      --green: #3D8B5E;
-      --yellow: #C4A020;
-      --orange: #D4622A;
-      --red: #B83030;
-      --purple: #5040A8;
+      --blue: #4f8de7;
+      --teal: #2f9fa3;
+      --green: #71a55c;
+      --yellow: #d0c44a;
+      --orange: #d7964d;
+      --red: #c55e55;
+      --purple: #5c4eb5;
     }
 
     body {
       margin: 0;
       min-height: 100vh;
-      background:
-        radial-gradient(circle at top, rgba(255,255,255,0.9), rgba(255,255,255,0) 30%),
-        linear-gradient(180deg, #ece4ef 0%, var(--bg) 42%, #efe6da 100%);
-      color: var(--ink);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--warm-white);
+      color: var(--near-black);
+      font-family: 'Inter', sans-serif;
       padding: 64px 14px 40px;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--red-brand);
+      z-index: 9999;
     }
     /* ── top nav ── */
     .top-nav {
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 900;
-      height: 44px;
+      height: 48px;
       display: flex;
       align-items: center;
       padding: 0 20px;
-      background: rgba(255, 252, 248, 0.82);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-bottom: 1px solid rgba(0,0,0,0.07);
+      background: var(--near-black);
+      border-bottom: none;
     }
     .nav-back {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
+      font-size: 0.75rem;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: inherit;
+      color: var(--stone);
       text-decoration: none;
-      opacity: 0.5;
-      transition: opacity 0.15s;
+      transition: color 0.15s;
     }
-    .nav-back:hover { opacity: 1; }
+    .nav-back:hover { color: var(--white); }
 
     .app {
       max-width: 1220px;
@@ -70,11 +81,10 @@
     }
 
     .panel {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      box-shadow: 0 12px 34px var(--shadow);
-      backdrop-filter: blur(10px);
+      background: var(--white);
+      border: 1px solid var(--stone-light);
+      border-radius: 6px;
+      box-shadow: 0 2px 12px rgba(13,13,13,0.06);
     }
 
     header {
@@ -85,30 +95,28 @@
     .eyebrow {
       display: inline-block;
       margin-bottom: 10px;
-      padding: 7px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.75);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 0.76rem;
-      font-weight: 800;
+      color: var(--stone);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 500;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.12em;
     }
 
     h1 {
       margin: 0;
-      font-family: Georgia, "Times New Roman", serif;
+      font-family: 'Archivo Narrow', sans-serif;
       font-size: clamp(2rem, 5vw, 3.5rem);
       font-weight: 600;
       letter-spacing: 0.04em;
+      color: var(--near-black);
     }
 
     .sub {
       margin: 10px auto 0;
       max-width: 760px;
       line-height: 1.6;
-      color: var(--muted);
+      color: var(--mid-gray);
       font-size: 1rem;
     }
 
@@ -132,12 +140,14 @@
     h2 {
       margin: 0 0 10px;
       font-size: 1.12rem;
+      font-family: 'Archivo Narrow', sans-serif;
+      font-weight: 600;
     }
 
     p {
       margin: 0;
       line-height: 1.6;
-      color: var(--muted);
+      color: var(--mid-gray);
     }
 
     .actions,
@@ -153,20 +163,22 @@
 
     .btn {
       border: none;
-      border-radius: 999px;
+      border-radius: 3px;
       padding: 12px 18px;
+      font-family: 'Inter', sans-serif;
       font-size: 0.94rem;
-      font-weight: 800;
+      font-weight: 500;
       cursor: pointer;
-      transition: transform 0.1s ease, opacity 0.14s ease;
-      box-shadow: 0 8px 20px rgba(31, 19, 31, 0.12);
+      transition: background 0.15s ease;
     }
 
-    .btn:active { transform: scale(0.98); }
-    .btn:disabled { opacity: 0.45; cursor: default; box-shadow: none; }
+    .btn:active { opacity: 0.85; }
+    .btn:disabled { opacity: 0.45; cursor: default; }
 
-    .btn-primary { background: linear-gradient(135deg, var(--purple), var(--blue)); color: white; }
-    .btn-secondary { background: rgba(255,255,255,0.92); color: var(--ink); border: 1px solid var(--border); }
+    .btn-primary { background: var(--near-black); color: white; }
+    .btn-primary:hover { background: var(--dark); }
+    .btn-secondary { background: transparent; color: var(--stone-dark); border: 1px solid var(--stone-dark); }
+    .btn-secondary:hover { border-color: var(--stone); color: var(--stone); }
     .btn-really { background: var(--really); color: white; }
     .btn-slightly { background: var(--slightly); color: white; }
     .btn-unimportant { background: var(--unimportant); color: white; }
@@ -176,8 +188,9 @@
       background: none;
       padding: 0;
       margin-bottom: 12px;
-      color: var(--muted);
-      font-weight: 700;
+      color: var(--mid-gray);
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
       cursor: pointer;
     }
 
@@ -189,23 +202,23 @@
       display: flex;
       justify-content: space-between;
       gap: 12px;
-      color: var(--muted);
+      color: var(--mid-gray);
       font-size: 0.83rem;
-      font-weight: 700;
+      font-weight: 500;
       margin-bottom: 8px;
     }
 
     .progress-bar {
-      height: 8px;
-      background: rgba(92, 78, 181, 0.12);
-      border-radius: 999px;
+      height: 6px;
+      background: var(--stone-light);
+      border-radius: 3px;
       overflow: hidden;
     }
 
     .progress-fill {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, var(--purple), var(--blue));
+      background: var(--stone);
       transition: width 0.2s ease;
     }
 
@@ -223,8 +236,7 @@
     }
 
     .assign-btn.active {
-      outline: 3px solid rgba(45, 40, 48, 0.14);
-      transform: translateY(-1px);
+      outline: 2px solid var(--near-black);
     }
 
     .card-grid {
@@ -237,26 +249,26 @@
       position: relative;
       min-height: 84px;
       border: none;
-      border-radius: 18px;
+      border-radius: 4px;
       padding: 12px 10px 10px;
       color: white;
       text-align: center;
       cursor: pointer;
-      box-shadow: 0 10px 20px rgba(31, 19, 31, 0.12);
+      box-shadow: 0 2px 8px rgba(13,13,13,0.12);
       transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
       overflow: hidden;
     }
 
     .value-card:hover {
       transform: translateY(-1px);
-      box-shadow: 0 14px 24px rgba(31, 19, 31, 0.16);
+      box-shadow: 0 4px 14px rgba(13,13,13,0.16);
     }
 
     .value-card::before {
       content: attr(data-mark);
       position: absolute;
       inset: auto auto -10px -4px;
-      font-family: Georgia, "Times New Roman", serif;
+      font-family: 'Archivo Narrow', sans-serif;
       font-size: 4rem;
       font-weight: 700;
       color: rgba(255,255,255,0.09);
@@ -264,26 +276,12 @@
       pointer-events: none;
     }
 
-    .value-card::after {
-      content: "";
-      position: absolute;
-      bottom: -20px;
-      right: -20px;
-      width: 140px;
-      height: 140px;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cpath d='M100,10 C145,10 180,45 180,90 C180,135 145,170 100,170 C55,170 20,135 20,90 C20,55 45,30 70,25 C95,20 115,35 115,55 C115,75 100,85 85,82 C70,79 62,68 65,58 C68,48 78,44 85,48' fill='none' stroke='rgba(255,255,255,0.18)' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M130,30 C155,45 168,75 160,105 C152,135 128,155 100,158' fill='none' stroke='rgba(255,255,255,0.12)' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-size: contain;
-      background-repeat: no-repeat;
-      pointer-events: none;
-      opacity: 0.9;
-    }
-
-
     .value-card .word {
       position: relative;
       z-index: 1;
+      font-family: 'Inter', sans-serif;
       font-size: 0.95rem;
-      font-weight: 800;
+      font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.04em;
       line-height: 1.25;
@@ -314,10 +312,10 @@
       border: 1px solid rgba(255,255,255,0.24);
     }
 
-    .value-card.status-really { box-shadow: 0 0 0 3px rgba(77, 156, 115, 0.55), 0 10px 20px rgba(31, 19, 31, 0.12); }
-    .value-card.status-slightly { box-shadow: 0 0 0 3px rgba(200, 144, 62, 0.55), 0 10px 20px rgba(31, 19, 31, 0.12); }
-    .value-card.status-unimportant { box-shadow: 0 0 0 3px rgba(197, 101, 88, 0.58), 0 10px 20px rgba(31, 19, 31, 0.12); }
-    .value-card.selected { box-shadow: 0 0 0 4px rgba(45, 40, 48, 0.2), 0 12px 24px rgba(31, 19, 31, 0.18); transform: translateY(-1px); }
+    .value-card.status-really { box-shadow: 0 0 0 3px rgba(77, 156, 115, 0.55), 0 2px 8px rgba(13,13,13,0.12); }
+    .value-card.status-slightly { box-shadow: 0 0 0 3px rgba(200, 144, 62, 0.55), 0 2px 8px rgba(13,13,13,0.12); }
+    .value-card.status-unimportant { box-shadow: 0 0 0 3px rgba(197, 101, 88, 0.58), 0 2px 8px rgba(13,13,13,0.12); }
+    .value-card.selected { box-shadow: 0 0 0 3px rgba(13,13,13,0.2), 0 4px 14px rgba(13,13,13,0.18); transform: translateY(-1px); }
 
     .summary-grid {
       margin-top: 14px;
@@ -326,7 +324,7 @@
     .stat {
       flex: 1;
       min-width: 120px;
-      border-radius: 18px;
+      border-radius: 4px;
       padding: 14px;
       color: white;
     }
@@ -334,22 +332,24 @@
     .stat small {
       display: block;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
+      font-family: 'Inter', sans-serif;
       font-size: 0.68rem;
-      font-weight: 800;
+      font-weight: 500;
       opacity: 0.9;
     }
 
     .stat span {
       display: block;
       margin-top: 6px;
+      font-family: 'Archivo Narrow', sans-serif;
       font-size: 1.6rem;
-      font-weight: 900;
+      font-weight: 700;
     }
 
-    .really { background: linear-gradient(135deg, #55a77a, var(--really)); }
-    .slightly { background: linear-gradient(135deg, #d29b4f, var(--slightly)); }
-    .unimportant { background: linear-gradient(135deg, #d06d60, var(--unimportant)); }
+    .really { background: var(--really); }
+    .slightly { background: var(--slightly); }
+    .unimportant { background: var(--unimportant); }
 
     .selection-bar {
       align-items: center;
@@ -359,21 +359,19 @@
 
     .selection-note {
       font-size: 0.9rem;
-      color: var(--muted);
-      font-weight: 700;
+      color: var(--mid-gray);
+      font-weight: 500;
     }
 
     .pill {
       display: inline-block;
       padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.78);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 0.76rem;
-      font-weight: 800;
+      color: var(--stone);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 500;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.12em;
     }
 
     .final-list {
@@ -384,39 +382,47 @@
 
     .final-block {
       padding: 16px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.62);
-      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--warm-white);
+      border: 1px solid var(--stone-light);
     }
 
     .final-block strong {
       display: block;
       margin-bottom: 8px;
-      font-size: 0.84rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 500;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.12em;
+      color: var(--stone);
     }
 
     footer {
-      text-align: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-top: 24px;
-      color: var(--muted);
-      font-size: 0.78rem;
-      line-height: 1.7;
+      padding: 0 4px;
     }
-
-    footer a {
-      color: var(--ink);
-      text-decoration: none;
-      font-weight: 700;
+    footer .footer-left {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--stone-dark);
+    }
+    footer .footer-right {
+      font-family: 'Archivo Narrow', sans-serif;
+      font-style: italic;
+      font-size: 13px;
+      color: var(--stone);
     }
 
     @media (max-width: 940px) {
       .top-grid { grid-template-columns: 1fr; }
     }
   </style>
-  <link rel="manifest" href="manifest.json">
-  <script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');</script>
 </head>
 <body>
   <nav class="top-nav" aria-label="Site navigation">
@@ -559,8 +565,8 @@
     </section>
 
     <footer>
-      The Values Cards by <a href="https://www.qcards.com.au" target="_blank" rel="noopener">Qcards</a><br>
-      Published in Australia by Qcards · Marie McNamara &amp; John Veeken
+      <span class="footer-left">coaching · the economist</span>
+      <span class="footer-right">life begins at the end of your comfort zone</span>
     </footer>
   </div>
 

@@ -4,95 +4,101 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>At My Best</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     :root {
-      --orange: #E8591A;
-      --orange-deep: #c9491f;
-      --warm: #f0dfd2;
-      --ink: #2d2728;
-      --muted: #70686a;
-      --paper: #f7f2eb;
-      --panel: rgba(255,255,255,0.88);
-      --border: rgba(59, 48, 44, 0.12);
-      --shadow: rgba(37, 26, 24, 0.14);
-      --white: #fff;
+      --red:         #E3120B;
+      --near-black:  #0D0D0D;
+      --dark:        #262626;
+      --mid-gray:    #666666;
+      --light-gray:  #AAAAAA;
+      --off-white:   #F5F4EE;
+      --white:       #FFFFFF;
+      --stone:       #A89F94;
+      --stone-light: #E8E3DD;
+      --stone-dark:  #7A7168;
+      --warm-white:  #FDFBF8;
+      --coral: #d5794f;
+      --coral-deep: #c96539;
     }
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: var(--ink);
-      background:
-        radial-gradient(circle at top, rgba(255,255,255,0.94), rgba(255,255,255,0) 32%),
-        linear-gradient(180deg, #f8efe8 0%, #f7f2eb 42%, #efe3d7 100%);
+      font-family: 'Inter', sans-serif;
+      color: var(--near-black);
+      background: var(--warm-white);
       padding: 66px 16px 40px;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--red);
+      z-index: 9999;
     }
     /* ── top nav ── */
     .top-nav {
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 900;
-      height: 44px;
+      height: 48px;
       display: flex;
       align-items: center;
       padding: 0 20px;
-      background: rgba(255, 252, 248, 0.82);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-bottom: 1px solid rgba(0,0,0,0.07);
+      background: var(--near-black);
+      border-bottom: none;
     }
     .nav-back {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
+      font-size: 0.75rem;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: inherit;
+      color: var(--stone);
       text-decoration: none;
-      opacity: 0.5;
-      transition: opacity 0.15s;
+      transition: color 0.15s;
     }
-    .nav-back:hover { opacity: 1; }
+    .nav-back:hover { color: var(--white); }
     .app { max-width: 1180px; margin: 0 auto; }
     .screen { display: none; }
     .screen.active { display: block; }
     .panel {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 26px;
-      box-shadow: 0 14px 34px var(--shadow);
-      backdrop-filter: blur(10px);
+      background: var(--white);
+      border: 1px solid var(--stone-light);
+      border-radius: 6px;
+      box-shadow: 0 2px 12px rgba(13,13,13,0.06);
     }
     header { text-align: center; margin-bottom: 18px; }
     .eyebrow {
       display: inline-block;
       margin-bottom: 10px;
-      padding: 7px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.78);
-      border: 1px solid var(--border);
-      color: var(--muted);
+      color: var(--stone);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 500;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-size: 0.76rem;
-      font-weight: 800;
+      letter-spacing: 0.12em;
     }
     h1 {
       margin: 0;
-      font-family: Georgia, "Times New Roman", serif;
+      font-family: 'Archivo Narrow', sans-serif;
       font-size: clamp(2rem, 5vw, 3.8rem);
       font-weight: 600;
       letter-spacing: 0.03em;
+      color: var(--near-black);
     }
-    h2 { margin: 0 0 10px; font-size: 1.15rem; }
-    p { margin: 0; color: var(--muted); line-height: 1.6; }
+    h2 { margin: 0 0 10px; font-size: 1.15rem; font-family: 'Archivo Narrow', sans-serif; font-weight: 600; }
+    p { margin: 0; color: var(--mid-gray); line-height: 1.6; }
     .sub {
       max-width: 780px;
       margin: 10px auto 0;
-      color: var(--muted);
+      color: var(--mid-gray);
       line-height: 1.6;
       font-size: 1rem;
     }
@@ -121,69 +127,68 @@
     .search-input {
       width: 100%;
       min-width: 0;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.92);
+      border-radius: 4px;
+      border: 1px solid var(--stone-light);
+      background: var(--white);
       padding: 13px 15px;
+      font-family: 'Inter', sans-serif;
       font-size: 0.97rem;
-      color: var(--ink);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+      color: var(--near-black);
     }
     .search-input:focus {
-      outline: 2px solid rgba(201,101,57,0.18);
-      border-color: rgba(201,101,57,0.28);
+      outline: 2px solid var(--stone-light);
+      border-color: var(--stone);
     }
     .btn {
       border: none;
-      border-radius: 999px;
+      border-radius: 3px;
       padding: 12px 18px;
+      font-family: 'Inter', sans-serif;
       font-size: 0.95rem;
-      font-weight: 800;
+      font-weight: 500;
       cursor: pointer;
-      transition: transform 0.1s ease, opacity 0.14s ease;
-      box-shadow: 0 8px 20px rgba(33, 23, 40, 0.12);
+      transition: background 0.15s ease;
     }
-    .btn:active { transform: scale(0.98); }
-    .btn:disabled { opacity: 0.45; cursor: default; box-shadow: none; }
-    .btn-primary { background: linear-gradient(135deg, var(--orange), var(--orange-deep)); color: var(--white); }
-    .btn-secondary { background: rgba(255,255,255,0.92); color: var(--ink); border: 1px solid var(--border); }
+    .btn:active { opacity: 0.85; }
+    .btn:disabled { opacity: 0.45; cursor: default; }
+    .btn-primary { background: var(--near-black); color: var(--white); }
+    .btn-primary:hover { background: var(--dark); }
+    .btn-secondary { background: transparent; color: var(--stone-dark); border: 1px solid var(--stone-dark); }
+    .btn-secondary:hover { border-color: var(--stone); color: var(--stone); }
     .back-link {
       border: none;
       background: none;
       padding: 0;
       margin-bottom: 12px;
-      color: var(--muted);
-      font-weight: 700;
+      color: var(--mid-gray);
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
       cursor: pointer;
     }
     .exercise-card, .note, .strength-card {
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      background: rgba(255,255,255,0.82);
-      box-shadow: 0 10px 24px rgba(33, 23, 40, 0.08);
+      border: 1px solid var(--stone-light);
+      border-radius: 4px;
+      background: var(--warm-white);
+      box-shadow: 0 2px 8px rgba(13,13,13,0.04);
     }
     .exercise-card {
       padding: 18px;
       text-align: left;
       cursor: pointer;
-      transition: transform 0.12s ease, border-color 0.12s ease;
+      transition: border-color 0.12s ease;
     }
     .exercise-card:hover, .strength-card:hover {
-      transform: translateY(-2px);
-      border-color: rgba(42, 34, 35, 0.18);
+      border-color: var(--stone);
     }
-    .exercise-card h3 { margin: 0 0 8px; font-size: 1.02rem; }
+    .exercise-card h3 { margin: 0 0 8px; font-size: 1.02rem; font-family: 'Archivo Narrow', sans-serif; }
     .chip-row { margin-top: 14px; }
     .chip {
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.74);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 0.76rem;
-      font-weight: 800;
+      color: var(--stone);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 500;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.12em;
     }
     .note-list { display: grid; gap: 10px; margin-top: 14px; }
     .note { padding: 14px 16px; }
@@ -191,37 +196,38 @@
       min-height: 132px;
       padding: 16px 14px;
       cursor: pointer;
-      transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+      transition: border-color 0.12s ease, box-shadow 0.12s ease;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
     .strength-card.selected {
-      box-shadow: 0 0 0 3px rgba(213,121,79,0.2), 0 14px 26px rgba(33, 23, 40, 0.12);
-      border-color: rgba(201,101,57,0.32);
+      box-shadow: 0 0 0 2px var(--stone), 0 2px 12px rgba(13,13,13,0.08);
+      border-color: var(--stone);
     }
     .strength-number {
-      font-size: 0.74rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--muted);
-      font-weight: 800;
+      letter-spacing: 0.12em;
+      color: var(--stone);
+      font-weight: 500;
     }
     .strength-word {
-      font-family: Georgia, "Times New Roman", serif;
+      font-family: 'Archivo Narrow', sans-serif;
       font-size: 1.4rem;
       line-height: 1.2;
-      color: var(--orange-deep);
+      color: var(--near-black);
       text-wrap: balance;
     }
-    .strength-note { font-size: 0.82rem; color: var(--muted); }
-    .strength-card.needs-review .strength-word { color: var(--muted); font-size: 1.05rem; }
+    .strength-note { font-size: 0.82rem; color: var(--mid-gray); }
+    .strength-card.needs-review .strength-word { color: var(--mid-gray); font-size: 1.05rem; }
     .strength-card { position: relative; }
     .card-back { display: none; flex-direction: column; height: 100%; }
     .strength-card.flipped .card-front { display: none; }
     .strength-card.flipped .card-back { display: flex; }
-    .flip-photo { width: 100%; flex: 1; min-height: 0; object-fit: cover; border-radius: 10px; }
-    .flip-label { font-size: 0.78rem; color: var(--muted); margin-top: 6px; text-align: center; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+    .flip-photo { width: 100%; flex: 1; min-height: 0; object-fit: cover; border-radius: 4px; }
+    .flip-label { font-family: 'Inter', sans-serif; font-size: 0.68rem; color: var(--stone); margin-top: 6px; text-align: center; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; }
     .flip-btn {
       position: absolute;
       top: 8px;
@@ -229,8 +235,8 @@
       width: 26px;
       height: 26px;
       border-radius: 50%;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.92);
+      border: 1px solid var(--stone-light);
+      background: var(--white);
       cursor: pointer;
       font-size: 0.9rem;
       display: flex;
@@ -238,21 +244,20 @@
       justify-content: center;
       padding: 0;
       line-height: 1;
-      transition: border-color 0.12s ease, background 0.12s ease;
+      transition: border-color 0.12s ease;
       z-index: 2;
     }
-    .flip-btn:hover { background: var(--white); border-color: rgba(201,101,57,0.4); }
+    .flip-btn:hover { border-color: var(--stone); }
     .reflection-card {
-      border-radius: 26px;
-      background: var(--white);
+      border-radius: 4px;
+      background: var(--warm-white);
       padding: 26px;
-      border: 1px solid rgba(35, 31, 39, 0.08);
-      box-shadow: inset 0 0 0 1px rgba(35,31,39,0.04);
+      border: 1px solid var(--stone-light);
     }
     .reflection-title {
-      font-family: Georgia, "Times New Roman", serif;
+      font-family: 'Archivo Narrow', sans-serif;
       font-size: clamp(1.6rem, 4vw, 2.3rem);
-      color: var(--orange-deep);
+      color: var(--near-black);
       margin-bottom: 14px;
     }
     .selected-list {
@@ -263,44 +268,58 @@
     }
     .selected-pill {
       padding: 10px 12px;
-      border-radius: 16px;
-      background: #fff6f0;
-      border: 1px solid rgba(201,101,57,0.18);
-      font-weight: 700;
-      color: var(--ink);
+      border-radius: 3px;
+      background: var(--off-white);
+      border: 1px solid var(--stone-light);
+      font-weight: 500;
+      font-family: 'Inter', sans-serif;
+      color: var(--near-black);
     }
     .slideshow-card {
-      border-radius: 24px;
-      background: rgba(255,255,255,0.88);
-      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--warm-white);
+      border: 1px solid var(--stone-light);
       padding: 18px;
-      box-shadow: 0 10px 24px rgba(33, 23, 40, 0.08);
+      box-shadow: 0 2px 8px rgba(13,13,13,0.04);
     }
     .slideshow-image {
       width: 100%;
       max-height: 72vh;
-      border-radius: 22px;
+      border-radius: 4px;
       display: block;
       object-fit: contain;
-      background: rgba(240, 223, 210, 0.36);
-      box-shadow: 0 14px 28px rgba(33, 23, 40, 0.12);
+      background: var(--off-white);
+      box-shadow: 0 2px 12px rgba(13,13,13,0.08);
     }
     .slideshow-meta {
       margin-bottom: 14px;
     }
     .lightbox img {
       width: 100%;
-      border-radius: 22px;
+      border-radius: 4px;
       display: block;
       margin-top: 16px;
-      box-shadow: 0 14px 28px rgba(33, 23, 40, 0.12);
+      box-shadow: 0 2px 12px rgba(13,13,13,0.08);
     }
     footer {
-      text-align: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-top: 26px;
-      color: var(--muted);
-      font-size: 0.78rem;
-      line-height: 1.7;
+      padding: 0 4px;
+    }
+    footer .footer-left {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--stone-dark);
+    }
+    footer .footer-right {
+      font-family: 'Archivo Narrow', sans-serif;
+      font-style: italic;
+      font-size: 13px;
+      color: var(--stone);
     }
     a { color: inherit; }
     @media (max-width: 940px) {
@@ -308,8 +327,6 @@
       .control-bar { grid-template-columns: 1fr; }
     }
   </style>
-  <link rel="manifest" href="manifest.json">
-  <script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');</script>
 </head>
 <body>
   <nav class="top-nav" aria-label="Site navigation">
@@ -433,9 +450,8 @@
     </section>
 
     <footer>
-      At My Best Strengths Cards by <a href="https://atmybest.com">atmybest.com</a><br>
-      Booklet references visible in the supplied images: <a href="https://atmybest.com/inspiration">inspiration</a>, <a href="https://atmybest.com/360">360</a>, <a href="https://atmybest.com/shop">shop</a>, <a href="https://atmybest.com/feedback">feedback</a>.<br>
-      <!-- [NEEDS REVIEW — IMG_4446] The full 48-word deck below was recovered from published At My Best examples and a corroborating full-list source. IMG_4446 directly confirmed cards 29–40, while the remaining word cards were not fully visible in the supplied photos. -->
+      <span class="footer-left">coaching · the economist</span>
+      <span class="footer-right">life begins at the end of your comfort zone</span>
     </footer>
   </div>
 
@@ -491,7 +507,7 @@
       { number: 48, word: "Humourous", note: "", status: "recovered" }
     ];
     const EXERCISES = [{"id": "personal", "title": "Exercise 1: Personal Reflection", "summary": "Sort through the words and pick out the ones that describe you at your absolute best.", "detail": "Focusing on one particular aspect of your life (e.g. home, work, social), sort through the 48 words and pick out the ones that describe you at your absolute best. To make it manageable you might want to aim for 5 to 10 cards.", "reflect": "Which strengths do you show most often? How does this mix of strengths work together? How might you use them even more effectively? How do they relate to what is important to you at this point in life?", "tip": "Try the same exercise focusing on different parts of your life.", "selectionLimit": 10}, {"id": "strengths360", "title": "Exercise 2: Strengths 360", "summary": "Ask colleagues, family, friends or customers which strengths they most value in you.", "detail": "Interested in knowing what strengths others see in you? Find out by asking a few of your colleagues, family, friends or customers to pick out the strengths they most value in you. To get even more insight ask them to give you examples of how you show these strengths.", "reflect": "Whose feedback surprises you? Which strengths do people mention consistently? What examples help you trust what they see in you?", "tip": "Try the online version of this exercise by visiting atmybest.com/360.", "selectionLimit": 10}, {"id": "team", "title": "Exercise 3: Team Strength", "summary": "Spread the cards out, photo side up, and ask each person which image reflects the team at its best.", "detail": "Get the team together around a table and spread the cards out, photo side up. Ask each person to say which image they think reflects the team at its best and why. Facilitate the group to build on the discussion and relate it to the current circumstances or challenges. How can we use our strengths more as a team? How can we use them to benefit customers more? How can we help each other be at our best more?", "reflect": "Which photographed image feels most like the team at its best? What qualities does that image suggest? What would help the team live that more consistently?", "tip": "See if you can agree on one image that represents the collective strengths of the team.", "selectionLimit": 3}, {"id": "guess", "title": "Exercise 4: Guess Who?", "summary": "Choose five strengths associated with someone and let the group guess who is being described.", "detail": "Here's an idea for a group that know each other well. Put everyone's name in a hat before each person picks one out discretely. Ask them to pick out 5 strengths they associate with that person. Taking turns to share, the group try to guess whose strengths are being described.", "reflect": "Which strengths make this person easy to recognise? Which choices feel generous, specific, and grounded in real examples?", "tip": "Encourage more discussion by asking people to work in pairs.", "selectionLimit": 5}];
-    const PHOTO_CARDS = [{"id":"card_01","title":"Supportive","caption":"Supportive","src":"https://picsum.photos/seed/supportive/800/600"},{"id":"card_02","title":"Organised","caption":"Organised","src":"https://picsum.photos/seed/organised/800/600"},{"id":"card_03","title":"Thoughtful","caption":"Thoughtful","src":"https://picsum.photos/seed/thoughtful/800/600"},{"id":"card_04","title":"Independent","caption":"Independent","src":"https://picsum.photos/seed/independent/800/600"},{"id":"card_05","title":"Determined","caption":"Determined","src":"https://picsum.photos/seed/determined/800/600"},{"id":"card_06","title":"Approachable","caption":"Approachable","src":"https://picsum.photos/seed/approachable/800/600"},{"id":"card_07","title":"Flexible","caption":"Flexible","src":"https://picsum.photos/seed/flexible/800/600"},{"id":"card_08","title":"Open-minded","caption":"Open-minded","src":"https://picsum.photos/seed/open-minded/800/600"},{"id":"card_09","title":"Insightful","caption":"Insightful","src":"https://picsum.photos/seed/insightful/800/600"},{"id":"card_10","title":"Playful","caption":"Playful","src":"https://picsum.photos/seed/playful/800/600"},{"id":"card_11","title":"Analytical","caption":"Analytical","src":"https://picsum.photos/seed/analytical/800/600"},{"id":"card_12","title":"Passionate","caption":"Passionate","src":"https://picsum.photos/seed/passionate/800/600"},{"id":"card_13","title":"Curious","caption":"Curious","src":"https://picsum.photos/seed/curious/800/600"},{"id":"card_14","title":"Decisive","caption":"Decisive","src":"https://picsum.photos/seed/decisive/800/600"},{"id":"card_15","title":"Resilient","caption":"Resilient","src":"https://picsum.photos/seed/resilient/800/600"},{"id":"card_16","title":"Practical","caption":"Practical","src":"https://picsum.photos/seed/practical/800/600"},{"id":"card_17","title":"Conscientious","caption":"Conscientious","src":"https://picsum.photos/seed/conscientious/800/600"},{"id":"card_18","title":"Brave","caption":"Brave","src":"https://picsum.photos/seed/brave/800/600"},{"id":"card_19","title":"Spontaneous","caption":"Spontaneous","src":"https://picsum.photos/seed/spontaneous/800/600"},{"id":"card_20","title":"Creative","caption":"Creative","src":"https://picsum.photos/seed/creative/800/600"},{"id":"card_21","title":"Positive","caption":"Positive","src":"https://picsum.photos/seed/positive/800/600"},{"id":"card_22","title":"Calm","caption":"Calm","src":"https://picsum.photos/seed/calm/800/600"},{"id":"card_23","title":"Sincere","caption":"Sincere","src":"https://picsum.photos/seed/sincere/800/600"},{"id":"card_24","title":"Appreciative","caption":"Appreciative","src":"https://picsum.photos/seed/appreciative/800/600"},{"id":"card_25","title":"Rigourous","caption":"Rigourous","src":"https://picsum.photos/seed/rigourous/800/600"},{"id":"card_26","title":"Wise","caption":"Wise","src":"https://picsum.photos/seed/wise/800/600"},{"id":"card_27","title":"Fair","caption":"Fair","src":"https://picsum.photos/seed/fair/800/600"},{"id":"card_28","title":"Co-operative","caption":"Co-operative","src":"https://picsum.photos/seed/co-operative/800/600"},{"id":"card_29","title":"Detailed","caption":"Detailed","src":"https://picsum.photos/seed/detailed/800/600"},{"id":"card_30","title":"Hopeful","caption":"Hopeful","src":"https://picsum.photos/seed/hopeful/800/600"},{"id":"card_31","title":"Energetic","caption":"Energetic","src":"https://picsum.photos/seed/energetic/800/600"},{"id":"card_32","title":"Considerate","caption":"Considerate","src":"https://picsum.photos/seed/considerate/800/600"},{"id":"card_33","title":"Warm","caption":"Warm","src":"https://picsum.photos/seed/warm/800/600"},{"id":"card_34","title":"Attentive","caption":"Attentive","src":"https://picsum.photos/seed/attentive/800/600"},{"id":"card_35","title":"Strategic","caption":"Strategic","src":"https://picsum.photos/seed/strategic/800/600"},{"id":"card_36","title":"Caring","caption":"Caring","src":"https://picsum.photos/seed/caring/800/600"},{"id":"card_37","title":"Patient","caption":"Patient","src":"https://picsum.photos/seed/patient/800/600"},{"id":"card_38","title":"Understanding","caption":"Understanding","src":"https://picsum.photos/seed/understanding/800/600"},{"id":"card_39","title":"Modest","caption":"Modest","src":"https://picsum.photos/seed/modest/800/600"},{"id":"card_40","title":"Engaging","caption":"Engaging","src":"https://picsum.photos/seed/engaging/800/600"},{"id":"card_41","title":"Focused","caption":"Focused","src":"https://picsum.photos/seed/focused/800/600"},{"id":"card_42","title":"Empathetic","caption":"Empathetic","src":"https://picsum.photos/seed/empathetic/800/600"},{"id":"card_43","title":"Dependable","caption":"Dependable","src":"https://picsum.photos/seed/dependable/800/600"},{"id":"card_44","title":"Principled","caption":"Principled","src":"https://picsum.photos/seed/principled/800/600"},{"id":"card_45","title":"Guiding","caption":"Guiding","src":"https://picsum.photos/seed/guiding/800/600"},{"id":"card_46","title":"Generous","caption":"Generous","src":"https://picsum.photos/seed/generous/800/600"},{"id":"card_47","title":"Adventurous","caption":"Adventurous","src":"https://picsum.photos/seed/adventurous/800/600"},{"id":"card_48","title":"Humourous","caption":"Humourous","src":"https://picsum.photos/seed/humourous/800/600"}];
+    const PHOTO_CARDS = [{"id":"card_01","title":"Supportive","caption":"Supportive","src":"https://images.pexels.com/photos/4061216/pexels-photo-4061216.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_02","title":"Organised","caption":"Organised","src":"https://images.pexels.com/photos/5908729/pexels-photo-5908729.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_03","title":"Thoughtful","caption":"Thoughtful","src":"https://images.pexels.com/photos/3681933/pexels-photo-3681933.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_04","title":"Independent","caption":"Independent","src":"https://images.pexels.com/photos/2581920/pexels-photo-2581920.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_05","title":"Determined","caption":"Determined","src":"https://images.pexels.com/photos/2468339/pexels-photo-2468339.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_06","title":"Approachable","caption":"Approachable","src":"https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_07","title":"Flexible","caption":"Flexible","src":"https://images.pexels.com/photos/6798388/pexels-photo-6798388.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_08","title":"Open-minded","caption":"Open-minded","src":"https://images.pexels.com/photos/239853/pexels-photo-239853.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_09","title":"Insightful","caption":"Insightful","src":"https://images.pexels.com/photos/1128318/pexels-photo-1128318.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_10","title":"Playful","caption":"Playful","src":"https://images.pexels.com/photos/5623072/pexels-photo-5623072.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_11","title":"Analytical","caption":"Analytical","src":"https://images.pexels.com/photos/590041/pexels-photo-590041.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_12","title":"Passionate","caption":"Passionate","src":"https://images.pexels.com/photos/5816952/pexels-photo-5816952.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_13","title":"Curious","caption":"Curious","src":"https://images.pexels.com/photos/29132351/pexels-photo-29132351.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_14","title":"Decisive","caption":"Decisive","src":"https://images.pexels.com/photos/4342352/pexels-photo-4342352.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_15","title":"Resilient","caption":"Resilient","src":"https://images.pexels.com/photos/23228215/pexels-photo-23228215.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_16","title":"Practical","caption":"Practical","src":"https://images.pexels.com/photos/1029243/pexels-photo-1029243.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_17","title":"Conscientious","caption":"Conscientious","src":"https://images.pexels.com/photos/5711703/pexels-photo-5711703.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_18","title":"Brave","caption":"Brave","src":"https://images.pexels.com/photos/2270848/pexels-photo-2270848.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_19","title":"Spontaneous","caption":"Spontaneous","src":"https://images.pexels.com/photos/40192/pexels-photo-40192.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_20","title":"Creative","caption":"Creative","src":"https://images.pexels.com/photos/4538276/pexels-photo-4538276.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_21","title":"Positive","caption":"Positive","src":"https://images.pexels.com/photos/3847908/pexels-photo-3847908.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_22","title":"Calm","caption":"Calm","src":"https://images.pexels.com/photos/35169195/pexels-photo-35169195.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_23","title":"Sincere","caption":"Sincere","src":"https://images.pexels.com/photos/1029572/pexels-photo-1029572.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_24","title":"Appreciative","caption":"Appreciative","src":"https://images.pexels.com/photos/7309444/pexels-photo-7309444.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_25","title":"Rigourous","caption":"Rigourous","src":"https://images.pexels.com/photos/13742002/pexels-photo-13742002.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_26","title":"Wise","caption":"Wise","src":"https://images.pexels.com/photos/4098169/pexels-photo-4098169.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_27","title":"Fair","caption":"Fair","src":"https://images.pexels.com/photos/6077861/pexels-photo-6077861.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_28","title":"Co-operative","caption":"Co-operative","src":"https://images.pexels.com/photos/3184293/pexels-photo-3184293.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_29","title":"Detailed","caption":"Detailed","src":"https://images.pexels.com/photos/34182727/pexels-photo-34182727.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_30","title":"Hopeful","caption":"Hopeful","src":"https://images.pexels.com/photos/762528/pexels-photo-762528.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_31","title":"Energetic","caption":"Energetic","src":"https://images.pexels.com/photos/5896828/pexels-photo-5896828.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_32","title":"Considerate","caption":"Considerate","src":"https://images.pexels.com/photos/18968358/pexels-photo-18968358.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_33","title":"Warm","caption":"Warm","src":"https://images.pexels.com/photos/4825713/pexels-photo-4825713.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_34","title":"Attentive","caption":"Attentive","src":"https://images.pexels.com/photos/5324913/pexels-photo-5324913.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_35","title":"Strategic","caption":"Strategic","src":"https://images.pexels.com/photos/260024/pexels-photo-260024.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_36","title":"Caring","caption":"Caring","src":"https://images.pexels.com/photos/7173478/pexels-photo-7173478.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_37","title":"Patient","caption":"Patient","src":"https://images.pexels.com/photos/1684894/pexels-photo-1684894.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_38","title":"Understanding","caption":"Understanding","src":"https://images.pexels.com/photos/6134928/pexels-photo-6134928.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_39","title":"Modest","caption":"Modest","src":"https://images.pexels.com/photos/6355173/pexels-photo-6355173.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_40","title":"Engaging","caption":"Engaging","src":"https://images.pexels.com/photos/29284294/pexels-photo-29284294.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_41","title":"Focused","caption":"Focused","src":"https://images.pexels.com/photos/4350177/pexels-photo-4350177.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_42","title":"Empathetic","caption":"Empathetic","src":"https://images.pexels.com/photos/4584663/pexels-photo-4584663.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_43","title":"Dependable","caption":"Dependable","src":"https://images.pexels.com/photos/7693156/pexels-photo-7693156.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_44","title":"Principled","caption":"Principled","src":"https://images.pexels.com/photos/885880/pexels-photo-885880.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_45","title":"Guiding","caption":"Guiding","src":"https://images.pexels.com/photos/3727511/pexels-photo-3727511.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_46","title":"Generous","caption":"Generous","src":"https://images.pexels.com/photos/6646924/pexels-photo-6646924.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_47","title":"Adventurous","caption":"Adventurous","src":"https://images.pexels.com/photos/1365425/pexels-photo-1365425.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"},{"id":"card_48","title":"Humourous","caption":"Humourous","src":"https://images.pexels.com/photos/7150075/pexels-photo-7150075.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}];
 
     const VISIBLE_STRENGTH_CARDS = STRENGTH_CARDS;
 
