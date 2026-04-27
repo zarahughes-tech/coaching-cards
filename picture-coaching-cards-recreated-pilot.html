@@ -41,25 +41,35 @@
       position: fixed;
       top: 3px; left: 0; right: 0;
       z-index: 900;
-      height: 44px;
+      height: 48px;
       display: flex;
       align-items: center;
-      padding: 0 20px;
-      background: var(--near-black);
+      justify-content: space-between;
+      padding: 0 32px;
+      background: var(--warm-white);
+      border-bottom: 1px solid var(--stone-light);
+    }
+    .identity-mark {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--stone-dark);
     }
     .nav-back {
       display: inline-flex;
       align-items: center;
       gap: 6px;
       font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.12em;
+      font-weight: 600;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--stone);
+      color: var(--stone-dark);
       text-decoration: none;
       transition: color 0.15s;
     }
-    .nav-back:hover { color: var(--white); }
+    .nav-back:hover { color: var(--near-black); }
     .app { max-width: 1220px; margin: 0 auto; }
     header { text-align: center; margin-bottom: 28px; }
     .eyebrow {
@@ -225,8 +235,9 @@
   </style>
 </head>
 <body>
-  <nav class="top-nav">
-    <a href="index.html" class="nav-back">← All card sets</a>
+  <nav class="top-nav" aria-label="Site navigation">
+    <span class="identity-mark">Coaching · The Economist</span>
+    <a href="index.html" class="nav-back">All tools</a>
   </nav>
   <main class="app">
     <header>

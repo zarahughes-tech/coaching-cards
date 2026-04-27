@@ -12,17 +12,15 @@
       --red:         #E3120B;
       --near-black:  #0D0D0D;
       --dark:        #262626;
-      --mid-gray:    #666666;
-      --light-gray:  #AAAAAA;
-      --off-white:   #F5F4EE;
-      --white:       #FFFFFF;
       --stone:       #A89F94;
       --stone-light: #E8E3DD;
       --stone-dark:  #7A7168;
       --warm-white:  #FDFBF8;
-      --question:    #4e925f;
-      --process:     #355d98;
+      --chicago:     #2E45B8;
+      --question:    #2E45B8;
+      --process:     #6ca38e;
     }
+
     body {
       margin: 0;
       min-height: 100vh;
@@ -30,7 +28,9 @@
       color: var(--near-black);
       font-family: 'Inter', sans-serif;
       padding: 66px 16px 40px;
+      letter-spacing: -0.2px;
     }
+
     body::before {
       content: '';
       position: fixed;
@@ -39,477 +39,565 @@
       background: var(--red);
       z-index: 9999;
     }
-    /* ── top nav ── */
+
     .top-nav {
       position: fixed;
-      top: 0; left: 0; right: 0;
+      top: 3px; left: 0; right: 0;
       z-index: 900;
       height: 48px;
       display: flex;
       align-items: center;
-      padding: 0 20px;
-      background: var(--near-black);
-      border-bottom: none;
+      justify-content: space-between;
+      padding: 0 32px;
+      background: var(--warm-white);
+      border-bottom: 1px solid var(--stone-light);
     }
+
+    .identity-mark {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--stone-dark);
+    }
+
     .nav-back {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-size: 0.75rem;
+      font-size: 10px;
       font-family: 'Inter', sans-serif;
-      font-weight: 500;
+      font-weight: 600;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--stone);
+      color: var(--stone-dark);
       text-decoration: none;
       transition: color 0.15s;
     }
-    .nav-back:hover { color: var(--white); }
-    .app { max-width: 1180px; margin: 0 auto; }
+    .nav-back:hover { color: var(--near-black); }
+
+    .app { max-width: 1100px; margin: 0 auto; }
+
     .screen { display: none; }
     .screen.active { display: block; }
+
     .panel {
-      background: var(--white);
+      background: white;
       border: 1px solid var(--stone-light);
       border-radius: 6px;
-      box-shadow: 0 2px 12px rgba(13,13,13,0.06);
     }
+
     header {
       text-align: center;
-      margin-bottom: 18px;
+      padding: 48px 24px 40px;
+      border-bottom: 1px solid var(--stone-light);
+      margin-bottom: 32px;
     }
+
     .eyebrow {
       display: inline-block;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       color: var(--stone);
       font-family: 'Inter', sans-serif;
-      font-size: 0.68rem;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-    }
-    h1 {
-      margin: 0;
-      font-family: 'Archivo Narrow', sans-serif;
-      font-size: clamp(2rem, 5vw, 3.8rem);
+      font-size: 10px;
       font-weight: 600;
-      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    h1 {
+      margin: 0 0 16px;
+      font-family: 'Archivo Narrow', sans-serif;
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
       color: var(--near-black);
+      line-height: 1.1;
     }
+
     .sub {
-      max-width: 760px;
-      margin: 10px auto 0;
-      color: var(--mid-gray);
-      line-height: 1.6;
-      font-size: 1rem;
+      max-width: 680px;
+      margin: 0 auto;
+      color: var(--stone-dark);
+      line-height: 1.7;
+      font-size: 15px;
     }
-    h2 { margin: 0 0 10px; font-size: 1.15rem; font-family: 'Archivo Narrow', sans-serif; font-weight: 600; }
-    p { margin: 0; color: var(--mid-gray); line-height: 1.6; }
+
+    h2 {
+      margin: 0 0 10px;
+      font-family: 'Archivo Narrow', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    p { margin: 0; color: var(--stone-dark); line-height: 1.65; font-size: 14px; }
+
     .grid {
       display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 18px;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 20px;
     }
-    .hero, .rules, .main, .aside, .browse-panel { padding: 22px; }
+
+    .hero, .rules, .main, .aside, .browse-panel { padding: 28px; }
+
     .actions, .filter-row {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
     }
-    .actions { margin-top: 16px; }
+    .actions { margin-top: 20px; }
+
     .btn {
       border: none;
-      border-radius: 3px;
-      padding: 12px 18px;
+      border-radius: 4px;
+      padding: 11px 20px;
       font-family: 'Inter', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 500;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
       cursor: pointer;
-      transition: background 0.15s ease, color 0.15s ease;
+      transition: opacity 0.15s, transform 0.15s;
     }
-    .btn:active { opacity: 0.85; }
-    .btn-secondary { background: transparent; color: var(--stone-dark); border: 1px solid var(--stone-dark); }
-    .btn-secondary:hover { border-color: var(--stone); color: var(--stone); }
-    .btn-question { background: var(--question); color: var(--white); }
-    .btn-process { background: var(--process); color: var(--white); }
-    .btn-primary { background: var(--near-black); color: var(--white); }
-    .btn-primary:hover { background: var(--dark); }
+    .btn:hover { opacity: 0.85; transform: translateY(-1px); }
+    .btn:active { opacity: 0.9; transform: none; }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--stone-dark);
+      border: 1.5px solid var(--stone-light);
+    }
+    .btn-secondary:hover { border-color: var(--stone-dark); }
+
+    .btn-question { background: var(--question); color: white; }
+    .btn-process  { background: var(--process);  color: white; }
+    .btn-primary  { background: var(--near-black); color: white; }
+
     .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       border: none;
       background: none;
       padding: 0;
-      margin-bottom: 12px;
-      color: var(--mid-gray);
+      margin-bottom: 20px;
+      color: var(--stone-dark);
       font-family: 'Inter', sans-serif;
-      font-weight: 500;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
       cursor: pointer;
+      transition: color 0.15s;
     }
-    .card-wrap { padding: 18px; }
+    .back-link:hover { color: var(--near-black); }
+
+    .card-wrap { padding: 28px; }
+
     .progress-row {
       display: flex;
       justify-content: space-between;
       gap: 12px;
-      margin-bottom: 8px;
-      color: var(--mid-gray);
-      font-size: 0.83rem;
-      font-weight: 500;
+      margin-bottom: 10px;
+      color: var(--stone);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
+
     .progress-bar {
-      height: 6px;
-      border-radius: 3px;
+      height: 3px;
+      border-radius: 2px;
       overflow: hidden;
       background: var(--stone-light);
-      margin-bottom: 16px;
+      margin-bottom: 24px;
     }
     .progress-fill {
       height: 100%;
       width: 0%;
-      background: var(--stone);
+      background: var(--chicago);
+      transition: width 0.3s ease;
     }
+
     .team-card {
-      min-height: 420px;
+      min-height: 400px;
       border-radius: 4px;
       background: var(--warm-white);
       border: 1px solid var(--stone-light);
-      padding: 28px 28px 24px;
-      box-shadow: 0 2px 12px rgba(13,13,13,0.06);
+      padding: 36px 32px 28px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       position: relative;
       overflow: hidden;
     }
+
     .team-card::before {
       content: "";
       position: absolute;
-      inset: 18px;
-      border-radius: 2px;
-      border: 1px solid var(--stone-light);
-      pointer-events: none;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--chicago);
+      opacity: 0;
+      transition: opacity 0.3s;
     }
+    .team-card.type-question::before { background: var(--question); opacity: 1; }
+    .team-card.type-process::before  { background: var(--process);  opacity: 1; }
+
     .card-top {
       text-align: center;
       font-family: 'Inter', sans-serif;
-      font-size: 0.68rem;
-      font-weight: 500;
-      letter-spacing: 0.12em;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--stone);
+      margin-bottom: 8px;
     }
+
     .card-body {
       font-family: 'Archivo Narrow', sans-serif;
-      font-size: clamp(1.45rem, 4vw, 2.1rem);
-      line-height: 1.35;
+      font-size: clamp(1.3rem, 3.5vw, 1.9rem);
+      line-height: 1.4;
       text-align: center;
       text-wrap: balance;
       color: var(--near-black);
-      margin: 20px auto;
-      max-width: 620px;
+      margin: 16px auto;
+      max-width: 580px;
       white-space: pre-line;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .card-footer {
+
+    .card-footer-mark {
       text-align: center;
-      font-family: 'Archivo Narrow', sans-serif;
-      font-size: 1rem;
-      color: var(--stone-dark);
-      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--stone);
     }
+
     .list {
       display: grid;
       gap: 10px;
-      margin-top: 14px;
-      max-height: 72vh;
+      margin-top: 18px;
+      max-height: 68vh;
       overflow: auto;
-      padding-right: 6px;
+      padding-right: 4px;
     }
+
     .item {
       border: 1px solid var(--stone-light);
       border-radius: 4px;
       background: var(--warm-white);
       padding: 14px 16px;
       cursor: pointer;
-      transition: border-color 0.12s ease;
+      transition: border-color 0.12s, background 0.12s;
+      text-align: left;
+      font-family: 'Inter', sans-serif;
+      width: 100%;
     }
     .item:hover {
-      border-color: var(--stone);
+      border-color: var(--chicago);
+      background: white;
     }
     .item strong {
       display: block;
       margin-bottom: 6px;
       text-transform: uppercase;
       letter-spacing: 0.12em;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.68rem;
-      font-weight: 500;
+      font-size: 10px;
+      font-weight: 600;
       color: var(--stone);
     }
+    .item.type-question strong { color: var(--question); }
+    .item.type-process  strong { color: var(--process); }
+    .item p { font-size: 13px; color: var(--stone-dark); }
+
     .chip-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 14px;
+      gap: 12px;
+      margin-top: 16px;
     }
     .chip {
       color: var(--stone);
       font-family: 'Inter', sans-serif;
-      font-size: 0.68rem;
-      font-weight: 500;
+      font-size: 10px;
+      font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.12em;
     }
+
     footer {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 26px;
+      margin-top: 32px;
       padding: 0 4px;
     }
-    footer .footer-left {
+    .footer-left {
       font-family: 'Inter', sans-serif;
-      font-size: 10px;
+      font-size: 9px;
       letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--stone-dark);
     }
-    footer .footer-right {
+    .footer-right {
       font-family: 'Archivo Narrow', sans-serif;
       font-style: italic;
       font-size: 13px;
       color: var(--stone);
     }
-    @media (max-width: 940px) {
+
+    @media (max-width: 900px) {
       .grid { grid-template-columns: 1fr; }
-      .team-card { min-height: 340px; padding: 22px; }
+      .team-card { min-height: 320px; padding: 28px 22px; }
+    }
+    @media (max-width: 480px) {
+      .top-nav { padding: 0 16px; }
+      .app { padding: 0; }
+      header { padding: 32px 16px 28px; }
     }
   </style>
 </head>
 <body>
-  <nav class="top-nav" aria-label="Site navigation">
-    <a href="index.html" class="nav-back">← All card sets</a>
-  </nav>
-  <div class="app">
-    <header>
-      <div class="eyebrow">Barefoot Coaching · 50 Questions for Coaching Groups and Teams</div>
-      <h1>Coaching Cards for Teams</h1>
-      <p class="sub">This version separates facilitator process cards from team-facing question cards, so you can lead a session without mixing prompts and instructions together.</p>
-    </header>
 
-    <section class="screen active" id="screen-home">
-      <div class="grid">
-        <div class="hero panel">
-          <h2>How to use this deck</h2>
-          <p>The photographed set includes both question cards and process cards. Question cards are prompts for the team. Process cards are facilitation structures you can use privately or bring in intentionally.</p>
-          <div class="actions">
-            <button class="btn btn-question" onclick="openDeck('question')">Question cards</button>
-            <button class="btn btn-process" onclick="openDeck('process')">Process cards</button>
-            <button class="btn btn-primary" onclick="openBrowse('all')">Browse everything</button>
-          </div>
-        </div>
-        <div class="rules panel">
-          <h2>Box copy</h2>
-          <p>50 tried and tested coaching questions to stimulate conversation, improve team relationships and create more effective team working.</p>
-          <p style="margin-top:10px">For use by managers, team leaders and coaches in team coaching sessions, group work and meetings.</p>
-          <p style="margin-top:10px">Written by Kim Morgan, owner and director of Barefoot Coaching Ltd.</p>
+<nav class="top-nav" aria-label="Site navigation">
+  <span class="identity-mark">Coaching · The Economist</span>
+  <a href="index.html" class="nav-back">All tools</a>
+</nav>
+
+<div class="app">
+  <header>
+    <div class="eyebrow">Team Coaching · Barefoot Coaching</div>
+    <h1>Coaching Cards for Teams</h1>
+    <p class="sub">50 tried and tested coaching questions to stimulate conversation, improve team relationships and create more effective team working. Question cards for the group; process cards for the facilitator.</p>
+  </header>
+
+  <section class="screen active" id="screen-home">
+    <div class="grid">
+      <div class="hero panel">
+        <h2>How to use this deck</h2>
+        <p>The deck includes both question cards and process cards. Question cards are prompts for the team to explore together. Process cards are facilitation structures you can use privately or bring into the room intentionally.</p>
+        <div class="actions">
+          <button class="btn btn-question" onclick="openDeck('question')">Question cards</button>
+          <button class="btn btn-process" onclick="openDeck('process')">Process cards</button>
+          <button class="btn btn-primary" onclick="openBrowse('all')">Browse everything</button>
         </div>
       </div>
-    </section>
-
-    <section class="screen" id="screen-card">
-      <div class="grid">
-        <div class="main panel card-wrap">
-          <button class="back-link" onclick="goHome()">← Back to menu</button>
-          <div class="progress-row">
-            <span id="deck-label">Question cards</span>
-            <span id="card-index">1 of 1</span>
-          </div>
-          <div class="progress-bar"><div class="progress-fill" id="card-fill"></div></div>
-          <div class="team-card">
-            <div class="card-top" id="card-type-label"></div>
-            <div class="card-body" id="card-text"></div>
-            <div class="card-footer">Barefoot Coaching</div>
-          </div>
-          <div class="actions">
-            <button class="btn btn-secondary" onclick="prevCard()">← Previous</button>
-            <button class="btn btn-primary" onclick="randomCard()">Random draw</button>
-            <button class="btn btn-secondary" onclick="nextCard()">Next →</button>
-          </div>
-        </div>
-        <aside class="aside panel">
-          <h2 id="aside-title"></h2>
-          <p id="aside-copy"></p>
-          <div class="chip-row">
-            <span class="chip" id="aside-count"></span>
-            <span class="chip" id="aside-kind"></span>
-          </div>
-          <div class="actions">
-            <button class="btn btn-question" onclick="openDeck('question')">Questions</button>
-            <button class="btn btn-process" onclick="openDeck('process')">Processes</button>
-            <button class="btn btn-secondary" onclick="openBrowse(currentFilter)">Browse list</button>
-          </div>
-        </aside>
+      <div class="rules panel">
+        <h2>About this deck</h2>
+        <p>For use by managers, team leaders, and coaches in team coaching sessions, group work, and meetings.</p>
+        <p style="margin-top:10px">Written by Kim Morgan, owner and director of Barefoot Coaching Ltd. 42 question cards and 8 process cards.</p>
+        <p style="margin-top:10px">Use the keyboard arrow keys to navigate cards once inside a deck.</p>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="screen" id="screen-browse">
-      <div class="browse-panel panel">
-        <button class="back-link" onclick="goHome()">← Back to menu</button>
-        <h2>Browse cards</h2>
-        <p>Use the filters to show question cards, process cards, or both.</p>
-        <div class="filter-row" style="margin-top:14px">
-          <button class="btn btn-question" onclick="openBrowse('question')">Questions</button>
-          <button class="btn btn-process" onclick="openBrowse('process')">Processes</button>
-          <button class="btn btn-secondary" onclick="openBrowse('all')">All</button>
+  <section class="screen" id="screen-card">
+    <div class="grid">
+      <div class="main panel card-wrap">
+        <button class="back-link" onclick="goHome()">Back to menu</button>
+        <div class="progress-row">
+          <span id="deck-label">Question cards</span>
+          <span id="card-index">1 of 1</span>
         </div>
-        <div class="list" id="browse-list"></div>
+        <div class="progress-bar"><div class="progress-fill" id="card-fill"></div></div>
+        <div class="team-card" id="team-card">
+          <div class="card-top" id="card-type-label"></div>
+          <div class="card-body" id="card-text"></div>
+          <div class="card-footer-mark">Barefoot Coaching · The Economist</div>
+        </div>
+        <div class="actions">
+          <button class="btn btn-secondary" onclick="prevCard()">Previous</button>
+          <button class="btn btn-primary" onclick="randomCard()">Random draw</button>
+          <button class="btn btn-secondary" onclick="nextCard()">Next</button>
+        </div>
       </div>
-    </section>
+      <aside class="aside panel">
+        <h2 id="aside-title"></h2>
+        <p id="aside-copy"></p>
+        <div class="chip-row">
+          <span class="chip" id="aside-count"></span>
+          <span class="chip" id="aside-kind"></span>
+        </div>
+        <div class="actions">
+          <button class="btn btn-question" onclick="openDeck('question')">Questions</button>
+          <button class="btn btn-process" onclick="openDeck('process')">Processes</button>
+          <button class="btn btn-secondary" onclick="openBrowse(currentFilter)">Browse list</button>
+        </div>
+      </aside>
+    </div>
+  </section>
 
-    <footer>
-      <span class="footer-left">coaching · the economist</span>
-      <span class="footer-right">life begins at the end of your comfort zone</span>
-    </footer>
-  </div>
+  <section class="screen" id="screen-browse">
+    <div class="browse-panel panel">
+      <button class="back-link" onclick="goHome()">Back to menu</button>
+      <h2>Browse cards</h2>
+      <p>Use the filters below to show question cards, process cards, or both. Click any card to open it in the deck view.</p>
+      <div class="filter-row" style="margin-top:16px">
+        <button class="btn btn-question" onclick="openBrowse('question')">Questions</button>
+        <button class="btn btn-process" onclick="openBrowse('process')">Processes</button>
+        <button class="btn btn-secondary" onclick="openBrowse('all')">All</button>
+      </div>
+      <div class="list" id="browse-list"></div>
+    </div>
+  </section>
 
-  <script>
-    const CARDS = [
-      { type: "question", text: "What do you value most about working in this team?" },
-      { type: "question", text: "What makes an effective team?" },
-      { type: "question", text: "Question for team: 80% of problems in organisations result from people not being honest, according to psychologist William Schutz. To what extent is this true in your team?" },
-      { type: "question", text: "Can you agree on six trademark behaviours for your team?" },
-      { type: "question", text: "What has been your most significant achievement as a team?" },
-      { type: "question", text: "What are 3 concerns/challenges facing this team?" },
-      { type: "question", text: "What are 3 positives about this team?" },
-      { type: "question", text: "What are the 3 most important outcomes from the team coaching session?" },
-      { type: "question", text: "What would you like to enjoy more in this team?" },
-      { type: "question", text: "What aspects of being in your team are you enjoying?" },
-      { type: "question", text: "How does it feel to be in your team right now?" },
-      { type: "question", text: "How have you grown as a person from being part of this team?" },
-      { type: "question", text: "How does the team deal with conflict?" },
-      { type: "question", text: "In your team what happens when somebody doesn't pull their weight?" },
-      { type: "question", text: "How does the team make decisions?" },
-      { type: "question", text: "What does your team do to have fun?" },
-      { type: "question", text: "What is your “role” in this team? (eg: Joker, Peacekeeper, Provoker etc)." },
-      { type: "question", text: "What is the first easy thing you could do to move you in the right direction?" },
-      { type: "question", text: "If a miracle occurred overnight and you came into work tomorrow, what would be different in this team?" },
-      { type: "question", text: "What would be the best possible outcome for this team?" },
-      { type: "question", text: "What one change could each team member commit to making, to make this team more effective?" },
-      { type: "question", text: "What is the ultimate purpose of this team?" },
-      { type: "question", text: "What are you prepared to do to make this team even more effective?" },
-      { type: "question", text: "How well does this team understand and manage its stakeholders?" },
-      { type: "question", text: "What holds this team back?" },
-      { type: "question", text: "What is the story about this team?" },
-      { type: "question", text: "What could this team achieve if everything went as well as it could?" },
-      { type: "question", text: "How clear is the vision of the team? How well are members of the team bought into the vision?" },
-      { type: "question", text: "How would you describe the current behaviours of your team?" },
-      { type: "question", text: "If a new member arrived in your team: What would they want to be different? What would they admire about the way the team functions?" },
-      { type: "question", text: "How would you describe the environment of your team – physical and psychological?" },
-      { type: "question", text: "What stops you from being at your best in this team? What keeps you at your best in this team?" },
-      { type: "question", text: "What are you like when you are at your best in this team?" },
-      { type: "question", text: "If this team/organisation were a book or film, which one would it be?" },
-      { type: "question", text: "What are some of the peak experiences you have had in this team/organisation?" },
-      { type: "question", text: "In teams in difficulty: Trust is low. Conflict is not confronted openly. How is it in your team?" },
-      { type: "question", text: "In teams in difficulty: Self worth is low. Communication is indirect, vague and not honest. How is it in your team?" },
-      { type: "question", text: "In high functioning teams there is a common purpose and clearly expressed common goal – how true is this for your team?" },
-      { type: "question", text: "In functioning teams: Self worth is high. Communication is direct, clear, specific and honest. How is it in your team?" },
-      { type: "question", text: "What does this team need to learn or develop to reach its full potential?" },
-      { type: "question", text: "How safe does it feel to take a risk, speak up, or make a mistake in this team?" },
-      { type: "question", text: "What would make this team a place where the very best people want to work?" },
-      { type: "process", text: "When conducting a team coaching session, ensure all team members feel: Significant. Capable. Likeable." },
+  <footer>
+    <span class="footer-left">coaching · the economist</span>
+    <span class="footer-right">life begins at the end of your comfort zone</span>
+  </footer>
+</div>
 
-      { type: "process", text: "Team Coaching Process\nMaking sure everyone gets heard:\nEach team member is given 5 minutes to speak and all other team members listen with interest and without interruption." },
-      { type: "process", text: "“What got us here won't get us there!”\nEncourage team to use solution focused thinking and discourage historical, problem-focused thinking." },
-      { type: "process", text: "Peer feedback at end of team coaching session. All team members to complete for each member of the team:\n• Your greatest strength\n• The value you bring to the team\n• One thing you could change for your own benefit" },
-      { type: "process", text: "Peer feedback for team members on behaviours to:\n• Stop\n• Start\n• Continue" },
-      { type: "process", text: "Hot Seat Questions\nA team member presents an issue they are wrestling with (the Hot Seat). Other team members each ask a coaching question for the person in the Hot Seat.\nHot Seat team member writes down each question but does not answer.\nAt the end, Hot Seat team member reflects back to the team useful questions which triggered new thinking." },
-      { type: "process", text: "Team Coaching Process\nExercise for team members:\nAll team members to write a word of appreciation about each of the other members of the team. Then each team member takes turns to listen to the words being read out to them." },
-      { type: "process", text: "Exercise for team members:\nDraw a picture of the team as you see it." }
-    ];
+<script>
+  const CARDS = [
+    { type: "question", text: "What do you value most about working in this team?" },
+    { type: "question", text: "What makes an effective team?" },
+    { type: "question", text: "80% of problems in organisations result from people not being honest, according to psychologist William Schutz. To what extent is this true in your team?" },
+    { type: "question", text: "Can you agree on six trademark behaviours for your team?" },
+    { type: "question", text: "What has been your most significant achievement as a team?" },
+    { type: "question", text: "What are 3 concerns and challenges facing this team?" },
+    { type: "question", text: "What are 3 positives about this team?" },
+    { type: "question", text: "What are the 3 most important outcomes from the team coaching session?" },
+    { type: "question", text: "What would you like to enjoy more in this team?" },
+    { type: "question", text: "What aspects of being in your team are you enjoying?" },
+    { type: "question", text: "How does it feel to be in your team right now?" },
+    { type: "question", text: "How have you grown as a person from being part of this team?" },
+    { type: "question", text: "How does the team deal with conflict?" },
+    { type: "question", text: "In your team, what happens when somebody does not pull their weight?" },
+    { type: "question", text: "How does the team make decisions?" },
+    { type: "question", text: "What does your team do to have fun?" },
+    { type: "question", text: "What is your role in this team? (eg: Joker, Peacekeeper, Provoker etc.)" },
+    { type: "question", text: "What is the first easy thing you could do to move you in the right direction?" },
+    { type: "question", text: "If a miracle occurred overnight and you came into work tomorrow, what would be different in this team?" },
+    { type: "question", text: "What would be the best possible outcome for this team?" },
+    { type: "question", text: "What one change could each team member commit to making, to make this team more effective?" },
+    { type: "question", text: "What is the ultimate purpose of this team?" },
+    { type: "question", text: "What are you prepared to do to make this team even more effective?" },
+    { type: "question", text: "How well does this team understand and manage its stakeholders?" },
+    { type: "question", text: "What holds this team back?" },
+    { type: "question", text: "What is the story about this team?" },
+    { type: "question", text: "What could this team achieve if everything went as well as it could?" },
+    { type: "question", text: "How clear is the vision of the team? How well are members of the team bought into the vision?" },
+    { type: "question", text: "How would you describe the current behaviours of your team?" },
+    { type: "question", text: "If a new member arrived in your team: What would they want to be different? What would they admire about the way the team functions?" },
+    { type: "question", text: "How would you describe the environment of your team, both physical and psychological?" },
+    { type: "question", text: "What stops you from being at your best in this team? What keeps you at your best in this team?" },
+    { type: "question", text: "What are you like when you are at your best in this team?" },
+    { type: "question", text: "If this team or organisation were a book or film, which one would it be?" },
+    { type: "question", text: "What are some of the peak experiences you have had in this team or organisation?" },
+    { type: "question", text: "In teams in difficulty: Trust is low. Conflict is not confronted openly. How is it in your team?" },
+    { type: "question", text: "In teams in difficulty: Self worth is low. Communication is indirect, vague and not honest. How is it in your team?" },
+    { type: "question", text: "In high functioning teams there is a common purpose and clearly expressed common goal. How true is this for your team?" },
+    { type: "question", text: "In functioning teams: Self worth is high. Communication is direct, clear, specific and honest. How is it in your team?" },
+    { type: "question", text: "What does this team need to learn or develop to reach its full potential?" },
+    { type: "question", text: "How safe does it feel to take a risk, speak up, or make a mistake in this team?" },
+    { type: "question", text: "What would make this team a place where the very best people want to work?" },
+    { type: "process", text: "When conducting a team coaching session, ensure all team members feel: Significant. Capable. Likeable." },
+    { type: "process", text: "Team Coaching Process\nMaking sure everyone gets heard:\nEach team member is given 5 minutes to speak and all other team members listen with interest and without interruption." },
+    { type: "process", text: "'What got us here won't get us there!'\nEncourage the team to use solution focused thinking and discourage historical, problem-focused thinking." },
+    { type: "process", text: "Peer feedback at end of team coaching session. All team members to complete for each member of the team:\n- Your greatest strength\n- The value you bring to the team\n- One thing you could change for your own benefit" },
+    { type: "process", text: "Peer feedback for team members on behaviours to:\n- Stop\n- Start\n- Continue" },
+    { type: "process", text: "Hot Seat Questions\nA team member presents an issue they are wrestling with (the Hot Seat). Other team members each ask a coaching question.\nHot Seat team member writes down each question but does not answer.\nAt the end, they reflect back to the team the questions which triggered new thinking." },
+    { type: "process", text: "Team Coaching Process\nExercise for team members:\nAll team members write a word of appreciation about each of the other members of the team. Then each team member takes turns to listen to their words being read out." },
+    { type: "process", text: "Exercise for team members:\nDraw a picture of the team as you see it." }
+  ];
 
-    let currentFilter = "question";
-    let filteredCards = [];
-    let currentIndex = 0;
+  let currentFilter = "question";
+  let filteredCards = [];
+  let currentIndex = 0;
 
-    function filterCards(type) {
-      return type === "all" ? CARDS : CARDS.filter(card => card.type === type);
-    }
+  function filterCards(type) {
+    return type === "all" ? CARDS : CARDS.filter(card => card.type === type);
+  }
 
-    function goHome() {
-      document.querySelectorAll(".screen").forEach(screen => screen.classList.remove("active"));
-      document.getElementById("screen-home").classList.add("active");
-    }
+  function goHome() {
+    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+    document.getElementById("screen-home").classList.add("active");
+  }
 
-    function openDeck(type) {
-      currentFilter = type;
-      filteredCards = filterCards(type);
-      currentIndex = 0;
-      renderCard();
-      document.querySelectorAll(".screen").forEach(screen => screen.classList.remove("active"));
-      document.getElementById("screen-card").classList.add("active");
-    }
+  function openDeck(type) {
+    currentFilter = type;
+    filteredCards = filterCards(type);
+    currentIndex = 0;
+    renderCard();
+    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+    document.getElementById("screen-card").classList.add("active");
+  }
 
-    function renderCard() {
-      const card = filteredCards[currentIndex];
-      const label = currentFilter === "question" ? "Question cards" : "Process cards";
-      document.getElementById("deck-label").textContent = label;
-      document.getElementById("card-index").textContent = `${currentIndex + 1} of ${filteredCards.length}`;
-      document.getElementById("card-fill").style.width = `${((currentIndex + 1) / filteredCards.length) * 100}%`;
-      document.getElementById("card-type-label").textContent = card.type === "question" ? "Question for team members" : "Team coaching process";
-      document.getElementById("card-text").textContent = card.text;
-      document.getElementById("aside-title").textContent = label;
-      document.getElementById("aside-copy").textContent = card.type === "question"
-        ? "Use this side when you want a prompt the group can discuss together."
-        : "Use this side when you want structure for the facilitation itself.";
-      document.getElementById("aside-count").textContent = `${filteredCards.length} cards loaded`;
-      document.getElementById("aside-kind").textContent = card.type;
-    }
+  function renderCard() {
+    const card = filteredCards[currentIndex];
+    const label = currentFilter === "question" ? "Question cards" : "Process cards";
+    const cardEl = document.getElementById("team-card");
+    cardEl.className = "team-card type-" + card.type;
+    document.getElementById("deck-label").textContent = label;
+    document.getElementById("card-index").textContent = (currentIndex + 1) + " of " + filteredCards.length;
+    document.getElementById("card-fill").style.width = (((currentIndex + 1) / filteredCards.length) * 100) + "%";
+    document.getElementById("card-type-label").textContent = card.type === "question" ? "Question for team members" : "Team coaching process";
+    document.getElementById("card-text").textContent = card.text;
+    document.getElementById("aside-title").textContent = label;
+    document.getElementById("aside-copy").textContent = card.type === "question"
+      ? "Use this side when you want a prompt the group can discuss together."
+      : "Use this side when you want structure for the facilitation itself.";
+    document.getElementById("aside-count").textContent = filteredCards.length + " cards loaded";
+    document.getElementById("aside-kind").textContent = card.type;
+  }
 
-    function prevCard() {
-      currentIndex = (currentIndex - 1 + filteredCards.length) % filteredCards.length;
-      renderCard();
-    }
+  function prevCard() {
+    currentIndex = (currentIndex - 1 + filteredCards.length) % filteredCards.length;
+    renderCard();
+  }
 
-    function nextCard() {
-      currentIndex = (currentIndex + 1) % filteredCards.length;
-      renderCard();
-    }
+  function nextCard() {
+    currentIndex = (currentIndex + 1) % filteredCards.length;
+    renderCard();
+  }
 
-    function randomCard() {
-      currentIndex = Math.floor(Math.random() * filteredCards.length);
-      renderCard();
-    }
+  function randomCard() {
+    currentIndex = Math.floor(Math.random() * filteredCards.length);
+    renderCard();
+  }
 
-    function openBrowse(type) {
-      currentFilter = type;
-      const cards = filterCards(type);
-      const list = document.getElementById("browse-list");
-      list.innerHTML = "";
-      cards.forEach(card => {
-        const item = document.createElement("button");
-        item.className = "item";
-        item.innerHTML = `<strong>${card.type === "question" ? "Question card" : "Process card"}</strong><p>${card.text.replace(/\n/g, "<br>")}</p>`;
-        item.onclick = () => {
-          filteredCards = filterCards(card.type);
-          currentFilter = card.type;
-          currentIndex = filteredCards.findIndex(candidate => candidate.text === card.text);
-          renderCard();
-          document.querySelectorAll(".screen").forEach(screen => screen.classList.remove("active"));
-          document.getElementById("screen-card").classList.add("active");
-        };
-        list.appendChild(item);
-      });
-      document.querySelectorAll(".screen").forEach(screen => screen.classList.remove("active"));
-      document.getElementById("screen-browse").classList.add("active");
-    }
-
-    document.addEventListener("keydown", event => {
-      if (!document.getElementById("screen-card").classList.contains("active")) return;
-      if (event.key === "ArrowRight") nextCard();
-      if (event.key === "ArrowLeft") prevCard();
-      if (event.key === " " || event.key === "Enter") {
-        event.preventDefault();
-        randomCard();
-      }
+  function openBrowse(type) {
+    currentFilter = type;
+    const cards = filterCards(type);
+    const list = document.getElementById("browse-list");
+    list.innerHTML = "";
+    cards.forEach(function(card) {
+      const item = document.createElement("button");
+      item.className = "item type-" + card.type;
+      item.innerHTML = "<strong>" + (card.type === "question" ? "Question card" : "Process card") + "</strong><p>" + card.text.replace(/\n/g, "<br>") + "</p>";
+      item.onclick = function() {
+        filteredCards = filterCards(card.type);
+        currentFilter = card.type;
+        currentIndex = filteredCards.findIndex(function(c) { return c.text === card.text; });
+        renderCard();
+        document.querySelectorAll(".screen").forEach(function(s) { s.classList.remove("active"); });
+        document.getElementById("screen-card").classList.add("active");
+      };
+      list.appendChild(item);
     });
-  </script>
+    document.querySelectorAll(".screen").forEach(function(s) { s.classList.remove("active"); });
+    document.getElementById("screen-browse").classList.add("active");
+  }
+
+  document.addEventListener("keydown", function(event) {
+    if (!document.getElementById("screen-card").classList.contains("active")) return;
+    if (event.key === "ArrowRight") nextCard();
+    if (event.key === "ArrowLeft") prevCard();
+    if (event.key === " " || event.key === "Enter") {
+      event.preventDefault();
+      randomCard();
+    }
+  });
+</script>
 </body>
 </html>
