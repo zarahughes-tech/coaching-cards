@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Coaching Cards Library</title>
+  <title>Your Coaching Journey</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after { box-sizing: border-box; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
     :root {
       --red:         #E3120B;
@@ -21,483 +22,367 @@
       --stone-light: #E8E3DD;
       --stone-dark:  #7A7168;
       --warm-white:  #FDFBF8;
-      --max:         1240px;
+      --chicago:     #2E45B8;
+      --chicago-light: #EBEDFA;
     }
 
-    html { scroll-behavior: smooth; }
-
     body {
-      margin: 0;
-      min-height: 100vh;
       font-family: 'Inter', sans-serif;
       background: var(--warm-white);
       color: var(--near-black);
+      letter-spacing: -0.01em;
     }
 
-    /* Red rule — always at the very top */
+    /* Red rule */
     body::before {
       content: '';
-      display: block;
       position: fixed;
       top: 0; left: 0; right: 0;
       height: 3px;
       background: var(--red);
-      z-index: 100;
+      z-index: 300;
     }
 
-    .shell {
-      max-width: var(--max);
-      margin: 0 auto;
-      padding: 44px 24px 64px;
-    }
-
-    /* ── Topbar ── */
-    .topbar {
+    /* Fixed header */
+    .header {
+      position: fixed;
+      top: 3px; left: 0; right: 0;
+      background: var(--warm-white);
+      border-bottom: 1px solid var(--stone-light);
+      z-index: 250;
+      padding: 14px 40px;
       display: flex;
+      align-items: center;
       justify-content: space-between;
+    }
+
+    .identity-mark {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--stone-dark);
+    }
+
+    .header-nav {
+      display: flex;
+      gap: 4px;
+    }
+
+    .header-nav a {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--mid-gray);
+      text-decoration: none;
+      padding: 5px 12px;
+      transition: color 0.15s;
+    }
+
+    .header-nav a:hover { color: var(--near-black); }
+
+    /* Main content */
+    .main {
+      padding-top: 50px;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding-bottom: 0;
+    }
+
+    /* Hero */
+    .hero {
+      padding: 120px 40px 100px;
+      text-align: center;
+      border-bottom: 1px solid var(--stone-light);
+    }
+
+    .hero-eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--stone);
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .hero-title {
+      font-family: 'Archivo Narrow', sans-serif;
+      font-weight: 700;
+      font-size: clamp(2.8rem, 6vw, 4rem);
+      line-height: 1.08;
+      color: var(--near-black);
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-subtitle {
+      font-size: 17px;
+      color: var(--stone-dark);
+      line-height: 1.8;
+      max-width: 680px;
+      margin: 0 auto 16px;
+      font-weight: 400;
+    }
+
+    .hero-tagline {
+      font-size: 14px;
+      font-style: italic;
+      color: var(--stone);
+    }
+
+    /* Journey overview strip */
+    .journey-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-bottom: 1px solid var(--stone-light);
+    }
+
+    .journey-strip-item {
+      padding: 28px 32px;
+      border-right: 1px solid var(--stone-light);
+      display: flex;
       align-items: center;
       gap: 16px;
-      margin-bottom: 36px;
     }
 
-    .brand {
+    .journey-strip-item:last-child { border-right: none; }
+
+    .strip-number {
+      font-family: 'Archivo Narrow', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--red);
+      min-width: 36px;
+      line-height: 1;
+    }
+
+    .strip-label {
       display: flex;
       flex-direction: column;
       gap: 3px;
     }
 
-    .brand-name {
+    .strip-label strong {
       font-family: 'Archivo Narrow', sans-serif;
+      font-size: 16px;
       font-weight: 700;
-      font-size: 18px;
-      letter-spacing: 0.01em;
       color: var(--near-black);
     }
 
-    .brand-sub {
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.14em;
+    .strip-label span {
+      font-size: 11px;
+      letter-spacing: 0.09em;
       text-transform: uppercase;
       color: var(--stone);
+      font-weight: 500;
     }
 
-    .quick-nav {
+    /* Phase sections */
+    .phase-section {
+      padding: 80px 40px;
+      border-bottom: 1px solid var(--stone-light);
+    }
+
+    .phase-header {
       display: flex;
-      flex-wrap: nowrap;
-      justify-content: flex-end;
-      gap: 4px;
-      overflow-x: auto;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-    }
-    .quick-nav::-webkit-scrollbar { display: none; }
-
-    .quick-nav a,
-    .hero-actions a,
-    .deck-link,
-    .section-link {
-      text-decoration: none;
+      align-items: baseline;
+      gap: 20px;
+      margin-bottom: 40px;
     }
 
-    .quick-nav a {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--mid-gray);
-      padding: 6px 12px;
-      white-space: nowrap;
-      transition: color 0.15s ease;
+    .phase-number {
+      font-family: 'Archivo Narrow', sans-serif;
+      font-size: 56px;
+      font-weight: 700;
+      color: var(--red);
+      min-width: 80px;
+      line-height: 1;
     }
 
-    .quick-nav a:hover,
-    .quick-nav a:focus-visible {
-      color: var(--near-black);
-      outline: none;
-    }
-
-    /* ── Hero ── */
-    .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
-      gap: 2px;
-      align-items: stretch;
-      margin-bottom: 2px;
-    }
-
-    .hero-main {
-      background: var(--near-black);
-      padding: 44px 40px;
-      position: relative;
-    }
-
-    .eyebrow {
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--stone);
-      margin-bottom: 20px;
-    }
-
-    h1, h2, h3 {
-      margin: 0;
+    .phase-title-group h2 {
       font-family: 'Archivo Narrow', sans-serif;
       font-weight: 700;
+      font-size: 36px;
+      color: var(--near-black);
+      margin-bottom: 6px;
       line-height: 1.05;
     }
 
-    h1 {
-      font-size: clamp(2.4rem, 5vw, 3.8rem);
-      color: var(--white);
-      margin-bottom: 20px;
-    }
-
-    .hero-copy {
-      font-size: 15px;
-      line-height: 1.7;
+    .phase-theme {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
       color: var(--stone);
-      max-width: 48rem;
+      font-weight: 600;
     }
 
-    .hero-actions {
+    .phase-description {
+      margin-bottom: 40px;
+      padding-left: 100px;
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--stone-dark);
+      max-width: 800px;
+    }
+
+    /* Tool cards grid */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      padding-left: 100px;
+      margin-bottom: 36px;
+    }
+
+    .tool-card {
+      background: var(--white);
+      border: 1px solid var(--stone-light);
+      padding: 28px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
       display: flex;
+      flex-direction: column;
+      gap: 14px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .tool-card:hover {
+      border-color: var(--chicago);
+      box-shadow: 0 8px 24px rgba(46, 69, 184, 0.10);
+      transform: translateY(-3px);
+    }
+
+    .tool-icon {
+      font-size: 28px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+    }
+
+    .tool-name {
+      font-family: 'Archivo Narrow', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--near-black);
+      line-height: 1.1;
+    }
+
+    .tool-description {
+      font-size: 13px;
+      line-height: 1.75;
+      color: var(--stone-dark);
+      flex: 1;
+    }
+
+    .tool-cards-count {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--stone);
+      font-weight: 600;
+    }
+
+    /* Exercise callout */
+    .exercise-section {
+      padding: 28px 32px;
+      background: var(--chicago-light);
+      border-left: 3px solid var(--chicago);
+      margin-left: 100px;
+    }
+
+    .exercise-title {
+      font-family: 'Archivo Narrow', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--near-black);
+      margin-bottom: 10px;
+      letter-spacing: 0.01em;
+    }
+
+    .exercise-description {
+      font-size: 13px;
+      line-height: 1.75;
+      color: var(--dark);
+    }
+
+    /* CTA */
+    .cta-section {
+      padding: 100px 40px;
+      text-align: center;
+      border-bottom: 1px solid var(--stone-light);
+    }
+
+    .cta-title {
+      font-family: 'Archivo Narrow', sans-serif;
+      font-weight: 700;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      color: var(--near-black);
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .cta-description {
+      font-size: 15px;
+      color: var(--stone-dark);
+      line-height: 1.8;
+      max-width: 560px;
+      margin: 0 auto 36px;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
       flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 32px;
     }
 
     .btn {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      gap: 8px;
-      min-height: 44px;
-      padding: 10px 22px;
+      padding: 13px 28px;
       font-family: 'Inter', sans-serif;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
-      letter-spacing: 0.02em;
-      color: inherit;
-      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
     }
 
     .btn-primary {
-      background: var(--white);
-      color: var(--near-black);
+      background: var(--chicago);
+      color: var(--white);
+      border: 1px solid var(--chicago);
     }
-    .btn-primary:hover { background: var(--off-white); }
+
+    .btn-primary:hover {
+      background: transparent;
+      color: var(--chicago);
+    }
 
     .btn-secondary {
       background: transparent;
-      color: var(--stone);
-      border: 1px solid var(--stone-dark);
-    }
-    .btn-secondary:hover { color: var(--white); border-color: var(--stone); }
-
-    .hero-side {
-      background: var(--off-white);
-      padding: 32px;
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
-
-    .stat {
-      padding: 20px 0;
-      border-bottom: 1px solid var(--stone-light);
-    }
-    .stat:last-child { border-bottom: none; padding-bottom: 0; }
-    .stat:first-child { padding-top: 0; }
-
-    .stat-label {
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--stone);
-      margin-bottom: 8px;
-    }
-
-    .stat strong {
-      display: block;
-      font-family: 'Archivo Narrow', sans-serif;
-      font-size: 20px;
-      font-weight: 700;
       color: var(--near-black);
-      margin-bottom: 4px;
-    }
-
-    .stat span {
-      font-size: 13px;
-      color: var(--mid-gray);
-      line-height: 1.6;
-    }
-
-    /* ── Section panels ── */
-    .section-panel {
-      background: var(--white);
       border: 1px solid var(--stone-light);
-      border-top: none;
-      padding: 32px;
-      margin-bottom: 2px;
     }
 
-    .section-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      gap: 16px;
-      margin-bottom: 24px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid var(--stone-light);
+    .btn-secondary:hover {
+      border-color: var(--near-black);
     }
 
-    .section-head h2 {
-      font-size: 22px;
-      color: var(--near-black);
-    }
-
-    .section-head p {
-      max-width: 44rem;
-      color: var(--mid-gray);
-      line-height: 1.65;
-      margin: 8px 0 0;
-      font-size: 14px;
-    }
-
-    .section-link {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--stone-dark);
-      white-space: nowrap;
-      letter-spacing: 0.04em;
-    }
-    .section-link:hover { color: var(--near-black); }
-
-    /* ── Deck grid ── */
-    .deck-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 1px;
-      background: var(--stone-light);
-    }
-
-    .deck-card {
-      background: var(--warm-white);
-      padding: 24px;
-      display: grid;
-      gap: 16px;
-      transition: background 0.15s ease;
-    }
-    .deck-card:hover,
-    .deck-card:focus-within { background: var(--off-white); }
-
-    .deck-meta, .deck-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .deck-tag {
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--stone);
-    }
-
-    .deck-size {
-      font-size: 11px;
-      color: var(--light-gray);
-      font-weight: 400;
-    }
-
-    .deck-body { display: grid; gap: 10px; }
-
-    .deck-body h3 {
-      font-size: clamp(1.3rem, 2.5vw, 1.65rem);
-      color: var(--near-black);
-    }
-
-    .deck-body p {
-      margin: 0;
-      color: var(--mid-gray);
-      line-height: 1.66;
-      font-size: 14px;
-    }
-
-    .sample-list {
-      display: grid;
-      gap: 6px;
-      margin-top: 4px;
-    }
-
-    .sample-list span {
-      display: block;
-      padding: 8px 12px;
-      border-left: 2px solid var(--stone);
-      background: var(--off-white);
-      color: var(--dark);
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .deck-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--near-black);
-    }
-
-    .deck-link::after {
-      content: "→";
-      transition: transform 0.15s ease;
-    }
-
-    .deck-card:hover .deck-link::after,
-    .deck-card:focus-within .deck-link::after { transform: translateX(3px); }
-
-    /* ── Framework feature ── */
-    .framework-feature {
-      display: grid;
-      grid-template-columns: minmax(0, 1.4fr) minmax(220px, 0.6fr);
-      gap: 1px;
-      background: var(--stone-light);
-    }
-
-    .framework-main {
-      background: var(--warm-white);
-      padding: 32px;
-    }
-
-    .framework-main h3 {
-      font-size: clamp(1.5rem, 3vw, 2rem);
-      color: var(--near-black);
-      margin-bottom: 12px;
-    }
-
-    .framework-main p {
-      margin: 0 0 20px;
-      color: var(--mid-gray);
-      line-height: 1.7;
-      font-size: 14px;
-      max-width: 52rem;
-    }
-
-    .framework-steps {
-      display: grid;
-      gap: 6px;
-      margin-bottom: 28px;
-    }
-
-    .framework-steps span {
-      display: block;
-      padding: 8px 12px;
-      border-left: 2px solid var(--red);
-      background: var(--off-white);
-      color: var(--dark);
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .framework-side {
-      background: var(--near-black);
-      padding: 32px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 24px;
-    }
-
-    .framework-side .stat-label {
-      color: var(--stone);
-    }
-
-    .framework-side strong {
-      display: block;
-      font-family: 'Archivo Narrow', sans-serif;
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--white);
-      margin-bottom: 6px;
-    }
-
-    .framework-side span {
-      font-size: 13px;
-      color: var(--stone);
-      line-height: 1.6;
-    }
-
-    .framework-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--white);
-      text-decoration: none;
-      border-bottom: 1px solid var(--stone-dark);
-      padding-bottom: 4px;
-      transition: border-color 0.15s ease, color 0.15s ease;
-    }
-
-    .framework-cta::after {
-      content: "→";
-    }
-
-    .framework-cta:hover {
-      color: var(--stone-light);
-      border-color: var(--stone);
-    }
-
-    @media (max-width: 980px) {
-      .framework-feature { grid-template-columns: 1fr; }
-    }
-
-    /* ── Notes grid ── */
-    .notes-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 1px;
-      background: var(--stone-light);
-    }
-
-    .note {
-      padding: 20px 24px;
-      background: var(--warm-white);
-    }
-
-    .note strong {
-      display: block;
-      font-family: 'Archivo Narrow', sans-serif;
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--near-black);
-      margin-bottom: 8px;
-    }
-
-    .note p {
-      margin: 0;
-      color: var(--mid-gray);
-      line-height: 1.65;
-      font-size: 13px;
-    }
-
-    /* ── Footer ── */
+    /* Footer */
     footer {
-      padding: 32px 0 8px;
+      padding: 32px 40px;
+      border-top: 1px solid var(--stone-light);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-top: 1px solid var(--stone-light);
-      margin-top: 2px;
+      background: var(--off-white);
     }
 
     .footer-identity {
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 500;
       letter-spacing: 0.14em;
       text-transform: uppercase;
@@ -511,304 +396,270 @@
       color: var(--stone);
     }
 
-    /* ── Responsive ── */
+    /* Responsive */
     @media (max-width: 980px) {
-      .hero,
-      .notes-grid,
-      .deck-grid { grid-template-columns: 1fr; }
-
-      .section-head {
-        align-items: flex-start;
-        flex-direction: column;
-      }
+      .journey-strip { grid-template-columns: repeat(2, 1fr); }
+      .journey-strip-item:nth-child(2) { border-right: none; }
     }
 
-    @media (max-width: 720px) {
-      .shell { padding: 28px 16px 48px; }
+    @media (max-width: 768px) {
+      .header { padding: 14px 20px; }
+      .header-nav { display: none; }
 
-      .topbar {
-        align-items: flex-start;
-        flex-direction: column;
-      }
+      .hero { padding: 80px 24px 60px; }
+      .hero-title { font-size: clamp(2.2rem, 10vw, 3rem); }
 
-      .hero-main { padding: 32px 24px; }
-      .hero-side  { padding: 24px; }
-      .section-panel { padding: 24px 20px; }
+      .journey-strip { grid-template-columns: 1fr 1fr; }
+      .journey-strip-item { padding: 20px; }
 
-      h1 { font-size: clamp(2rem, 12vw, 2.8rem); }
+      .phase-section { padding: 60px 24px; }
+
+      .phase-description,
+      .tools-grid,
+      .exercise-section { padding-left: 0; margin-left: 0; }
+
+      .tools-grid { grid-template-columns: 1fr; }
+
+      .phase-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .phase-number { font-size: 40px; min-width: auto; }
+
+      .cta-section { padding: 60px 24px; }
 
       footer {
         flex-direction: column;
         align-items: flex-start;
         gap: 8px;
+        padding: 24px;
       }
+    }
+
+    @media (max-width: 480px) {
+      .journey-strip { grid-template-columns: 1fr; }
+      .journey-strip-item { border-right: none; border-bottom: 1px solid var(--stone-light); }
     }
   </style>
 </head>
 <body>
-  <main class="shell">
-    <div class="topbar">
-      <div class="brand">
-        <span class="brand-name">Coaching Cards Library</span>
-        <span class="brand-sub">coaching · the economist</span>
+
+<header class="header">
+  <span class="identity-mark">coaching · the economist</span>
+  <nav class="header-nav" aria-label="Quick links">
+    <a href="#phase-1">Foundation</a>
+    <a href="#phase-2">Practice</a>
+    <a href="#phase-3">Transformation</a>
+    <a href="#phase-4">Integration</a>
+  </nav>
+</header>
+
+<main class="main">
+
+  <section class="hero">
+    <div class="hero-eyebrow">Your Coaching Journey</div>
+    <h1 class="hero-title">Life Begins at the End of Your Comfort Zone</h1>
+    <p class="hero-subtitle">Eight powerful tools to know yourself, show up intentionally, break through what is stopping you, and embody your growth.</p>
+    <p class="hero-tagline">A complete coaching system for individuals and teams.</p>
+  </section>
+
+  <div class="journey-strip" aria-label="Journey phases">
+    <div class="journey-strip-item">
+      <span class="strip-number">1</span>
+      <div class="strip-label">
+        <strong>Foundation</strong>
+        <span>Know yourself deeply</span>
       </div>
-      <nav class="quick-nav" aria-label="Deck quick links">
-        <a href="#decks">Browse decks</a>
-        <a href="coaching-cards-for-teams.html">Teams</a>
-        <a href="strong-suits.html">Strong Suits</a>
-        <a href="the-values-cards.html">Values Cards</a>
-        <a href="at-my-best.html">At My Best</a>
-        <a href="intelligent-change-closer.html">Closer</a>
-        <a href="coaching-cards-for-every-day.html">Every Day</a>
-        <a href="picture-coaching-cards-recreated-pilot.html">Picture Cards</a>
-        <a href="#frameworks">ITC</a>
-      </nav>
+    </div>
+    <div class="journey-strip-item">
+      <span class="strip-number">2</span>
+      <div class="strip-label">
+        <strong>Practice</strong>
+        <span>Show up intentionally</span>
+      </div>
+    </div>
+    <div class="journey-strip-item">
+      <span class="strip-number">3</span>
+      <div class="strip-label">
+        <strong>Transformation</strong>
+        <span>Break through what stops you</span>
+      </div>
+    </div>
+    <div class="journey-strip-item">
+      <span class="strip-number">4</span>
+      <div class="strip-label">
+        <strong>Integration</strong>
+        <span>Embody your growth</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 1: FOUNDATION -->
+  <section class="phase-section" id="phase-1" aria-labelledby="phase-1-title">
+    <div class="phase-header">
+      <div class="phase-number" aria-hidden="true">1</div>
+      <div class="phase-title-group">
+        <h2 id="phase-1-title">Foundation</h2>
+        <div class="phase-theme">Know Yourself Deeply</div>
+      </div>
     </div>
 
-    <section class="hero" aria-labelledby="page-title">
-      <div class="hero-main">
-        <div class="eyebrow">Barefoot Coaching and conversation decks</div>
-        <h1 id="page-title">Choose the right deck for the conversation you want.</h1>
-        <p class="hero-copy">
-          This library brings together reflective prompts, facilitation tools, strengths exercises, and values-based conversations in one calm, tactile-feeling space. Each deck opens as a focused experience, while this page gives you a better front door into the full collection.
-        </p>
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="#decks">Explore decks</a>
-          <a class="btn btn-secondary" href="coaching-cards-for-teams.html">Open team coaching</a>
-        </div>
+    <p class="phase-description">
+      Everything begins with self-knowledge. These three tools help you understand who you are at your best, what strengths define your work, and what values guide your decisions. This foundation is where clarity, confidence, and intentionality are born.
+    </p>
+
+    <div class="tools-grid">
+      <a href="at-my-best.html" class="tool-card">
+        <div class="tool-icon" aria-hidden="true">✨</div>
+        <div class="tool-name">At My Best</div>
+        <div class="tool-description">96 moments of excellence. Discover the recurring patterns that define you when you are at your finest.</div>
+        <div class="tool-cards-count">96 cards</div>
+      </a>
+
+      <a href="strong-suits.html" class="tool-card">
+        <div class="tool-icon" aria-hidden="true">💪</div>
+        <div class="tool-name">Strong Suits</div>
+        <div class="tool-description">Professional strengths across 4 dimensions. Understand what you do best and the shadows that come with it.</div>
+        <div class="tool-cards-count">40 cards</div>
+      </a>
+
+      <a href="the-values-cards.html" class="tool-card">
+        <div class="tool-icon" aria-hidden="true">🧭</div>
+        <div class="tool-name">The Values Cards</div>
+        <div class="tool-description">Clarify what you stand for and what guides your most important decisions through sorting and reflection.</div>
+        <div class="tool-cards-count">56 cards</div>
+      </a>
+    </div>
+
+    <div class="exercise-section">
+      <div class="exercise-title">Phase 1 Exercise: Create Your Personal Profile</div>
+      <div class="exercise-description">
+        After completing all three foundation tools, write a 1-page personal profile that combines them: <strong>"At my best, I am [At My Best insight], my professional strengths are [Strong Suits], and I am guided by [Values]."</strong> This becomes your compass for the rest of the journey.
       </div>
+    </div>
+  </section>
 
-      <aside class="hero-side" aria-label="Library summary">
-        <div class="stat">
-          <div class="stat-label">Collection</div>
-          <strong>7 decks + 1 framework</strong>
-          <span>Card decks for teams, pairs, and self-reflection — plus a structured change framework for deeper work.</span>
-        </div>
-        <div class="stat">
-          <div class="stat-label">Best for</div>
-          <strong>Workshops and coaching</strong>
-          <span>Use them to warm up a room, deepen a conversation, or guide a session.</span>
-        </div>
-        <div class="stat">
-          <div class="stat-label">Designed around</div>
-          <strong>Prompt-first flow</strong>
-          <span>Fast entry points, browseable decks, and card-led reflection.</span>
-        </div>
-      </aside>
-    </section>
-
-    <section class="section-panel" id="decks" aria-labelledby="decks-title">
-      <div class="section-head">
-        <div>
-          <h2 id="decks-title">Decks</h2>
-          <p>Each card set has a slightly different energy. Some are built for group facilitation, some for personal reflection, and some for guided conversation that becomes more candid over time.</p>
-        </div>
-        <a class="section-link" href="#notes">How to use the library</a>
+  <!-- PHASE 2: PRACTICE -->
+  <section class="phase-section" id="phase-2" aria-labelledby="phase-2-title">
+    <div class="phase-header">
+      <div class="phase-number" aria-hidden="true">2</div>
+      <div class="phase-title-group">
+        <h2 id="phase-2-title">Practice</h2>
+        <div class="phase-theme">Show Up Intentionally</div>
       </div>
+    </div>
 
-      <div class="deck-grid">
-        <article class="deck-card">
-          <div class="deck-meta">
-            <span class="deck-tag">Teams</span>
-            <span class="deck-size">50 prompts</span>
-          </div>
-          <div class="deck-body">
-            <h3>Coaching Cards for Teams</h3>
-            <p>Separate team-facing questions from facilitator process cards so you can run a session with more clarity and less clutter.</p>
-            <div class="sample-list" aria-label="Sample prompts">
-              <span>Question cards for discussion and reflection.</span>
-              <span>Process cards for structure, feedback, and facilitation moves.</span>
-            </div>
-          </div>
-          <div class="deck-footer">
-            <a class="deck-link" href="coaching-cards-for-teams.html">Open deck</a>
-            <span class="deck-size">Facilitator-friendly</span>
-          </div>
-        </article>
+    <p class="phase-description">
+      Knowledge without practice remains potential, not power. These two tools give you daily ways to embody your strengths and values, both individually and with your team. Small, consistent practices compound into lasting change.
+    </p>
 
-        <article class="deck-card">
-          <div class="deck-meta">
-            <span class="deck-tag">Strengths</span>
-            <span class="deck-size">4 suits · partial deck</span>
-          </div>
-          <div class="deck-body">
-            <h3>Strong Suits</h3>
-            <p>A playing-card-inspired deck that surfaces strengths, patterns, and shadows through four distinct suits.</p>
-            <div class="sample-list" aria-label="Sample prompt types">
-              <span>Explore traits and their strengths-based expression.</span>
-              <span>Use the suit structure to compare themes across a group.</span>
-            </div>
-          </div>
-          <div class="deck-footer">
-            <a class="deck-link" href="strong-suits.html">Open deck</a>
-            <span class="deck-size">Visual and tactile</span>
-          </div>
-        </article>
+    <div class="tools-grid">
+      <a href="coaching-cards-for-every-day.html" class="tool-card">
+        <div class="tool-icon" aria-hidden="true">☀️</div>
+        <div class="tool-name">Coaching Cards for Every Day</div>
+        <div class="tool-description">50 daily practices. Morning rituals, mindful pauses, and evening reflections that build your strength day by day.</div>
+        <div class="tool-cards-count">50 cards</div>
+      </a>
 
-        <article class="deck-card">
-          <div class="deck-meta">
-            <span class="deck-tag">Connection</span>
-            <span class="deck-size">3 levels</span>
-          </div>
-          <div class="deck-body">
-            <h3>Close, Closer, Closest</h3>
-            <p>Move from lighter questions into deeper vulnerability with a gradual, level-based conversation flow.</p>
-            <div class="sample-list" aria-label="Sample flow">
-              <span>Start gently with introductory prompts.</span>
-              <span>Build toward more personal and revealing conversation.</span>
-            </div>
-          </div>
-          <div class="deck-footer">
-            <a class="deck-link" href="intelligent-change-closer.html">Open deck</a>
-            <span class="deck-size">Progressive mode</span>
-          </div>
-        </article>
+      <a href="coaching-cards-for-teams.html" class="tool-card">
+        <div class="tool-icon" aria-hidden="true">🤝</div>
+        <div class="tool-name">Coaching Cards for Teams</div>
+        <div class="tool-description">42 reflection questions and 8 team processes. Build psychological safety, trust, and shared clarity with your team.</div>
+        <div class="tool-cards-count">50 cards</div>
+      </a>
+    </div>
 
-        <article class="deck-card">
-          <div class="deck-meta">
-            <span class="deck-tag">Values</span>
-            <span class="deck-size">Sort and compare</span>
-          </div>
-          <div class="deck-body">
-            <h3>The Values Cards</h3>
-            <p>Reflect on what matters most, what matters somewhat, and what feels less central so priorities become easier to articulate.</p>
-            <div class="sample-list" aria-label="Sample sorting approach">
-              <span>Designed for ranking, sorting, and discussion.</span>
-              <span>Useful for personal coaching, team charters, and decision-making.</span>
-            </div>
-          </div>
-          <div class="deck-footer">
-            <a class="deck-link" href="the-values-cards.html">Open deck</a>
-            <span class="deck-size">Clarify priorities</span>
-          </div>
-        </article>
-
-        <article class="deck-card">
-          <div class="deck-meta">
-            <span class="deck-tag">Reflection</span>
-            <span class="deck-size">Personal insight</span>
-          </div>
-          <div class="deck-body">
-            <h3>At My Best</h3>
-            <p>A reflective deck for understanding the conditions, behaviors, and environments that help someone show up at their strongest.</p>
-            <div class="sample-list" aria-label="Sample reflection areas">
-              <span>Identify patterns that support your best work.</span>
-              <span>Translate insight into clearer asks, habits, and boundaries.</span>
-            </div>
-          </div>
-          <div class="deck-footer">
-            <a class="deck-link" href="at-my-best.html">Open deck</a>
-            <span class="deck-size">Self-awareness</span>
-          </div>
-        </article>
-
-        <article class="deck-card">
-          <div class="deck-meta">
-            <span class="deck-tag">Images</span>
-            <span class="deck-size">51 visible photos</span>
-          </div>
-          <div class="deck-body">
-            <h3>Picture Coaching Cards</h3>
-            <p>An image-first deck for choosing the photograph that resonates, drawing one at random, or pairing two images together to explore what is true now and what is emerging next.</p>
-            <div class="sample-list" aria-label="Sample picture card uses">
-              <span>Use a single image to open up feeling, metaphor, and meaning.</span>
-              <span>Use a pair of images to compare present reality with future possibility.</span>
-            </div>
-          </div>
-          <div class="deck-footer">
-            <a class="deck-link" href="picture-coaching-cards-recreated-pilot.html">Open deck</a>
-            <span class="deck-size">Image-led reflection</span>
-          </div>
-        </article>
-
-        <article class="deck-card">
-          <div class="deck-meta">
-            <span class="deck-tag">Daily practice</span>
-            <span class="deck-size">50 prompts</span>
-          </div>
-          <div class="deck-body">
-            <h3>Coaching Cards for Every Day</h3>
-            <p>A solo reflection deck by Kim Morgan. Sort each card into comfortable or uncomfortable, then draw one from each pile for a richer, more honest conversation with yourself.</p>
-            <div class="sample-list" aria-label="Sample ways to use">
-              <span>Split the deck: sort first, then draw one from each pile.</span>
-              <span>One a day: work through the cards in order, five minutes at a time.</span>
-            </div>
-          </div>
-          <div class="deck-footer">
-            <a class="deck-link" href="coaching-cards-for-every-day.html">Open deck</a>
-            <span class="deck-size">Barefoot Coaching</span>
-          </div>
-        </article>
+    <div class="exercise-section">
+      <div class="exercise-title">Phase 2 Exercise: 30-Day Daily Practice</div>
+      <div class="exercise-description">
+        Commit to drawing one card from Coaching Cards for Every Day each morning for 30 days. Spend 3 minutes with it, then journal one insight. Over the month, you will notice shifts in how you show up: more intentional, more aligned with your strengths and values.
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="section-panel" id="frameworks" aria-labelledby="frameworks-title">
-      <div class="section-head">
-        <div>
-          <h2 id="frameworks-title">Frameworks</h2>
-          <p>Structured coaching tools for deeper change work. These go beyond card prompts into guided processes that help someone map what is getting in their way and design small experiments to move through it.</p>
-        </div>
+  <!-- PHASE 3: TRANSFORMATION -->
+  <section class="phase-section" id="phase-3" aria-labelledby="phase-3-title">
+    <div class="phase-header">
+      <div class="phase-number" aria-hidden="true">3</div>
+      <div class="phase-title-group">
+        <h2 id="phase-3-title">Transformation</h2>
+        <div class="phase-theme">Break Through What Is Stopping You</div>
       </div>
+    </div>
 
-      <div class="framework-feature">
-        <div class="framework-main">
-          <div class="deck-tag" style="margin-bottom:16px;">Immunity to Change</div>
-          <h3>Why good intentions are not enough, and what to do instead</h3>
-          <p>
-            Developed by Robert Kegan and Lisa Laskow Lahey at Harvard, the Immunity to Change framework helps people surface the hidden commitments and big assumptions that are quietly working against their stated goals. It turns frustrating stuckness into something visible and workable.
-          </p>
-          <div class="framework-steps" aria-label="Framework stages">
-            <span>Stage 1: Name the improvement goal you keep not achieving.</span>
-            <span>Stage 2: Surface the behaviours that work against it.</span>
-            <span>Stage 3: Uncover the competing commitments underneath those behaviours.</span>
-            <span>Stage 4: Identify the big assumptions holding the whole system in place.</span>
-            <span>Stage 5: Design a small, safe-to-fail experiment to test the assumption.</span>
-          </div>
-        </div>
-        <div class="framework-side">
-          <div>
-            <div class="stat-label" style="font-size:10px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:10px;">What it produces</div>
-            <strong>Your immunity map</strong>
-            <span>A clear, personalised map of the internal system keeping you stuck, plus a first experiment to gently disrupt it.</span>
-          </div>
-          <div>
-            <div class="stat-label" style="font-size:10px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:10px;">Best used for</div>
-            <strong>1:1 coaching</strong>
-            <span>Individual sessions where someone has a clear goal but keeps hitting the same invisible wall.</span>
-          </div>
-          <a class="framework-cta" href="immunity-to-change.html" target="_blank" rel="noopener">Open framework session</a>
-        </div>
+    <p class="phase-description">
+      Growth eventually hits a ceiling: a pattern you cannot break, a change you cannot sustain, a belief that limits you. These two tools help you understand what is really blocking progress and move through it with clarity and courage.
+    </p>
+
+    <div class="tools-grid">
+      <a href="intelligent-change-closer.html" class="tool-card">
+        <div class="tool-icon" aria-hidden="true">🔓</div>
+        <div class="tool-name">Intelligent Change Closer</div>
+        <div class="tool-description">109 questions across 3 nested levels. Navigate personal resistance, uncover competing commitments, and find the pathway forward.</div>
+        <div class="tool-cards-count">109 cards</div>
+      </a>
+
+      <a href="immunity-to-change.html" target="_blank" rel="noopener" class="tool-card">
+        <div class="tool-icon" aria-hidden="true">🛡️</div>
+        <div class="tool-name">Immunity to Change</div>
+        <div class="tool-description">A 5-stage diagnostic framework. Map your hidden assumptions and understand exactly why you are immune to change, then design an experiment to test them.</div>
+        <div class="tool-cards-count">Framework</div>
+      </a>
+    </div>
+
+    <div class="exercise-section">
+      <div class="exercise-title">Phase 3 Exercise: Immunity Map</div>
+      <div class="exercise-description">
+        Choose one area where you feel stuck. Complete the Immunity to Change framework: What are you committed to? What competing commitment is in the way? What worry underlies it? What assumption makes that worry feel true? This clarity is your breakthrough.
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="section-panel" id="notes" aria-labelledby="notes-title">
-      <div class="section-head">
-        <div>
-          <h2 id="notes-title">How to use the library</h2>
-          <p>The decks are already interactive, so this page is mainly about helping you get into the right one quickly and with the right context.</p>
-        </div>
+  <!-- PHASE 4: INTEGRATION -->
+  <section class="phase-section" id="phase-4" aria-labelledby="phase-4-title">
+    <div class="phase-header">
+      <div class="phase-number" aria-hidden="true">4</div>
+      <div class="phase-title-group">
+        <h2 id="phase-4-title">Integration</h2>
+        <div class="phase-theme">Embody Your Growth</div>
       </div>
+    </div>
 
-      <div class="notes-grid">
-        <div class="note">
-          <strong>Choose by energy</strong>
-          <p>Use team coaching when you need structure, Strong Suits when you want a strengths lens, and Close, Closer, Closest when the goal is relational depth.</p>
-        </div>
-        <div class="note">
-          <strong>Use on mobile too</strong>
-          <p>The landing page and linked decks are set up to work as a compact card browser on smaller screens, not just as desktop workshop tools.</p>
-        </div>
-        <div class="note">
-          <strong>Mix and match</strong>
-          <p>It is completely reasonable to start in one deck and switch to another once the conversation reveals what the group or person needs next.</p>
-        </div>
+    <p class="phase-description">
+      Transformation is not just cognitive. It is felt, embodied, intuited. This tool bridges your thinking mind with your emotional intelligence, helping you integrate insights into lived experience.
+    </p>
+
+    <div class="tools-grid" style="grid-template-columns: minmax(260px, 420px);">
+      <a href="picture-coaching-cards-recreated-pilot.html" class="tool-card">
+        <div class="tool-icon" aria-hidden="true">🎨</div>
+        <div class="tool-name">Picture Coaching Cards</div>
+        <div class="tool-description">51 evocative images. Use visual prompts to access your intuition, sense emerging patterns, and ground insights in your body.</div>
+        <div class="tool-cards-count">51 cards</div>
+      </a>
+    </div>
+
+    <div class="exercise-section">
+      <div class="exercise-title">Phase 4 Exercise: Weekly Intuition Check-In</div>
+      <div class="exercise-description">
+        Every week, draw one card from Picture Coaching Cards. Sit with the image for 5 minutes without thinking. What arises? What is your gut telling you about your progress and what is next? This practice develops the wisdom that lives beyond your conscious mind.
       </div>
-    </section>
+    </div>
+  </section>
 
-    <footer>
-      <span class="footer-identity">coaching · the economist</span>
-      <span class="footer-tagline">life begins at the end of your comfort zone</span>
-    </footer>
-  </main>
+  <!-- CALL TO ACTION -->
+  <section class="cta-section">
+    <h2 class="cta-title">Ready to Begin?</h2>
+    <p class="cta-description">
+      Start with the Foundation phase to understand yourself deeply. Or explore any tool that calls to you. There is no wrong order — follow your intuition and your needs.
+    </p>
+    <div class="cta-buttons">
+      <a href="at-my-best.html" class="btn btn-primary">Start with At My Best</a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span class="footer-identity">coaching · the economist</span>
+  <span class="footer-tagline">life begins at the end of your comfort zone</span>
+</footer>
+
 </body>
 </html>
